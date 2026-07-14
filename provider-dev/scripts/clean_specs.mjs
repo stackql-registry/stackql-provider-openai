@@ -96,6 +96,22 @@ if (orgSurvivors.length) {
   process.exit(1);
 }
 
+// Stamp tags on untagged operations (the Containers family ships untagged upstream):
+// deterministic rule - tag from the first path segment, TitleCased. The split step
+// discriminates on tags, so every operation must carry exactly one.
+let stamped = 0;
+for (const [path, item] of Object.entries(doc.paths)) {
+  for (const v of HTTP) {
+    const op = item[v];
+    if (op && (!op.tags || op.tags.length === 0)) {
+      const seg = path.split('/')[1];
+      op.tags = [seg.charAt(0).toUpperCase() + seg.slice(1)];
+      stamped++;
+    }
+  }
+}
+if (stamped) console.log(`Stamped tags on ${stamped} untagged operation(s) (first path segment, TitleCased)`);
+
 console.log('Validating filtered spec with @apidevtools/swagger-parser ...');
 await SwaggerParser.validate(structuredClone(doc));
 

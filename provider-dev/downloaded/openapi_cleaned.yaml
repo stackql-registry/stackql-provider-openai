@@ -1463,6 +1463,8 @@ paths:
               "last_id": "container_123",
               "has_more": false
             }
+      tags:
+        - Containers
     post:
       summary: Create Container
       description: Creates a container.
@@ -1577,6 +1579,8 @@ paths:
                 "memory_limit": "4g",
                 "name": "My Container"
             }
+      tags:
+        - Containers
   /containers/{container_id}:
     get:
       summary: Retrieve Container
@@ -1665,6 +1669,8 @@ paths:
                 "memory_limit": "4g",
                 "name": "My Container"
             }
+      tags:
+        - Containers
     delete:
       operationId: DeleteContainer
       summary: Delete Container
@@ -1737,6 +1743,8 @@ paths:
                 "object": "container.deleted",
                 "deleted": true
             }
+      tags:
+        - Containers
   /containers/{container_id}/files:
     post:
       summary: |
@@ -1836,6 +1844,8 @@ paths:
               "path": "/mnt/data/88e12fa445d32636f190a0b33daed6cb-tsconfig.json",
               "source": "user"
             }
+      tags:
+        - Containers
     get:
       summary: List Container files
       description: Lists container files.
@@ -1953,6 +1963,8 @@ paths:
                 "has_more": false,
                 "last_id": "cfile_682e0e8a43c88191a7978f477a09bdf5"
             }
+      tags:
+        - Containers
   /containers/{container_id}/files/{file_id}:
     get:
       summary: Retrieve Container File
@@ -2047,6 +2059,8 @@ paths:
                 "path": "/mnt/data/88e12fa445d32636f190a0b33daed6cb-tsconfig.json",
                 "source": "user"
             }
+      tags:
+        - Containers
     delete:
       operationId: DeleteContainerFile
       summary: Delete Container File
@@ -2128,6 +2142,8 @@ paths:
                 "object": "container.file.deleted",
                 "deleted": true
             }
+      tags:
+        - Containers
   /conversations/{conversation_id}/items:
     post:
       operationId: createConversationItems

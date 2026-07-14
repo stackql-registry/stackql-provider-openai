@@ -1,0 +1,13 @@
+{
+  "Assistants": "assistants",
+  "Batch": "batches",
+  "Containers": "containers",
+  "Conversations": "conversations",
+  "Evals": "evals",
+  "Files": "files",
+  "Fine-tuning": "fine_tuning",
+  "Models": "models",
+  "Skills": "skills",
+  "Uploads": "uploads",
+  "Vector stores": "vector_stores"
+}
