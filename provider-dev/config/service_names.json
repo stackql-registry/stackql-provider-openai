@@ -1,13 +1,13 @@
 {
-  "Assistants": "assistants",
-  "Batch": "batches",
-  "Containers": "containers",
-  "Conversations": "conversations",
-  "Evals": "evals",
-  "Files": "files",
-  "Fine-tuning": "fine_tuning",
-  "Models": "models",
-  "Skills": "skills",
-  "Uploads": "uploads",
-  "Vector stores": "vector_stores"
+  "assistants": "assistants",
+  "batch": "batches",
+  "containers": "containers",
+  "conversations": "conversations",
+  "evals": "evals",
+  "files": "files",
+  "fine_tuning": "fine_tuning",
+  "models": "models",
+  "skills": "skills",
+  "uploads": "uploads",
+  "vector_stores": "vector_stores"
 }

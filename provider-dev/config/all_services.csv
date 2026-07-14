@@ -1,0 +1,197 @@
+filename,path,operationId,formatted_op_id,verb,response_object,tags,formatted_tags,stackql_resource_name,stackql_method_name,stackql_verb,stackql_object_key,op_description
+assistants.yaml,/assistants,listAssistants,list_assistants,get,ListAssistantsResponse,Assistants,assistants,assistants,list,select,$.data,Returns a list of assistants.
+assistants.yaml,/assistants,createAssistant,create_assistant,post,AssistantObject,Assistants,assistants,assistants,create,insert,,Create an assistant with a model and instructions.
+assistants.yaml,/assistants/{assistant_id},getAssistant,get_assistant,get,AssistantObject,Assistants,assistants,assistants,get,select,,Retrieves an assistant.
+assistants.yaml,/assistants/{assistant_id},modifyAssistant,modify_assistant,post,AssistantObject,Assistants,assistants,assistants,update,update,,Modifies an assistant.
+assistants.yaml,/assistants/{assistant_id},deleteAssistant,delete_assistant,delete,DeleteAssistantResponse,Assistants,assistants,assistants,delete,delete,,Delete an assistant.
+assistants.yaml,/threads,createThread,create_thread,post,ThreadObject,Assistants,assistants,threads,create,insert,,Create a thread.
+assistants.yaml,/threads/runs,createThreadAndRun,create_thread_and_run,post,RunObject,Assistants,assistants,threads,create_thread_and_run,exec,,Create a thread and run it in one request.
+assistants.yaml,/threads/{thread_id},getThread,get_thread,get,ThreadObject,Assistants,assistants,threads,get,select,,Retrieves a thread.
+assistants.yaml,/threads/{thread_id},modifyThread,modify_thread,post,ThreadObject,Assistants,assistants,threads,update,update,,Modifies a thread.
+assistants.yaml,/threads/{thread_id},deleteThread,delete_thread,delete,DeleteThreadResponse,Assistants,assistants,threads,delete,delete,,Delete a thread.
+assistants.yaml,/threads/{thread_id}/messages,listMessages,list_messages,get,ListMessagesResponse,Assistants,assistants,messages,list,select,$.data,Returns a list of messages for a given thread.
+assistants.yaml,/threads/{thread_id}/messages,createMessage,create_message,post,MessageObject,Assistants,assistants,messages,create,insert,,Create a message.
+assistants.yaml,/threads/{thread_id}/messages/{message_id},getMessage,get_message,get,MessageObject,Assistants,assistants,messages,get,select,,Retrieve a message.
+assistants.yaml,/threads/{thread_id}/messages/{message_id},modifyMessage,modify_message,post,MessageObject,Assistants,assistants,messages,update,update,,Modifies a message.
+assistants.yaml,/threads/{thread_id}/messages/{message_id},deleteMessage,delete_message,delete,DeleteMessageResponse,Assistants,assistants,messages,delete,delete,,Deletes a message.
+assistants.yaml,/threads/{thread_id}/runs,listRuns,list_runs,get,ListRunsResponse,Assistants,assistants,runs,list,select,$.data,Returns a list of runs belonging to a thread.
+assistants.yaml,/threads/{thread_id}/runs,createRun,create_run,post,RunObject,Assistants,assistants,runs,create,insert,,Create a run.
+assistants.yaml,/threads/{thread_id}/runs/{run_id},getRun,get_run,get,RunObject,Assistants,assistants,runs,get,select,,Retrieves a run.
+assistants.yaml,/threads/{thread_id}/runs/{run_id},modifyRun,modify_run,post,RunObject,Assistants,assistants,runs,update,update,,Modifies a run.
+assistants.yaml,/threads/{thread_id}/runs/{run_id}/cancel,cancelRun,cancel_run,post,RunObject,Assistants,assistants,runs,cancel,exec,,Cancels a run that is `in_progress`.
+assistants.yaml,/threads/{thread_id}/runs/{run_id}/steps,listRunSteps,list_run_steps,get,ListRunStepsResponse,Assistants,assistants,run_steps,list,select,$.data,Returns a list of run steps belonging to a run.
+assistants.yaml,/threads/{thread_id}/runs/{run_id}/steps/{step_id},getRunStep,get_run_step,get,RunStepObject,Assistants,assistants,run_steps,get,select,,Retrieves a run step.
+assistants.yaml,/threads/{thread_id}/runs/{run_id}/submit_tool_outputs,submitToolOuputsToRun,submit_tool_ouputs_to_run,post,RunObject,Assistants,assistants,runs,submit_tool_outputs,exec,,"When a run has the `status: ""requires_action""` and `required_action.type` is `submit_tool_outputs`, this endpoint can be used to submit the outputs from the tool calls once they're all completed. All outputs must be submitted in a single request.
+"
+batches.yaml,/batches,createBatch,create_batch,post,Batch,Batch,batch,batches,create,insert,,Creates and executes a batch from an uploaded file of requests
+batches.yaml,/batches,listBatches,list_batches,get,ListBatchesResponse,Batch,batch,batches,list,select,$.data,List your organization's batches.
+batches.yaml,/batches/{batch_id},retrieveBatch,retrieve_batch,get,Batch,Batch,batch,batches,get,select,,Retrieves a batch.
+batches.yaml,/batches/{batch_id}/cancel,cancelBatch,cancel_batch,post,Batch,Batch,batch,batches,cancel,exec,,"Cancels an in-progress batch. The batch will be in status `cancelling` for up to 10 minutes, before changing to `cancelled`, where it will have partial results (if any) available in the output file."
+containers.yaml,/containers,ListContainers,list_containers,get,ContainerListResource,Containers,containers,containers,list,select,$.data,List Containers
+containers.yaml,/containers,CreateContainer,create_container,post,ContainerResource,Containers,containers,containers,create,insert,,Create Container
+containers.yaml,/containers/{container_id},RetrieveContainer,retrieve_container,get,ContainerResource,Containers,containers,containers,get,select,,Retrieve Container
+containers.yaml,/containers/{container_id},DeleteContainer,delete_container,delete,,Containers,containers,containers,delete,delete,,Delete Container
+containers.yaml,/containers/{container_id}/files,CreateContainerFile,create_container_file,post,ContainerFileResource,Containers,containers,files,create,insert,,"Create a Container File
+
+You can send either a multipart/form-data request with the raw file content, or a JSON request with a file ID.
+"
+containers.yaml,/containers/{container_id}/files,ListContainerFiles,list_container_files,get,ContainerFileListResource,Containers,containers,files,list,select,$.data,List Container files
+containers.yaml,/containers/{container_id}/files/{file_id},RetrieveContainerFile,retrieve_container_file,get,ContainerFileResource,Containers,containers,files,get,select,,Retrieve Container File
+containers.yaml,/containers/{container_id}/files/{file_id},DeleteContainerFile,delete_container_file,delete,,Containers,containers,files,delete,delete,,Delete Container File
+conversations.yaml,/conversations/{conversation_id}/items,createConversationItems,create_conversation_items,post,ConversationItemList,Conversations,conversations,items,create,insert,,Create items in a conversation with the given ID.
+conversations.yaml,/conversations/{conversation_id}/items,listConversationItems,list_conversation_items,get,ConversationItemList,Conversations,conversations,items,list,select,$.data,List all items for a conversation with the given ID.
+conversations.yaml,/conversations/{conversation_id}/items/{item_id},getConversationItem,get_conversation_item,get,ConversationItem,Conversations,conversations,items,get,select,,Get a single item from a conversation with the given IDs.
+conversations.yaml,/conversations/{conversation_id}/items/{item_id},deleteConversationItem,delete_conversation_item,delete,ConversationResource,Conversations,conversations,items,delete,delete,,Delete an item from a conversation with the given IDs.
+conversations.yaml,/conversations,createConversation,create_conversation,post,ConversationResource,Conversations,conversations,conversations,create,insert,,Create a conversation.
+conversations.yaml,/conversations/{conversation_id},getConversation,get_conversation,get,ConversationResource,Conversations,conversations,conversations,get,select,,Get a conversation
+conversations.yaml,/conversations/{conversation_id},deleteConversation,delete_conversation,delete,DeletedConversationResource,Conversations,conversations,conversations,delete,delete,,Delete a conversation. Items in the conversation will not be deleted.
+conversations.yaml,/conversations/{conversation_id},updateConversation,update_conversation,post,ConversationResource,Conversations,conversations,conversations,update,update,,Update a conversation
+evals.yaml,/evals,listEvals,list_evals,get,EvalList,Evals,evals,evals,list,select,$.data,"List evaluations for a project.
+"
+evals.yaml,/evals,createEval,create_eval,post,Eval,Evals,evals,evals,create,insert,,"Create the structure of an evaluation that can be used to test a model's performance.
+An evaluation is a set of testing criteria and the config for a data source, which dictates the schema of the data used in the evaluation. After creating an evaluation, you can run it on different models and model parameters. We support several types of graders and datasources.
+For more information, see the [Evals guide](/docs/guides/evals).
+"
+evals.yaml,/evals/{eval_id},getEval,get_eval,get,Eval,Evals,evals,evals,get,select,,"Get an evaluation by ID.
+"
+evals.yaml,/evals/{eval_id},updateEval,update_eval,post,Eval,Evals,evals,evals,update,update,,"Update certain properties of an evaluation.
+"
+evals.yaml,/evals/{eval_id},deleteEval,delete_eval,delete,,Evals,evals,evals,delete,delete,,"Delete an evaluation.
+"
+evals.yaml,/evals/{eval_id}/runs,getEvalRuns,get_eval_runs,get,EvalRunList,Evals,evals,runs,list,select,$.data,"Get a list of runs for an evaluation.
+"
+evals.yaml,/evals/{eval_id}/runs,createEvalRun,create_eval_run,post,EvalRun,Evals,evals,runs,create,insert,,"Kicks off a new run for a given evaluation, specifying the data source, and what model configuration to use to test. The datasource will be validated against the schema specified in the config of the evaluation.
+"
+evals.yaml,/evals/{eval_id}/runs/{run_id},getEvalRun,get_eval_run,get,EvalRun,Evals,evals,runs,get,select,,"Get an evaluation run by ID.
+"
+evals.yaml,/evals/{eval_id}/runs/{run_id},cancelEvalRun,cancel_eval_run,post,EvalRun,Evals,evals,runs,cancel,exec,,"Cancel an ongoing evaluation run.
+"
+evals.yaml,/evals/{eval_id}/runs/{run_id},deleteEvalRun,delete_eval_run,delete,,Evals,evals,runs,delete,delete,,"Delete an eval run.
+"
+evals.yaml,/evals/{eval_id}/runs/{run_id}/output_items,getEvalRunOutputItems,get_eval_run_output_items,get,EvalRunOutputItemList,Evals,evals,run_output_items,list,select,$.data,"Get a list of output items for an evaluation run.
+"
+evals.yaml,/evals/{eval_id}/runs/{run_id}/output_items/{output_item_id},getEvalRunOutputItem,get_eval_run_output_item,get,EvalRunOutputItem,Evals,evals,run_output_items,get,select,,"Get an evaluation run output item by ID.
+"
+files.yaml,/files,listFiles,list_files,get,ListFilesResponse,Files,files,files,list,select,$.data,Returns a list of files.
+files.yaml,/files,createFile,create_file,post,OpenAIFile,Files,files,skip_this_resource,,,,"Upload a file that can be used across various endpoints. Individual files
+can be up to 512 MB, and each project can store up to 2.5 TB of files in
+total. There is no organization-wide storage limit. Uploads to this
+endpoint are rate-limited to 1,000 requests per minute per authenticated
+user.
+
+- The Assistants API supports files up to 2 million tokens and of specific
+  file types. See the [Assistants Tools guide](/docs/assistants/tools) for
+  details.
+- The Fine-tuning API only supports `.jsonl` files. The input also has
+  certain required formats for fine-tuning
+  [chat](/docs/api-reference/fine-tuning/chat-input) or
+  [completions](/docs/api-reference/fine-tuning/completions-input) models.
+- The Batch API only supports `.jsonl` files up to 200 MB in size. The input
+  also has a specific required
+  [format](/docs/api-reference/batch/request-input).
+- For Retrieval or `file_search` ingestion, upload files here first. If
+  you need to attach multiple uploaded files to the same vector store, use
+  [`/vector_stores/{vector_store_id}/file_batches`](/docs/api-reference/vector-stores-file-batches/createBatch)
+  instead of attaching them one by one. Vector store attachment has separate
+  limits from file upload, including 2,000 attached files per minute per
+  organization.
+
+Please [contact us](https://help.openai.com/) if you need to increase these
+storage limits.
+"
+files.yaml,/files/{file_id},deleteFile,delete_file,delete,DeleteFileResponse,Files,files,files,delete,delete,,Delete a file and remove it from all vector stores.
+files.yaml,/files/{file_id},retrieveFile,retrieve_file,get,OpenAIFile,Files,files,files,get,select,,Returns information about a specific file.
+fine_tuning.yaml,/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions,listFineTuningCheckpointPermissions,list_fine_tuning_checkpoint_permissions,get,ListFineTuningCheckpointPermissionResponse,Fine-tuning,fine_tuning,checkpoint_permissions,list,select,$.data,"**NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
+
+Organization owners can use this endpoint to view all permissions for a fine-tuned model checkpoint.
+"
+fine_tuning.yaml,/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions,createFineTuningCheckpointPermission,create_fine_tuning_checkpoint_permission,post,ListFineTuningCheckpointPermissionResponse,Fine-tuning,fine_tuning,checkpoint_permissions,create,insert,,"**NOTE:** Calling this endpoint requires an [admin API key](../admin-api-keys).
+
+This enables organization owners to share fine-tuned models with other projects in their organization.
+"
+fine_tuning.yaml,/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions/{permission_id},deleteFineTuningCheckpointPermission,delete_fine_tuning_checkpoint_permission,delete,DeleteFineTuningCheckpointPermissionResponse,Fine-tuning,fine_tuning,checkpoint_permissions,delete,delete,,"**NOTE:** This endpoint requires an [admin API key](../admin-api-keys).
+
+Organization owners can use this endpoint to delete a permission for a fine-tuned model checkpoint.
+"
+fine_tuning.yaml,/fine_tuning/jobs,createFineTuningJob,create_fine_tuning_job,post,FineTuningJob,Fine-tuning,fine_tuning,jobs,create,insert,,"Creates a fine-tuning job which begins the process of creating a new model from a given dataset.
+
+Response includes details of the enqueued job including job status and the name of the fine-tuned models once complete.
+
+[Learn more about fine-tuning](/docs/guides/model-optimization)
+"
+fine_tuning.yaml,/fine_tuning/jobs,listPaginatedFineTuningJobs,list_paginated_fine_tuning_jobs,get,ListPaginatedFineTuningJobsResponse,Fine-tuning,fine_tuning,jobs,list,select,$.data,"List your organization's fine-tuning jobs
+"
+fine_tuning.yaml,/fine_tuning/jobs/{fine_tuning_job_id},retrieveFineTuningJob,retrieve_fine_tuning_job,get,FineTuningJob,Fine-tuning,fine_tuning,jobs,get,select,,"Get info about a fine-tuning job.
+
+[Learn more about fine-tuning](/docs/guides/model-optimization)
+"
+fine_tuning.yaml,/fine_tuning/jobs/{fine_tuning_job_id}/cancel,cancelFineTuningJob,cancel_fine_tuning_job,post,FineTuningJob,Fine-tuning,fine_tuning,jobs,cancel,exec,,"Immediately cancel a fine-tune job.
+"
+fine_tuning.yaml,/fine_tuning/jobs/{fine_tuning_job_id}/checkpoints,listFineTuningJobCheckpoints,list_fine_tuning_job_checkpoints,get,ListFineTuningJobCheckpointsResponse,Fine-tuning,fine_tuning,checkpoints,list,select,$.data,"List checkpoints for a fine-tuning job.
+"
+fine_tuning.yaml,/fine_tuning/jobs/{fine_tuning_job_id}/events,listFineTuningEvents,list_fine_tuning_events,get,ListFineTuningJobEventsResponse,Fine-tuning,fine_tuning,events,list,select,$.data,"Get status updates for a fine-tuning job.
+"
+fine_tuning.yaml,/fine_tuning/jobs/{fine_tuning_job_id}/pause,pauseFineTuningJob,pause_fine_tuning_job,post,FineTuningJob,Fine-tuning,fine_tuning,jobs,pause,exec,,"Pause a fine-tune job.
+"
+fine_tuning.yaml,/fine_tuning/jobs/{fine_tuning_job_id}/resume,resumeFineTuningJob,resume_fine_tuning_job,post,FineTuningJob,Fine-tuning,fine_tuning,jobs,resume,exec,,"Resume a fine-tune job.
+"
+models.yaml,/models,listModels,list_models,get,ListModelsResponse,Models,models,models,list,select,$.data,"Lists the currently available models, and provides basic information about each one such as the owner and availability."
+models.yaml,/models/{model},retrieveModel,retrieve_model,get,Model,Models,models,models,get,select,,"Retrieves a model instance, providing basic information about the model such as the owner and permissioning."
+models.yaml,/models/{model},deleteModel,delete_model,delete,DeleteModelResponse,Models,models,models,delete,delete,,Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.
+skills.yaml,/skills,CreateSkill,create_skill,post,SkillResource,Skills,skills,skills,create,insert,,Create a new skill.
+skills.yaml,/skills,ListSkills,list_skills,get,SkillListResource,Skills,skills,skills,list,select,$.data,List all skills for the current project.
+skills.yaml,/skills/{skill_id},DeleteSkill,delete_skill,delete,DeletedSkillResource,Skills,skills,skills,delete,delete,,Delete a skill by its ID.
+skills.yaml,/skills/{skill_id},GetSkill,get_skill,get,SkillResource,Skills,skills,skills,get,select,,Get a skill by its ID.
+skills.yaml,/skills/{skill_id},UpdateSkillDefaultVersion,update_skill_default_version,post,SkillResource,Skills,skills,skills,update,update,,Update the default version pointer for a skill.
+skills.yaml,/skills/{skill_id}/versions,CreateSkillVersion,create_skill_version,post,SkillVersionResource,Skills,skills,versions,create,insert,,Create a new immutable skill version.
+skills.yaml,/skills/{skill_id}/versions,ListSkillVersions,list_skill_versions,get,SkillVersionListResource,Skills,skills,versions,list,select,$.data,List skill versions for a skill.
+skills.yaml,/skills/{skill_id}/versions/{version},GetSkillVersion,get_skill_version,get,SkillVersionResource,Skills,skills,versions,get,select,,Get a specific skill version.
+skills.yaml,/skills/{skill_id}/versions/{version},DeleteSkillVersion,delete_skill_version,delete,DeletedSkillVersionResource,Skills,skills,versions,delete,delete,,Delete a skill version.
+uploads.yaml,/uploads,createUpload,create_upload,post,Upload,Uploads,uploads,uploads,create,insert,,"Creates an intermediate [Upload](/docs/api-reference/uploads/object) object
+that you can add [Parts](/docs/api-reference/uploads/part-object) to.
+Currently, an Upload can accept at most 8 GB in total and expires after an
+hour after you create it.
+
+Once you complete the Upload, we will create a
+[File](/docs/api-reference/files/object) object that contains all the parts
+you uploaded. This File is usable in the rest of our platform as a regular
+File object.
+
+For certain `purpose` values, the correct `mime_type` must be specified. 
+Please refer to documentation for the 
+[supported MIME types for your use case](/docs/assistants/tools/file-search#supported-files).
+
+For guidance on the proper filename extensions for each purpose, please
+follow the documentation on [creating a
+File](/docs/api-reference/files/create).
+
+Returns the Upload object with status `pending`.
+"
+uploads.yaml,/uploads/{upload_id}/cancel,cancelUpload,cancel_upload,post,Upload,Uploads,uploads,uploads,cancel,exec,,"Cancels the Upload. No Parts may be added after an Upload is cancelled.
+
+Returns the Upload object with status `cancelled`.
+"
+uploads.yaml,/uploads/{upload_id}/complete,completeUpload,complete_upload,post,Upload,Uploads,uploads,uploads,complete,exec,,"Completes the [Upload](/docs/api-reference/uploads/object). 
+
+Within the returned Upload object, there is a nested [File](/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
+
+You can specify the order of the Parts by passing in an ordered list of the Part IDs.
+
+The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
+Returns the Upload object with status `completed`, including an additional `file` property containing the created usable File object.
+"
+vector_stores.yaml,/vector_stores,listVectorStores,list_vector_stores,get,ListVectorStoresResponse,Vector stores,vector stores,vector_stores,list,select,$.data,Returns a list of vector stores.
+vector_stores.yaml,/vector_stores,createVectorStore,create_vector_store,post,VectorStoreObject,Vector stores,vector stores,vector_stores,create,insert,,Create a vector store.
+vector_stores.yaml,/vector_stores/{vector_store_id},getVectorStore,get_vector_store,get,VectorStoreObject,Vector stores,vector stores,vector_stores,get,select,,Retrieves a vector store.
+vector_stores.yaml,/vector_stores/{vector_store_id},modifyVectorStore,modify_vector_store,post,VectorStoreObject,Vector stores,vector stores,vector_stores,update,update,,Modifies a vector store.
+vector_stores.yaml,/vector_stores/{vector_store_id},deleteVectorStore,delete_vector_store,delete,DeleteVectorStoreResponse,Vector stores,vector stores,vector_stores,delete,delete,,Delete a vector store.
+vector_stores.yaml,/vector_stores/{vector_store_id}/file_batches,createVectorStoreFileBatch,create_vector_store_file_batch,post,VectorStoreFileBatchObject,Vector stores,vector stores,file_batches,create,insert,,Create a vector store file batch.
+vector_stores.yaml,/vector_stores/{vector_store_id}/file_batches/{batch_id},getVectorStoreFileBatch,get_vector_store_file_batch,get,VectorStoreFileBatchObject,Vector stores,vector stores,file_batches,get,select,,Retrieves a vector store file batch.
+vector_stores.yaml,/vector_stores/{vector_store_id}/file_batches/{batch_id}/cancel,cancelVectorStoreFileBatch,cancel_vector_store_file_batch,post,VectorStoreFileBatchObject,Vector stores,vector stores,file_batches,cancel,exec,,Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.
+vector_stores.yaml,/vector_stores/{vector_store_id}/file_batches/{batch_id}/files,listFilesInVectorStoreBatch,list_files_in_vector_store_batch,get,ListVectorStoreFilesResponse,Vector stores,vector stores,file_batch_files,list,select,$.data,Returns a list of vector store files in a batch.
+vector_stores.yaml,/vector_stores/{vector_store_id}/files,listVectorStoreFiles,list_vector_store_files,get,ListVectorStoreFilesResponse,Vector stores,vector stores,files,list,select,$.data,Returns a list of vector store files.
+vector_stores.yaml,/vector_stores/{vector_store_id}/files,createVectorStoreFile,create_vector_store_file,post,VectorStoreFileObject,Vector stores,vector stores,files,create,insert,,Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object).
+vector_stores.yaml,/vector_stores/{vector_store_id}/files/{file_id},getVectorStoreFile,get_vector_store_file,get,VectorStoreFileObject,Vector stores,vector stores,files,get,select,,Retrieves a vector store file.
+vector_stores.yaml,/vector_stores/{vector_store_id}/files/{file_id},deleteVectorStoreFile,delete_vector_store_file,delete,DeleteVectorStoreFileResponse,Vector stores,vector stores,files,delete,delete,,"Delete a vector store file. This will remove the file from the vector store but the file itself will not be deleted. To delete the file, use the [delete file](/docs/api-reference/files/delete) endpoint."
+vector_stores.yaml,/vector_stores/{vector_store_id}/files/{file_id},updateVectorStoreFileAttributes,update_vector_store_file_attributes,post,VectorStoreFileObject,Vector stores,vector stores,files,update,update,,Update attributes on a vector store file.
+vector_stores.yaml,/vector_stores/{vector_store_id}/search,searchVectorStore,search_vector_store,post,VectorStoreSearchResultsPage,Vector stores,vector stores,vector_stores,search,exec,,Search a vector store for relevant chunks based on a query and file attributes filter.
