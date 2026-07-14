@@ -63,9 +63,35 @@ node provider-dev/scripts/build_inventory.mjs          # endpoint inventory over
 node provider-dev/scripts/disposition_predecessor.mjs  # disposition every v1 method; regenerate Breaking Changes
 ```
 
+### 1. Split into service specs
+
+Tag-discriminated (the spec's tags map 1:1 to services; the untagged Containers family is tag-stamped in `clean_specs.mjs`; overrides in `provider-dev/config/service_names.json` are keyed by normalized tag name):
+
+```bash
+node bin/split.mjs \
+  --provider-name openai \
+  --api-doc provider-dev/downloaded/openapi_cleaned.yaml \
+  --output-dir provider-dev/source \
+  --svc-discriminator tag \
+  --svc-name-overrides "$(cat provider-dev/config/service_names.json)" \
+  --overwrite
+```
+
+Produces 11 service specs in `provider-dev/source/`: `assistants` (assistants, threads, messages, runs, run_steps - deprecation-labelled family), `batches`, `containers`, `conversations`, `evals`, `files`, `fine_tuning`, `models`, `skills`, `uploads`, `vector_stores`.
+
+### 2. Generate mappings
+
+```bash
+rm -f provider-dev/config/all_services.csv   # analyze appends; always start clean
+node bin/generate-mappings.mjs --provider-name openai --input-dir provider-dev/source --output-dir provider-dev/config
+node provider-dev/scripts/map_operations.mjs
+```
+
+`map_operations.mjs` fills the `stackql_*` columns from the endpoint inventory (one deterministic rule table) and gates on: coverage both directions, unique method keys, unique path-param signatures per (resource, SQL verb), object keys on every list, and disposition consistency against the predecessor table. Current state: 99 operations mapped (select 43, insert 19, delete 16, exec 12, update 9), 26 resources across 11 services.
+
 ### Later stages
 
-Split, mappings, normalize, generate, test, publish and docs follow the [k8s provider](https://github.com/stackql/stackql-provider-k8s) pattern and are documented here as they land.
+Normalize, generate, test, publish and docs follow the [k8s provider](https://github.com/stackql/stackql-provider-k8s) pattern and are documented here as they land.
 
 ## License
 

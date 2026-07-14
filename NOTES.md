@@ -92,3 +92,67 @@ x-stackQL-config:
 3. `GET /v1/vector_stores?limit=2&after=<last_id>` - assert the second page starts after the first page's last id and `has_more: false`.
 4. `GET /v1/vector_stores?limit=2&after=<final last_id>` - assert the empty-page shape (`data: []`, `last_id` null/absent) that the engine relies on for termination.
 5. Same three steps through the generated provider (`SELECT ... FROM openai.vector_stores.vector_stores`) with a debug proxy or `--http.log`, asserting the loop makes exactly pages+1 requests and returns the union.
+
+## 4. Predecessor inventory and dispositions (tasks 2, 6)
+
+`inventory_predecessor.mjs` parses the v1 resource pages' Methods tables: **94 methods, 35 resources, 17 services** (SELECT 39, INSERT 24, DELETE 12, EXEC 11, UPDATE 8). The join key to the new surface is the operationId - v1 method names are snake_case operationIds from the older spec sync, typo included (`submit_tool_ouputs_to_run` = `submitToolOuputsToRun`, still present upstream). The 25 v1 methods with no operationId match are all in the four admin services (their operationIds were renamed upstream); a service-level rule dispositions them.
+
+`disposition_predecessor.mjs` result - **no v1 entry undispositioned (the validator forbids a third state)**:
+
+- **carried 42** - same `openai.<service>.<resource>` FQN (method names become resource-scoped: `retrieve_batch` -> `get`)
+- **renamed 13** (5 distinct resource renames): `batch.batches` -> `batches.batches`, `fine_tuning.job_checkpoints` -> `fine_tuning.checkpoints`, `vector_stores.vector_store_files` -> `vector_stores.files`, `vector_stores.vector_store_file_batches` -> `vector_stores.file_batches`, `vector_stores.files_in_vector_store_batches` -> `vector_stores.file_batch_files`
+- **retired 39**: 26 org-admin-surface (-> `openai_admin`: audit_logs, invites x2, projects x4, users), 10 data-plane-inference (audio x3, chat, completions, embeddings, images x3, moderations), 2 method-level (files.create_file multipart, files.download_file binary - the `files.files` resource itself survives as list/get/delete), 1 binary (uploads.upload_parts)
+
+No v1 resource lacks an obvious successor - every retirement carries a standing-posture reason code, so nothing needs an explicit decision beyond the Open items below. The Breaking Changes README section is generated from this table (marker-delimited, `disposition_predecessor.mjs` refuses to run without exactly one marker pair).
+
+## 5. Endpoint inventory and the service split (tasks 5, 7)
+
+`build_inventory.mjs` over the filtered spec -> `endpoint_inventory.csv`: **100 operations, 99 mapped / 1 skipped (createFile: multipart-binary-body), 26 resources, 11 services** (select 43, insert 19, delete 16, exec 12, update 9). 23 deprecation-labelled ops (5 spec-flagged assistants CRUD + 18 family-rule), 9 update-POSTs, 20 async-job ops (create/poll/cancel triples on fine_tuning.jobs, batches, vector_stores.file_batches, uploads, assistants.runs, evals.runs; plus pause/resume/complete controls).
+
+**Service split (recorded in `service_names.json`, CLAUDE.md candidates updated):** `assistants` (assistants, threads, messages, runs, run_steps), `batches`, `containers` (containers, files), `conversations` (conversations, items), `evals` (evals, runs, run_output_items), `files`, `fine_tuning` (jobs, events, checkpoints, checkpoint_permissions), `models`, `skills` (skills, versions), `uploads`, `vector_stores` (vector_stores, files, file_batches, file_batch_files). Additions vs the CLAUDE.md candidates: `conversations` and `skills` (rationale in section 2). The split is tag-discriminated - the spec's tags map 1:1 to these services (the `Assistants` tag already spans `/assistants` + `/threads`), with two mechanics: the untagged Containers ops are tag-stamped in `clean_specs.mjs`, and `service_names.json` keys are provider-utils-normalized tag names (`batch` -> `batches` is the one real override; overrides apply after `normalizeServiceName`, verified in provider-utils 0.7.6 `split.js:127`).
+
+## 6. Pilot mapping - GREEN (task 8)
+
+Split (11 services) -> `generate-mappings` (analyze; the keycloak "delete `all_services.csv` before re-run" carry-over applies) -> `map_operations.mjs`. The mapper's rule table IS `endpoint_inventory.csv` joined by operationId - one source of truth, no second rule set to drift. All validations pass: coverage both directions, unique (service, resource, method), unique path-param signatures per (resource, SQL verb) (exec excluded), list methods all carry `$.data`, and disposition consistency (every carried/renamed v1 method resolves to a mapped method - 55/55).
+
+- `fine_tuning` (async-job archetype): jobs `create`/`get`(poll)/`list` + `cancel`/`pause`/`resume` EXEC; children events/checkpoints SELECT-only; checkpoint_permissions list/create/delete
+- `vector_stores` (CRUD flagship): full CRUD + `search` EXEC on the store; files CRUD (update = attributes POST); file_batches create/poll/cancel; file_batch_files list
+- `batches` (async boundary case): create/get/list + cancel EXEC
+
+No signature collisions anywhere (the oci `GetCompartment` failure mode does not occur: OpenAI child paths always add a distinct path parameter). The live vector-store lifecycle proof is blocked on key - runbook in section 7.
+
+## 7. Decisions and evidence for the remaining open questions (task 9)
+
+**Org/project headers - DECIDED: optional header parameters injected at pre-normalize, the anthropic mechanism.** The pinned spec declares neither `OpenAI-Organization` nor `OpenAI-Project` on any operation (zero occurrences). The in-family precedent is the anthropic provider, which declares `anthropic-version` as an optional per-operation header parameter with a schema default, generated through this same toolchain. Phase 2 `pre_normalize.mjs` injects both headers as `required: false` header parameters on every operation (deterministic rule); they surface as optional query parameters (settable in WHERE / INSERT params), never in required params; documented once in the README auth section. No auth-config or engine mechanism for static extra headers exists to prefer over this.
+
+**Update-POST partial semantics (keycloak warning) - spec-side evidence recorded, wire probes owed.** All 9 update-POSTs are labelled `UPDATE`, none `REPLACE`. Pilot evidence: `UpdateVectorStoreRequest` has zero required properties, all nullable (name, expires_after, metadata) - partial by construction; `updateVectorStoreFileAttributes` requires exactly the one field it targets (`attributes`) - a targeted update, not a representation replace. The OpenAI convention ("Only fields provided are updated" per the modify-* documentation) matches. Wire-level omitted-field-preservation probes (the keycloak method: update one field, assert others unchanged) fold into the blocked-on-key runbook for `vector_stores.update` and `files.update` before generation ships.
+
+**Deprecation labels through the generator - rule recorded, generate-phase verification owed.** The five spec-flagged `/assistants` ops carry `deprecated: true` through split unchanged (verified in `provider-dev/source/assistants.yaml`). The family rule (all assistants-service resources labelled deprecated in docs) is applied at the docs/post-process stage in phase 2; the endpoint inventory carries the flag per op (`spec` vs `family-rule` provenance). Drift CI watches for the vendor stamping threads/runs or removing paths.
+
+**Derived-cursor config in the pilots** - the section 3 config is the generate-phase input for all 11 services (service-level `x-stackQL-config`); `fine_tuning` ships with the two documented first-page deviants (jobs, events). Nothing further to decide in phase 1.
+
+**Rate limits and pacing - nothing observed (no live calls this session; blocked on key).** Posture recorded for the smoke design: metadata endpoints sit in the standard per-tier RPM buckets; the suites pace at <= 1 request/second, honor `Retry-After` on 429, and never parallelize writes. To be replaced with observed numbers when the key lands.
+
+**Gated-tier design for token/compute smokes - mock-first, recorded now:**
+
+- **Ungated (every CI run once a key exists):** offline SHOW/DESCRIBE + meta-routes (no key); live reads (models, files, vector_stores lists); cost-free lifecycles - vector store create -> get -> update metadata -> delete (no files attached, no embeddings billed), upload create -> cancel (metadata only). `stackql-smoke-<stamp>` naming; sweep prior breadcrumbs by name prefix before each run.
+- **Gated (mock-first; live only by explicit decision, never in CI defaults):** fine-tuning job create (training compute), batch create (token consumption on execution), `vector_stores.search` (embeds the query), eval run create, assistants runs (inference). The integration mock asserts the wire shapes for all of these (create/poll/cancel triples, `$.data` unwrapping, derived-cursor traversal incl. the empty-overshoot page, deprecation labels, bearer + org/project headers) so the gated tier's live value is purely confirmatory.
+- Never against a production project; a dedicated test project under the org.
+
+**Cutover plan (drafted; executes at phase 2 exit):**
+
+1. The `legacy/` archive commit (one commit, history preserved): move `website/docs/services/` -> `legacy/website-docs-services/` and `website/docs/index.md` alongside; delete `website/build/` (derived; regenerated from the new docs). Nothing else is v1-specific (section 1).
+2. Registry publish: new provider version for `openai` in `stackql/stackql-provider-registry` replacing the v1 version per the registry flow; old version stays pullable for pinning.
+3. Verification: `REGISTRY PULL openai` against the published registry; the four test layers re-run `--registry public`.
+4. Acceptance: the v1 documented example queries re-run - each passes unchanged or is covered by a Breaking Changes entry, no third state. Extracted target list (22 SELECT + 12 DELETE FROM-targets across the 35 v1 resource pages, plus the INSERT examples): every target resolves through `predecessor_dispositions.csv` - carried targets must pass verbatim; the 5 renamed vector_stores/batch/fine_tuning targets and the retired org-admin/data-plane targets are covered by the generated Breaking Changes section. The extraction command and the per-target expectation are re-derived from the dispositions CSV at acceptance time (deterministic, no hand-kept list).
+5. Docs site regenerated (`openai-provider.stackql.io`) with the generation-change note and the `openai_admin` sibling pointer.
+
+## Open
+
+1. **Live runbooks blocked on `OPENAI_API_KEY`** - the section 3 two-page traversal, the vector store cost-free lifecycle, the update-POST field-drop probes, rate-limit observation. All other phase 1 results are offline-proven; these execute unchanged when a key is present. (nvidia/vsphere blocked-on-key pattern.)
+2. **Scope confirmations for the two added services** - `conversations` (Responses-family state; CRUD is clean metadata, items carry message content - the same content posture as the in-scope assistants thread messages) and `skills` (files-like versioned metadata; content endpoints already excluded as binary). Both are in the phase 1 build; strike this item if the maintainer concurs, or a one-line rule change in `clean_specs.mjs` removes either cleanly.
+3. **Excluded-but-arguable families, recorded for the record** (not relitigated without new facts): `/audio/voice_consents` (consent records are metadata, but the audio family is data-plane and the surface is invocation-adjacent); `/videos` (Sora generation jobs are async-job-shaped, but generation is inference - the batches argument does not transfer because batch inputs are pre-priced files, video jobs are direct generation); ChatKit threads (session metadata, but the surface is beta and client-secret-coupled).
+4. **`$.data[-1:].id` cursor for the fine_tuning list deviants** - negative-index JSONPath support in PaesslerAG/jsonpath v0.1.1 unverified (no Go toolchain here). If it works, jobs/events get transparent pagination too; if not, the shipped first-page posture stands. Phase 2, low priority.
+5. **`responseTerminator` engine gap** - any-sdk config vocabulary carries it, the stackql loop ignores it; consuming it (`$.has_more == false`) would remove the one-request overshoot per traversal. Upstream ticket to file; not a v1 gate.
+6. **openapi 3.1.0 through normalize/generate** - unexercised (nvidia finding); any breakage lands as deterministic downgrades in `pre_normalize.mjs`. Phase 2.
+7. **`analyze` appends to an existing `all_services.csv`** - keycloak carry-over confirmed still true in provider-utils 0.7.6; delete before re-running `generate-mappings`. Candidate upstream fix.
