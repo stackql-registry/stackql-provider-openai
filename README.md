@@ -105,7 +105,8 @@ node provider-dev/scripts/lower_residual_variants.mjs   # lower any union left a
 
 **`pre_normalize.mjs`** applies the adjustments the generic normalizer cannot infer, before the flatten:
 
-- **Injects the optional org/project headers** on every operation (200 parameters across all 100 operations) - `OpenAI-Organization` and `OpenAI-Project` as `required: false` header parameters (the anthropic `anthropic-version` mechanism; the spec declares neither). They surface as optional query parameters, never in required params.
+- **Injects the optional org/project headers** on every operation (200 parameters across all 100 operations) - `OpenAI-Organization` and `OpenAI-Project` as `required: false` header parameters (the spec declares neither). They surface as optional query parameters, never in required params.
+- **Carries the assistants-family deprecation** driven by the endpoint inventory. The vendor flags only the five `/assistants` CRUD operations `deprecated: true`, but the whole family (threads, messages, runs, run steps) carries the migration-to-Responses deprecation. The inventory's `deprecated` column records that decision per operation; `pre_normalize` stamps `deprecated: true` on the 18 family operations the vendor left unflagged (23 total), so the label is uniform and flows through generate into the provider and docs.
 - **Guards against the openapi 3.1.0 array-type nullable form** (`type: ["string", "null"]`). This form is absent in the current pin, and the `anyOf: [{realType}, {type: "null"}]` idiom flattens safely under the normalizer's first-wins merge (the real type is always the first member), so no rewrite is needed here. The guard fails the run if a future spec refresh introduces the array-type form, so the downgrade is written deliberately rather than discovered during generate.
 
 **`npm run normalize`** (the `normalize` function in `@stackql/provider-utils`) renames `oneOf` / `anyOf` to `allOf` at the column-producing sites and flattens all `allOf` into single merged schemas (569 flattened, 300 variants renamed against this pin), resolving the nullable idiom to the real type in passing. Deep configuration blocks - `hyperparameters` and `method` on fine-tuning jobs, `chunking_strategy` on vector store files, tool configs on assistants - lower to object columns queried with `json_extract`, preserving the wire shape without exploding into hundreds of scalar columns. The list envelope is an object (`{object, data, ...}`), not a bare array, so no bare-array wrapping is needed and the `$.data` object key set during mapping carries through unchanged.
@@ -132,24 +133,20 @@ npm run generate-provider -- \
   --overwrite
 ```
 
-- **Fixed server** - `https://api.openai.com/v1` is a literal host with no server variables, so there is no route-matching caveat (the k8s dot-free-host constraint applies only to server variables spanning dots) and no `WHERE` server parameters.
+- **Fixed server** - `https://api.openai.com/v1` is a literal host with no server variables, so there are no `WHERE` server parameters and no host-routing configuration.
 - **`--service-config`** injects the derived-cursor pagination at the service level (provider-level inheritance is broken in any-sdk). The OpenAI list contract has no dedicated next-token field: `after` on the next request is fed from the previous page's `$.last_id`, and traversal ends when the token is absent on the final empty page. Two `fine_tuning` lists (`jobs`, `events`) omit `last_id` and `models` is unpaginated - these ship as documented first-page-plus-parameters reads under the same config (the token simply misses and the loop stops after page 1). See NOTES.md section 3 for the engine analysis and the `has_more` one-request overshoot.
-- **`--naive-req-body-translate`** makes `INSERT` / `UPDATE` body columns the native wire property names (`model`, `training_file`, `metadata`), replacing the v1 `data__` prefix (`data__model`). This is consistent with the current registry direction (aws, azure, google, snowflake, k8s). The request-body-column change is a breaking change beyond the resource and method renames the phase 1 disposition table captures; it is folded into the generated Breaking Changes section when generation lands.
+- **`--naive-req-body-translate`** makes `INSERT` / `UPDATE` body columns the native wire property names (`model`, `training_file`, `metadata`), replacing the v1 `data__` prefix (`data__model`). The request-body-column change is a breaking change beyond the resource and method renames the phase 1 disposition table captures; it is folded into the generated Breaking Changes section.
 
-Then post-process:
+No post-generate rewrite step is needed for this provider. The two corrections a generated provider commonly requires are both already clean in the OpenAI output, verified after generation:
 
-```bash
-node provider-dev/scripts/post_process.mjs
-```
+- **Response media type** - all 99 methods resolve to `application/json`; the spec has no competing content types that would need rewriting.
+- **Update / EXEC request binding** - the update-POST methods (`modify*`, `update*`) and the body-carrying EXEC methods (`vector_stores.search`, `uploads.complete`, `runs.submit_tool_outputs`) all carry the naive request-body translation, so their columns bind without intervention.
 
-`post_process.mjs` applies the fixes the generator cannot make on its own (confirmed against the integration suite after the first regeneration):
-
-- **Assistants family deprecation labelling** - the vendor flags only the five `/assistants` CRUD operations `deprecated: true`; the family rule stamps the deprecation label across the rest of the assistants service (threads, messages, runs, run_steps) so the docs carry the migration-to-Responses posture uniformly.
-- Any response media type or request binding corrections the mock integration tests surface (the k8s build found response-mediaType and patch-binding issues this way; the equivalents for this provider are confirmed, not assumed, after the first mock run).
+The one build-input adjustment - the assistants family deprecation labelling - is applied upstream in `pre_normalize.mjs` (driven by the endpoint inventory's `deprecated` column), so it flows through generate into the provider and docs rather than being patched onto generated output.
 
 ### 5. Test the Provider
 
-Four layers, mirroring the k8s suite.
+Four layers.
 
 **Validate offline** - resolves the provider with no network:
 

@@ -1011,6 +1011,7 @@ paths:
           description: Optionally scope the request to a specific project (overrides the default associated with the API key).
           schema:
             type: string
+      deprecated: true
   /threads/runs:
     post:
       operationId: createThreadAndRun
@@ -1475,6 +1476,7 @@ paths:
           description: Optionally scope the request to a specific project (overrides the default associated with the API key).
           schema:
             type: string
+      deprecated: true
   /threads/{thread_id}:
     get:
       operationId: getThread
@@ -1591,6 +1593,7 @@ paths:
                 }
               }
             }
+      deprecated: true
     post:
       operationId: modifyThread
       tags:
@@ -1720,6 +1723,7 @@ paths:
               },
               "tool_resources": {}
             }
+      deprecated: true
     delete:
       operationId: deleteThread
       tags:
@@ -1827,6 +1831,7 @@ paths:
               "object": "thread.deleted",
               "deleted": true
             }
+      deprecated: true
   /threads/{thread_id}/messages:
     get:
       operationId: listMessages
@@ -2018,6 +2023,7 @@ paths:
               "last_id": "msg_abc456",
               "has_more": false
             }
+      deprecated: true
     post:
       operationId: createMessage
       tags:
@@ -2163,6 +2169,7 @@ paths:
               "attachments": [],
               "metadata": {}
             }
+      deprecated: true
   /threads/{thread_id}/messages/{message_id}:
     get:
       operationId: getMessage
@@ -2302,6 +2309,7 @@ paths:
               "attachments": [],
               "metadata": {}
             }
+      deprecated: true
     post:
       operationId: modifyMessage
       tags:
@@ -2454,6 +2462,7 @@ paths:
                 "user": "abc123"
               }
             }
+      deprecated: true
     delete:
       operationId: deleteMessage
       tags:
@@ -2575,6 +2584,7 @@ paths:
               "object": "thread.message.deleted",
               "deleted": true
             }
+      deprecated: true
   /threads/{thread_id}/runs:
     get:
       operationId: listRuns
@@ -2814,6 +2824,7 @@ paths:
               "last_id": "run_abc456",
               "has_more": false
             }
+      deprecated: true
     post:
       operationId: createRun
       tags:
@@ -3277,6 +3288,7 @@ paths:
 
               event: done
               data: [DONE]
+      deprecated: true
   /threads/{thread_id}/runs/{run_id}:
     get:
       operationId: getRun
@@ -3432,6 +3444,7 @@ paths:
               "tool_choice": "auto",
               "parallel_tool_calls": true
             }
+      deprecated: true
     post:
       operationId: modifyRun
       tags:
@@ -3613,6 +3626,7 @@ paths:
               "tool_choice": "auto",
               "parallel_tool_calls": true
             }
+      deprecated: true
   /threads/{thread_id}/runs/{run_id}/cancel:
     post:
       operationId: cancelRun
@@ -3763,6 +3777,7 @@ paths:
               "tool_choice": "auto",
               "parallel_tool_calls": true
             }
+      deprecated: true
   /threads/{thread_id}/runs/{run_id}/steps:
     get:
       operationId: listRunSteps
@@ -3958,6 +3973,7 @@ paths:
               "last_id": "step_abc456",
               "has_more": false
             }
+      deprecated: true
   /threads/{thread_id}/runs/{run_id}/steps/{step_id}:
     get:
       operationId: getRunStep
@@ -4122,6 +4138,7 @@ paths:
                 "total_tokens": 579
               }
             }
+      deprecated: true
   /threads/{thread_id}/runs/{run_id}/submit_tool_outputs:
     post:
       operationId: submitToolOuputsToRun
@@ -4468,6 +4485,7 @@ paths:
 
               event: done
               data: [DONE]
+      deprecated: true
 components:
   schemas:
     ListAssistantsResponse:

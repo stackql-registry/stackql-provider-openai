@@ -9,7 +9,7 @@ This repository builds and documents the **next-generation `openai` provider** f
 - **Inference invocation** (chat/completions, responses, embeddings, images, audio, moderations, realtime) is the data plane, out of scope per the standing model-provider posture (the anthropic/openrouter treatment). **Batches are in scope** - an async job control surface, not an invocation.
 - Binary transfer (file content, upload parts) is skipped per the standing exclusions; file and upload *metadata* is in scope.
 
-Build pipeline and repository pattern follow stackql-registry/stackql-provider-k8s (branch `feature/provider-dev`). Sibling NOTES.md findings are reused, not re-derived - the snowflake refresh (replacement discipline), the anthropic provider (model-vendor scope posture), nvidia/oci (deprecation-as-build-input), keycloak (REPLACE-vs-UPDATE warning).
+Build pipeline and repository layout follow the established stackql provider-dev conventions (`@stackql/provider-utils`, the split/normalize/generate stages, service-level `x-stackQL-config`). Cross-provider findings are reused, not re-derived - the replacement discipline (predecessor inventory, dispositions, generated Breaking Changes), the model-vendor scope posture, deprecation-as-build-input, the REPLACE-vs-UPDATE warning.
 
 ## Spec source
 
@@ -49,11 +49,11 @@ provider-dev/
   config/                     # spec pin, predecessor inventory + dispositions, service names, all_services.csv
   openapi/src/openai/         # generated provider output (replaces v1 output)
   scripts/                    # clean_specs.mjs (incl org filter), inventory_predecessor.mjs, map_operations.mjs, pre_normalize.mjs, post_process.mjs
-bin/                          # npm wrappers (mirror k8s repo)
+bin/                          # npm wrappers
 tests/                        # integration mock + fixtures + smoke_test.py
 website/                      # existing Docusaurus site retained, regenerated
 CLAUDE.md
-README.md                     # k8s-README style, incl Breaking Changes and the openai_admin sibling note
+README.md                     # runnable-example style, incl Breaking Changes and the openai_admin sibling note
 ```
 
 ## Build pipeline
@@ -70,7 +70,7 @@ Deterministic and re-runnable throughout; validate-and-fail-without-writing; man
 
 **4. Generate** - servers `https://api.openai.com/v1`; auth bearer `OPENAI_API_KEY`; cursor config per the finding; org/project header mechanism per the decision; post-process for the rest.
 
-**5. Test** - the four k8s layers: offline SHOW/DESCRIBE; meta-routes; integration mock asserting `$.data`, the derived-cursor traversal (`after` = prior `last_id`, terminate `has_more: false`), a vector store lifecycle with file membership, a fine-tuning cancel `EXEC`, deprecation labels present, auth headers throughout; smokes cost-tiered - **ungated**: reads and cost-free lifecycles (file metadata round trip, vector store create/delete); **gated**: anything consuming tokens or training compute (mock-first, live only by explicit decision); `stackql-smoke-<stamp>` naming, breadcrumbs swept. Never against a production project.
+**5. Test** - the four test layers: offline SHOW/DESCRIBE; meta-routes; integration mock asserting `$.data`, the derived-cursor traversal (`after` = prior `last_id`, terminate `has_more: false`), a vector store lifecycle with file membership, a fine-tuning cancel `EXEC`, deprecation labels present, auth headers throughout; smokes cost-tiered - **ungated**: reads and cost-free lifecycles (file metadata round trip, vector store create/delete); **gated**: anything consuming tokens or training compute (mock-first, live only by explicit decision); `stackql-smoke-<stamp>` naming, breadcrumbs swept. Never against a production project.
 
 **6. Cutover and publish** - the `legacy/` archive commit; registry version replacement; `registry pull openai` verification; the v1 example-query acceptance run.
 
@@ -80,12 +80,12 @@ Deterministic and re-runnable throughout; validate-and-fail-without-writing; man
 
 ## Writing conventions
 
-Measured, precise, no hyperbole; third-person or passive descriptive framing; no em dashes (use `-`); `->` for arrows; QWERTY-only characters; k8s-README-style runnable examples with `json_extract`.
+Measured, precise, no hyperbole; third-person or passive descriptive framing; no em dashes (use `-`); `->` for arrows; QWERTY-only characters; runnable examples with `json_extract`.
 
 ## Non-negotiables
 
 1. Latest `@stackql/provider-utils`, always
-2. The k8s repo is the reference pattern; sibling findings reused, not re-derived
+2. Established provider-dev conventions are the reference pattern; cross-provider findings reused, not re-derived
 3. Nothing under `/organization` maps here - the subtree filter is validated
 4. Every v1 resource is dispositioned - Breaking Changes is generated, never hand-written
 5. v1 artifacts archive to `legacy/` in one commit - nothing silently deleted

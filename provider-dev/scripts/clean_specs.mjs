@@ -8,7 +8,7 @@
 //                           separate admin key class -> the sibling openai_admin provider
 //   data-plane-inference  - inference invocation (chat/completions, responses, embeddings,
 //                           images, audio, moderations, realtime, completions, videos,
-//                           conversation-free invocation surfaces); the anthropic/openrouter posture
+//                           conversation-free invocation surfaces); the model-provider posture
 //   binary-transfer       - file/skill/video/container-file content downloads and upload parts
 //   alpha-unstable        - /fine_tuning/alpha graders (compute-consuming, alpha-labelled)
 //   beta-ui-surface       - ChatKit session/thread surface (client-secret issuance, UI-coupled beta)
@@ -42,7 +42,7 @@ const RULES = [
   { re: /^\/organization(\/|$)/, reason: 'org-admin-surface' },
   { re: /^\/projects\/\{project_id\}(\/|$)/, reason: 'org-admin-surface' },
 
-  // inference data plane (the anthropic/openrouter posture)
+  // inference data plane (the model-provider posture)
   { re: /^\/chat(\/|$)/, reason: 'data-plane-inference' },
   { re: /^\/completions$/, reason: 'data-plane-inference' },
   { re: /^\/responses(\/|$)/, reason: 'data-plane-inference' },

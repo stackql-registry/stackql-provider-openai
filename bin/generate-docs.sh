@@ -30,7 +30,7 @@ while [[ $# -gt 0 ]]; do
       echo "Usage: generate-docs.sh [OPTIONS]"
       echo ""
       echo "Options:"
-      echo "  --provider-name NAME      Provider name (default: snowflake)"
+      echo "  --provider-name NAME      Provider name (default: openai)"
       echo "  --provider-dir DIR        Provider directory path (default: $PROVIDER_DIR)"
       echo "  --output-dir DIR          Output directory for docs (default: $OUTPUT_DIR)"
       echo "  --provider-data-dir DIR   Provider data directory (default: $PROVIDER_DATA_DIR)"

@@ -1,6 +1,6 @@
 # Engineering Notes
 
-Phase 1 working notes for the next-generation `openai` provider (in-situ replacement of v1). Each item records what was investigated, the evidence, and what remains open. Sibling findings reused, not re-derived: snowflake (replacement discipline, Breaking Changes mechanics), anthropic (model-vendor scope posture), nvidia/oci (deprecation-as-build-input, blocked-on-key gating), keycloak (REPLACE-vs-UPDATE, numbered Open list format). Reference pattern: stackql-provider-k8s (branch `feature/provider-dev`).
+Phase 1 working notes for the next-generation `openai` provider (in-situ replacement of v1). Each item records what was investigated, the evidence, and what remains open. Established cross-provider findings are reused, not re-derived: the replacement discipline (predecessor inventory, dispositions, generated Breaking Changes), the model-vendor scope posture, deprecation-as-build-input, blocked-on-key gating, and the REPLACE-vs-UPDATE warning.
 
 ## 1. Repo survey and the v1 footprint (task 1)
 
@@ -68,7 +68,7 @@ The validator fails the run if any rule matches nothing (stale-rule guard) or if
 - The derived cursor IS expressible in config. `requestToken: {key: after, location: query}` is applied verbatim: `SetNextPage()` clones the prior request and `q.Set("after", token)` (any-sdk `internal/anysdk/http_armoury_params.go:114-122`). `responseToken: {key: $.last_id, location: body}` extracts by JSONPath: `extractNextPageTokenFromBody` -> `res.ExtractElement` -> `jsonpath.Get("$.last_id", body)` (stackql `internal/stackql/execution/mono_valent_execution.go:1883-1915`, any-sdk `pkg/response/response.go:105-124`, PaesslerAG/jsonpath v0.1.1). No dedicated next-token field is needed - the previous page's `last_id` IS the token, which is exactly this mechanism.
 - **`has_more` cannot terminate the loop.** any-sdk's config vocabulary has `responseTerminator` (`internal/anysdk/pagination.go:44`), but nothing in the stackql traversal loop consumes it (zero references under stackql `internal/`). Termination is solely `tk == "" || tk == "<nil>" || tk == "[]"` (`mono_valent_execution.go:495`).
 - **Termination still works, at the cost of one extra request.** On the true last page `has_more` is `false` but `last_id` is still populated, so the loop issues one further call with `after=<final last_id>`. That page returns `data: []` with `last_id: null` (or absent): JSONPath yields nil -> `fmt.Sprintf("%v", nil)` = `"<nil>"` -> termination value (null case), or extraction error -> map-lookup fallback misses -> `""` (absent case). Either way traversal ends after exactly one empty overshoot request per full listing. Documented as the accepted cost; an engine ticket for `responseTerminator` consumption (evaluate `$.has_more == false`) is a follow-up, not a v1 gate.
-- Config placement is service-level `x-stackQL-config` (the k8s/jira/snowflake finding: provider-level inheritance is broken in any-sdk).
+- Config placement is service-level `x-stackQL-config` (provider-level pagination inheritance is broken in any-sdk).
 
 **The config** (applied per service at generate/post-process time):
 
