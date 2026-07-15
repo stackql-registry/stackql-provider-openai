@@ -43,9 +43,11 @@ REGISTRY PULL openai;
 
 The following system environment variables are used for authentication by default:
 
-- <CopyableCode code="OPENAI_API_KEY" /> - OpenAI API key (see <a href="https://platform.openai.com/account/api-keys">How to Create an OpenAI API Key</a>)
+- <CopyableCode code="OPENAI_API_KEY" /> - OpenAI API key, `sk-...` (see <a href="https://platform.openai.com/account/api-keys">How to Create an OpenAI API Key</a>)
 
 These variables are sourced at runtime (from the local machine or as CI variables/secrets).
+
+A standard API key carries its own organization and project defaults, so neither is required on any query. To scope a request explicitly, supply the optional `openai-organization` / `openai-project` headers - they are hyphenated wire names, so they are addressed with double quotes: `WHERE "openai-organization" = 'org-...'`. The organization/admin surface (usage, costs, projects, users, invites, audit logs) uses a separate **admin** key and lives in the sibling [`openai_admin`](https://openai-admin-provider.stackql.io) provider.
 
 <details>
 
@@ -68,6 +70,207 @@ stackql.exe shell --auth=$Auth
 
 ```
 </details>
+
+## Reading the surface
+
+Two conventions run through every resource:
+
+- **Deep blocks are JSON columns.** Nested API objects (`hyperparameters`, `method`, `request_counts`, `file_counts`, `metrics`, `last_error`) are lowered to object columns and read with `json_extract` rather than exploded into scalars.
+- **`LIMIT` is pushed to the wire.** `SELECT ... LIMIT 10` sends `limit=10` on the request; there is no need to set the `limit` parameter by hand. Timestamps are Unix epoch seconds - `date(created_at, 'unixepoch')` renders them.
+
+## Fine-tuning history and checkpoints
+
+Every fine-tuning job, newest first, with the tuning method and any failure reason:
+
+```sql
+SELECT
+  id,
+  model,
+  status,
+  fine_tuned_model,
+  trained_tokens,
+  date(created_at, 'unixepoch')      AS created,
+  json_extract(method, '$.type')     AS method_type,
+  json_extract(error, '$.message')   AS error_message
+FROM openai.fine_tuning.jobs
+ORDER BY created_at DESC;
+```
+
+Spend and success at a glance - tokens trained per base model:
+
+```sql
+SELECT
+  model,
+  count(*)              AS jobs,
+  sum(trained_tokens)   AS trained_tokens,
+  sum(CASE WHEN status = 'succeeded' THEN 1 ELSE 0 END) AS succeeded,
+  sum(CASE WHEN status = 'failed'    THEN 1 ELSE 0 END) AS failed
+FROM openai.fine_tuning.jobs
+GROUP BY model
+ORDER BY trained_tokens DESC;
+```
+
+Checkpoint inventory for one job - pick the best checkpoint by validation loss:
+
+```sql
+SELECT
+  step_number,
+  fine_tuned_model_checkpoint,
+  json_extract(metrics, '$.train_loss')       AS train_loss,
+  json_extract(metrics, '$.valid_loss')       AS valid_loss,
+  json_extract(metrics, '$.full_valid_loss')  AS full_valid_loss
+FROM openai.fine_tuning.checkpoints
+WHERE fine_tuning_job_id = 'ftjob-abc123'
+ORDER BY step_number;
+```
+
+## Async jobs: create, poll, cancel
+
+Fine-tuning jobs, batches, vector store file batches and uploads are all the same shape - `INSERT` creates, `SELECT` polls, `EXEC` cancels:
+
+```sql
+-- create
+INSERT INTO openai.fine_tuning.jobs (model, training_file)
+SELECT 'gpt-4o-mini-2024-07-18', 'file-abc123';
+
+-- poll
+SELECT status, trained_tokens, fine_tuned_model, json_extract(error, '$.message') AS error_message
+FROM openai.fine_tuning.jobs
+WHERE fine_tuning_job_id = 'ftjob-abc123';
+
+-- cancel
+EXEC openai.fine_tuning.jobs.cancel @fine_tuning_job_id = 'ftjob-abc123';
+```
+
+## Batch status and error triage
+
+Batches that are not finished, with their per-request tallies:
+
+```sql
+SELECT
+  id,
+  status,
+  endpoint,
+  json_extract(request_counts, '$.total')     AS requests_total,
+  json_extract(request_counts, '$.completed') AS requests_completed,
+  json_extract(request_counts, '$.failed')    AS requests_failed,
+  error_file_id,
+  date(created_at, 'unixepoch') AS created
+FROM openai.batches.batches
+WHERE status <> 'completed'
+ORDER BY created_at DESC;
+```
+
+Triage the failures - batches with failed requests, and where to read the errors:
+
+```sql
+SELECT
+  id,
+  status,
+  json_extract(request_counts, '$.failed') AS requests_failed,
+  output_file_id,
+  error_file_id,
+  date(coalesce(failed_at, completed_at, created_at), 'unixepoch') AS last_event
+FROM openai.batches.batches
+WHERE json_extract(request_counts, '$.failed') > 0
+   OR status IN ('failed', 'expired', 'cancelled')
+ORDER BY last_event DESC;
+```
+
+## Vector store audit
+
+Stores by size, with their file processing state:
+
+```sql
+SELECT
+  name,
+  status,
+  round(usage_bytes / 1048576.0, 2)            AS size_mb,
+  json_extract(file_counts, '$.total')         AS files_total,
+  json_extract(file_counts, '$.completed')     AS files_completed,
+  json_extract(file_counts, '$.failed')        AS files_failed,
+  date(created_at, 'unixepoch')                AS created,
+  date(last_active_at, 'unixepoch')            AS last_active
+FROM openai.vector_stores.vector_stores
+ORDER BY usage_bytes DESC;
+```
+
+Which files failed to ingest, and why:
+
+```sql
+SELECT
+  id AS file_id,
+  status,
+  usage_bytes,
+  json_extract(last_error, '$.code')    AS error_code,
+  json_extract(last_error, '$.message') AS error_message
+FROM openai.vector_stores.files
+WHERE vector_store_id = 'vs_abc123'
+  AND status = 'failed';
+```
+
+Idle stores - candidates for cleanup:
+
+```sql
+SELECT name, id, round(usage_bytes / 1048576.0, 2) AS size_mb,
+       date(last_active_at, 'unixepoch') AS last_active
+FROM openai.vector_stores.vector_stores
+WHERE last_active_at < strftime('%s', date('now', '-30 days'))
+ORDER BY usage_bytes DESC;
+```
+
+## File estate by purpose and age
+
+The whole file estate, grouped by what it is for:
+
+```sql
+SELECT
+  purpose,
+  count(*)                            AS files,
+  round(sum(bytes) / 1048576.0, 2)    AS total_mb,
+  min(date(created_at, 'unixepoch'))  AS oldest,
+  max(date(created_at, 'unixepoch'))  AS newest
+FROM openai.files.files
+GROUP BY purpose
+ORDER BY total_mb DESC;
+```
+
+`purpose` is filtered on the wire, so narrowing is a server-side fetch rather than a client-side scan:
+
+```sql
+SELECT id, filename, round(bytes / 1048576.0, 2) AS size_mb,
+       date(created_at, 'unixepoch') AS created, status
+FROM openai.files.files
+WHERE purpose = 'fine-tune'
+ORDER BY created_at;
+```
+
+## Assistants inventory
+
+> The Assistants family (assistants, threads, messages, runs, run steps) carries OpenAI's **deprecation** in favour of the Responses API. It is mapped and labelled here for inventory and migration work; new build-outs should target Responses.
+
+What assistants exist, on which models:
+
+```sql
+SELECT
+  id,
+  name,
+  model,
+  json_array_length(tools) AS tool_count,
+  date(created_at, 'unixepoch') AS created
+FROM openai.assistants.assistants
+ORDER BY created_at DESC
+LIMIT 20;
+```
+
+Assistants by model - the migration surface, largest first:
+
+```sql
+SELECT model, count(*) AS assistants
+FROM openai.assistants.assistants
+GROUP BY model
+ORDER BY assistants DESC;
+```
 
 
 ## Services
