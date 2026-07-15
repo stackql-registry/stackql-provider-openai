@@ -289,7 +289,20 @@ def completions_demo(sq, rep, key_present, model):
             print(f"  {line}")
         print("  ------------------")
     except urllib.error.HTTPError as e:
-        rep.record("gated: completions demo", "FAIL", f"HTTP {e.code}: {e.read().decode()[:120]}")
+        raw = e.read().decode()
+        code = ""
+        try:
+            code = json.loads(raw).get("error", {}).get("code", "") or ""
+        except Exception:  # noqa: BLE001
+            pass
+        # Quota / billing state on the account is not a provider or code defect, and
+        # this is an optional out-of-scope demo - report it as a SKIP so it does not
+        # red the run. Any other HTTP error is a real failure.
+        if e.code == 429 or code == "insufficient_quota":
+            rep.record("gated: completions demo", "SKIP",
+                       "account has no completions quota/billing (HTTP 429 insufficient_quota) - not a provider issue")
+        else:
+            rep.record("gated: completions demo", "FAIL", f"HTTP {e.code}: {raw[:120]}")
     except Exception as e:  # noqa: BLE001
         rep.record("gated: completions demo", "FAIL", repr(e)[:120])
 
