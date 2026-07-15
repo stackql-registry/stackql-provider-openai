@@ -50,9 +50,10 @@ Serves the built `build` directory locally to verify the production build.
 
 ## Deployment
 
-The site deploys to `openai-provider.stackql.io` (see `netlify.toml` and
-`static/CNAME`). To build and push to a `gh-pages` branch instead:
-
-```bash
-GIT_USER=<your GitHub username> yarn deploy
-```
+The site deploys to `openai-provider.stackql.io` via **GitHub Pages**, driven by
+the GitHub Actions workflow `.github/workflows/prod-web-deploy.yml` (on push to
+`main` touching `website/**`): it runs `yarn build` (which vendors the shared
+config), then publishes `website/build` with `actions/deploy-pages`. Pull requests
+run `.github/workflows/test-web-deploy.yml` as a build check. `static/CNAME` pins
+the custom domain and `static/.nojekyll` lets GitHub Pages serve Docusaurus's
+underscore-prefixed asset paths.

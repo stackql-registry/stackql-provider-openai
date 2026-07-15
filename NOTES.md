@@ -26,7 +26,7 @@ v1 services and per-service resource counts: assistants (5: assistants, messages
 
 The registry-side replacement (provider yaml version bump) happens in `stackql/stackql-provider-registry` per the registry flow, outside this repo.
 
-**Website state.** Docusaurus site with committed `build/` output, deploy workflows `.github/workflows/{prod,test}-web-deploy.yml` (Netlify-era CNAME in build/), site `openai-provider.stackql.io`. `star-check.yml` is deleted in the working tree (pre-existing local change, carried into the first commit).
+**Website state.** Docusaurus site deployed to `openai-provider.stackql.io` via GitHub Pages, driven by `.github/workflows/{prod,test}-web-deploy.yml` (`static/CNAME` pins the domain). `star-check.yml` is deleted in the working tree (pre-existing local change, carried into the first commit).
 
 **v1 documented example queries (the task 9 acceptance-query source).** Every resource page carries a `SELECT` example (`SELECT <fields> FROM openai.<service>.<resource>`), and INSERT/DELETE examples where mapped. The acceptance list is extracted from these pages at task 9.
 
