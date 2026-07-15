@@ -16,23 +16,20 @@ image: /img/stackql-openai-provider-featured-image.png
 
 fine_tuning service documentation.
 
-:::info Service Summary
+:::info[Service Summary]
 
-<div class="row">
-<div class="providerDocColumn">
-<span>total resources:&nbsp;<b>3</b></span><br />
-</div>
-</div>
+total resources: __4__  
 
 :::
 
 ## Resources
 <div class="row">
 <div class="providerDocColumn">
-<a href="/services/fine_tuning/events/">events</a><br />
-<a href="/services/fine_tuning/job_checkpoints/">job_checkpoints</a>
+<a href="/services/fine_tuning/checkpoint_permissions/">checkpoint_permissions</a><br />
+<a href="/services/fine_tuning/checkpoints/">checkpoints</a>
 </div>
 <div class="providerDocColumn">
+<a href="/services/fine_tuning/events/">events</a><br />
 <a href="/services/fine_tuning/jobs/">jobs</a>
 </div>
 </div>

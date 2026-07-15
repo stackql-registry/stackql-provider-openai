@@ -16,22 +16,18 @@ image: /img/stackql-openai-provider-featured-image.png
 
 uploads service documentation.
 
-:::info Service Summary
+:::info[Service Summary]
 
-<div class="row">
-<div class="providerDocColumn">
-<span>total resources:&nbsp;<b>2</b></span><br />
-</div>
-</div>
+total resources: __1__  
 
 :::
 
 ## Resources
 <div class="row">
 <div class="providerDocColumn">
-<a href="/services/uploads/upload_parts/">upload_parts</a>
+<a href="/services/uploads/uploads/">uploads</a>
 </div>
 <div class="providerDocColumn">
-<a href="/services/uploads/uploads/">uploads</a>
+
 </div>
 </div>

@@ -1,0 +1,107 @@
+id: openai
+name: openai
+version: v00.00.00000
+providerServices:
+  assistants:
+    id: assistants:v00.00.00000
+    name: assistants
+    preferred: true
+    service:
+      $ref: openai/v00.00.00000/services/assistants.yaml
+    title: assistants API
+    version: v00.00.00000
+    description: openai API
+  batches:
+    id: batches:v00.00.00000
+    name: batches
+    preferred: true
+    service:
+      $ref: openai/v00.00.00000/services/batches.yaml
+    title: batches API
+    version: v00.00.00000
+    description: openai API
+  containers:
+    id: containers:v00.00.00000
+    name: containers
+    preferred: true
+    service:
+      $ref: openai/v00.00.00000/services/containers.yaml
+    title: containers API
+    version: v00.00.00000
+    description: openai API
+  conversations:
+    id: conversations:v00.00.00000
+    name: conversations
+    preferred: true
+    service:
+      $ref: openai/v00.00.00000/services/conversations.yaml
+    title: conversations API
+    version: v00.00.00000
+    description: openai API
+  evals:
+    id: evals:v00.00.00000
+    name: evals
+    preferred: true
+    service:
+      $ref: openai/v00.00.00000/services/evals.yaml
+    title: evals API
+    version: v00.00.00000
+    description: openai API
+  files:
+    id: files:v00.00.00000
+    name: files
+    preferred: true
+    service:
+      $ref: openai/v00.00.00000/services/files.yaml
+    title: files API
+    version: v00.00.00000
+    description: openai API
+  fine_tuning:
+    id: fine_tuning:v00.00.00000
+    name: fine_tuning
+    preferred: true
+    service:
+      $ref: openai/v00.00.00000/services/fine_tuning.yaml
+    title: fine_tuning API
+    version: v00.00.00000
+    description: openai API
+  models:
+    id: models:v00.00.00000
+    name: models
+    preferred: true
+    service:
+      $ref: openai/v00.00.00000/services/models.yaml
+    title: models API
+    version: v00.00.00000
+    description: openai API
+  skills:
+    id: skills:v00.00.00000
+    name: skills
+    preferred: true
+    service:
+      $ref: openai/v00.00.00000/services/skills.yaml
+    title: skills API
+    version: v00.00.00000
+    description: openai API
+  uploads:
+    id: uploads:v00.00.00000
+    name: uploads
+    preferred: true
+    service:
+      $ref: openai/v00.00.00000/services/uploads.yaml
+    title: uploads API
+    version: v00.00.00000
+    description: openai API
+  vector_stores:
+    id: vector_stores:v00.00.00000
+    name: vector_stores
+    preferred: true
+    service:
+      $ref: openai/v00.00.00000/services/vector_stores.yaml
+    title: vector_stores API
+    version: v00.00.00000
+    description: openai API
+config:
+  auth:
+    type: bearer
+    credentialsenvvar: OPENAI_API_KEY

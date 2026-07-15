@@ -1,0 +1,13 @@
+{
+  "assistants": "assistants",
+  "batch": "batches",
+  "containers": "containers",
+  "conversations": "conversations",
+  "evals": "evals",
+  "files": "files",
+  "fine_tuning": "fine_tuning",
+  "models": "models",
+  "skills": "skills",
+  "uploads": "uploads",
+  "vector_stores": "vector_stores"
+}

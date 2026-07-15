@@ -16,13 +16,9 @@ image: /img/stackql-openai-provider-featured-image.png
 
 assistants service documentation.
 
-:::info Service Summary
+:::info[Service Summary]
 
-<div class="row">
-<div class="providerDocColumn">
-<span>total resources:&nbsp;<b>5</b></span><br />
-</div>
-</div>
+total resources: __5__  
 
 :::
 

@@ -1,0 +1,15 @@
+{
+  "source": "https://github.com/openai/openai-openapi",
+  "artifact": "openapi.yaml",
+  "branch": "main",
+  "ref": "a3276900e58b8b2a92e0cb087cd2e6e005f58458",
+  "ref_date": "2026-07-14T19:37:10Z",
+  "raw_url": "https://raw.githubusercontent.com/openai/openai-openapi/a3276900e58b8b2a92e0cb087cd2e6e005f58458/openapi.yaml",
+  "fetched_at": "2026-07-14T22:06:29.695Z",
+  "sha256": "74cbcf73838f4cd7e209b2d3f2e9ddc9fa155f21a44360b6fac7646a6d4f5f8b",
+  "openapi_version": "3.1.0",
+  "info_version": "2.3.0",
+  "info_title": "OpenAI API",
+  "paths": 162,
+  "operations": 242
+}

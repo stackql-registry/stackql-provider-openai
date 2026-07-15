@@ -1,28 +1,36 @@
 {
-  "name": "stackql-provider-digitalocean",
+  "name": "stackql-provider-openai",
   "version": "0.1.0",
-  "description": "StackQL Provider for Digital Ocean",
+  "description": "StackQL Provider for OpenAI",
   "type": "module",
   "scripts": {
+    "fetch-spec": "bash ./bin/fetch-spec.sh",
+    "inventory-predecessor": "node ./provider-dev/scripts/inventory_predecessor.mjs",
+    "clean-specs": "node ./provider-dev/scripts/clean_specs.mjs",
+    "pre-normalize": "node ./provider-dev/scripts/pre_normalize.mjs",
+    "normalize": "node ./bin/normalize.mjs",
+    "lower-residual-variants": "node ./provider-dev/scripts/lower_residual_variants.mjs",
     "generate-docs": "./bin/generate-docs.sh",
     "split": "./bin/split.sh",
     "generate-mappings": "./bin/generate-mappings.sh",
-    "generate-provider": "./bin/generate-provider.sh",
+    "generate-provider": "node ./bin/generate-provider.mjs",
     "start-server": "bash ./bin/start-server.sh",
     "stop-server": "bash ./bin/stop-server.sh",
     "server-status": "bash ./bin/server-status.sh",
     "test-meta-routes": "node ./bin/test-meta-routes.cjs"
   },
   "dependencies": {
+    "@apidevtools/swagger-parser": "^12.0.0",
     "@stackql/pgwire-lite": "^1.0.1",
-    "@stackql/provider-utils": "^0.5.0"
+    "@stackql/provider-utils": "^0.7.6",
+    "js-yaml": "^4.1.0"
   },
   "keywords": [
     "stackql",
-    "digitalocean",
+    "openai",
     "provider"
   ],
   "engines": {
-    "node": ">=14.16.0"
+    "node": ">=20"
   }
 }

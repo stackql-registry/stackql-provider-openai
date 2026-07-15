@@ -1,4 +1,4 @@
----
+--- 
 title: threads
 hide_title: false
 hide_table_of_contents: false
@@ -15,6 +15,7 @@ image: /img/stackql-openai-provider-featured-image.png
 ---
 
 import CopyableCode from '@site/src/components/CopyableCode/CopyableCode';
+import CodeBlock from '@theme/CodeBlock';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -22,33 +23,157 @@ Creates, updates, deletes, gets or lists a <code>threads</code> resource.
 
 ## Overview
 <table><tbody>
-<tr><td><b>Name</b></td><td><code>threads</code></td></tr>
+<tr><td><b>Name</b></td><td><CopyableCode code="threads" /></td></tr>
 <tr><td><b>Type</b></td><td>Resource</td></tr>
 <tr><td><b>Id</b></td><td><CopyableCode code="openai.assistants.threads" /></td></tr>
 </tbody></table>
 
 ## Fields
-| Name | Datatype | Description |
-|:-----|:---------|:------------|
-| <CopyableCode code="id" /> | `string` | The identifier, which can be referenced in API endpoints. |
-| <CopyableCode code="created_at" /> | `integer` | The Unix timestamp (in seconds) for when the thread was created. |
-| <CopyableCode code="metadata" /> | `object` | Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format. Keys can be a maximum of 64 characters long and values can be a maximum of 512 characters long. |
-| <CopyableCode code="object" /> | `string` | The object type, which is always `thread`. |
-| <CopyableCode code="tool_resources" /> | `object` | A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. |
+
+The following fields are returned by `SELECT` queries:
+
+<Tabs
+    defaultValue="get"
+    values={[
+        { label: 'get', value: 'get' }
+    ]}
+>
+<TabItem value="get">
+
+<table>
+<thead>
+    <tr>
+    <th>Name</th>
+    <th>Datatype</th>
+    <th>Description</th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+    <td><CopyableCode code="id" /></td>
+    <td><code>string</code></td>
+    <td>The identifier, which can be referenced in API endpoints.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="created_at" /></td>
+    <td><code>integer (unixtime)</code></td>
+    <td>The Unix timestamp (in seconds) for when the thread was created.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="metadata" /></td>
+    <td><code>object</code></td>
+    <td>Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format, and querying for objects via API or the dashboard.  Keys are strings with a maximum length of 64 characters. Values are strings with a maximum length of 512 characters.  (x-oaiTypeLabel: map)</td>
+</tr>
+<tr>
+    <td><CopyableCode code="object" /></td>
+    <td><code>string</code></td>
+    <td>The object type, which is always `thread`. (thread)</td>
+</tr>
+<tr>
+    <td><CopyableCode code="tool_resources" /></td>
+    <td><code>object</code></td>
+    <td>A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the `code_interpreter` tool requires a list of file IDs, while the `file_search` tool requires a list of vector store IDs. </td>
+</tr>
+</tbody>
+</table>
+</TabItem>
+</Tabs>
 
 ## Methods
-| Name | Accessible by | Required Params | Description |
-|:-----|:--------------|:----------------|:------------|
-| <CopyableCode code="get_thread" /> | `SELECT` | <CopyableCode code="thread_id" /> |  |
-| <CopyableCode code="create_thread" /> | `INSERT` | <CopyableCode code="" /> |  |
-| <CopyableCode code="delete_thread" /> | `DELETE` | <CopyableCode code="thread_id" /> |  |
-| <CopyableCode code="modify_thread" /> | `UPDATE` | <CopyableCode code="thread_id" /> |  |
-| <CopyableCode code="create_thread_and_run" /> | `EXEC` | <CopyableCode code="data__assistant_id" /> |  |
+
+The following methods are available for this resource:
+
+<table>
+<thead>
+    <tr>
+    <th>Name</th>
+    <th>Accessible by</th>
+    <th>Required Params</th>
+    <th>Optional Params</th>
+    <th>Description</th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+    <td><a href="#get"><CopyableCode code="get" /></a></td>
+    <td><CopyableCode code="select" /></td>
+    <td><a href="#parameter-thread_id"><code>thread_id</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
+    <td></td>
+</tr>
+<tr>
+    <td><a href="#create"><CopyableCode code="create" /></a></td>
+    <td><CopyableCode code="insert" /></td>
+    <td></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
+    <td></td>
+</tr>
+<tr>
+    <td><a href="#update"><CopyableCode code="update" /></a></td>
+    <td><CopyableCode code="update" /></td>
+    <td><a href="#parameter-thread_id"><code>thread_id</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
+    <td></td>
+</tr>
+<tr>
+    <td><a href="#delete"><CopyableCode code="delete" /></a></td>
+    <td><CopyableCode code="delete" /></td>
+    <td><a href="#parameter-thread_id"><code>thread_id</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
+    <td></td>
+</tr>
+<tr>
+    <td><a href="#create_thread_and_run"><CopyableCode code="create_thread_and_run" /></a></td>
+    <td><CopyableCode code="exec" /></td>
+    <td><a href="#parameter-assistant_id"><code>assistant_id</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
+    <td></td>
+</tr>
+</tbody>
+</table>
+
+## Parameters
+
+Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#methods) section to see which parameters are required or optional for each operation.
+
+<table>
+<thead>
+    <tr>
+    <th>Name</th>
+    <th>Datatype</th>
+    <th>Description</th>
+    </tr>
+</thead>
+<tbody>
+<tr id="parameter-thread_id">
+    <td><CopyableCode code="thread_id" /></td>
+    <td><code>string</code></td>
+    <td>The ID of the thread to delete.</td>
+</tr>
+<tr id="parameter-openai-organization">
+    <td><CopyableCode code="openai-organization" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.</td>
+</tr>
+<tr id="parameter-openai-project">
+    <td><CopyableCode code="openai-project" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.</td>
+</tr>
+</tbody>
+</table>
 
 ## `SELECT` examples
 
+<Tabs
+    defaultValue="get"
+    values={[
+        { label: 'get', value: 'get' }
+    ]}
+>
+<TabItem value="get">
 
-
+OK
 
 ```sql
 SELECT
@@ -58,96 +183,191 @@ metadata,
 object,
 tool_resources
 FROM openai.assistants.threads
-WHERE thread_id = '{{ thread_id }}';
-```
-## `INSERT` example
-
-Use the following StackQL query and manifest file to create a new <code>threads</code> resource.
-
-<Tabs
-    defaultValue="all"
-    values={[
-        
-        { label: 'All Properties', value: 'all', },
-        { label: 'Manifest', value: 'manifest', },
-    ]
-}>
-<TabItem value="all">
-
-```sql
-/*+ create */
-INSERT INTO openai.assistants.threads (
-data__messages,
-data__tool_resources,
-data__metadata
-)
-SELECT 
-'{{ messages }}',
-'{{ tool_resources }}',
-'{{ metadata }}'
+WHERE thread_id = '{{ thread_id }}' -- required
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
-```
-</TabItem>
-
-<TabItem value="manifest">
-
-```yaml
-- name: threads
-  props:
-    - name: messages
-      value: array
-      props:
-        - name: role
-          value: string
-        - name: content
-          value: string
-        - name: attachments
-          value: array
-          props:
-            - name: file_id
-              value: string
-            - name: tools
-              value: array
-              props:
-                - name: type
-                  value: string
-        - name: metadata
-          value: object
-    - name: tool_resources
-      props:
-        - name: code_interpreter
-          props:
-            - name: file_ids
-              value: array
-        - name: file_search
-          value: string
-    - name: metadata
-      value: object
-
 ```
 </TabItem>
 </Tabs>
 
-## `UPDATE` example
 
-Updates a <code>threads</code> resource.
+## `INSERT` examples
+
+<Tabs
+    defaultValue="create"
+    values={[
+        { label: 'create', value: 'create' },
+        { label: 'Manifest', value: 'manifest' }
+    ]}
+>
+<TabItem value="create">
+
+No description available.
 
 ```sql
-/*+ update */
+INSERT INTO openai.assistants.threads (
+messages,
+tool_resources,
+metadata,
+"openai-organization",
+"openai-project"
+)
+SELECT 
+'{{ messages }}',
+'{{ tool_resources }}',
+'{{ metadata }}',
+'{{ openai-organization }}',
+'{{ openai-project }}'
+RETURNING
+id,
+created_at,
+metadata,
+object,
+tool_resources
+;
+```
+</TabItem>
+<TabItem value="manifest">
+
+<CodeBlock language="yaml">{`# Description fields are for documentation purposes
+- name: threads
+  props:
+    - name: messages
+      description: |
+        A list of [messages](https://platform.openai.com/docs/api-reference/messages) to start the thread with.
+      value:
+        - role: "{{ role }}"
+          content: "{{ content }}"
+          attachments: "{{ attachments }}"
+          metadata: "{{ metadata }}"
+    - name: tool_resources
+      description: |
+        A set of resources that are made available to the assistant's tools in this thread. The resources are specific to the type of tool. For example, the \`code_interpreter\` tool requires a list of file IDs, while the \`file_search\` tool requires a list of vector store IDs.
+      value:
+        code_interpreter:
+          file_ids:
+            - "{{ file_ids }}"
+        file_search:
+          vector_store_ids:
+            - "{{ vector_store_ids }}"
+          vector_stores:
+            - file_ids: "{{ file_ids }}"
+              chunking_strategy: "{{ chunking_strategy }}"
+              metadata: "{{ metadata }}"
+    - name: metadata
+      value: "{{ metadata }}"
+      description: |
+        Set of 16 key-value pairs that can be attached to an object. This can be
+        useful for storing additional information about the object in a structured
+        format, and querying for objects via API or the dashboard.
+        Keys are strings with a maximum length of 64 characters. Values are strings
+        with a maximum length of 512 characters.
+    - name: openai-organization
+      value: "{{ openai-organization }}"
+      description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as \`openai_organization\`.
+      description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as \`openai_organization\`.
+    - name: openai-project
+      value: "{{ openai-project }}"
+      description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as \`openai_project\`.
+      description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as \`openai_project\`.
+`}</CodeBlock>
+
+</TabItem>
+</Tabs>
+
+
+## `UPDATE` examples
+
+<Tabs
+    defaultValue="update"
+    values={[
+        { label: 'update', value: 'update' }
+    ]}
+>
+<TabItem value="update">
+
+No description available.
+
+```sql
 UPDATE openai.assistants.threads
 SET 
 tool_resources = '{{ tool_resources }}',
 metadata = '{{ metadata }}'
 WHERE 
-thread_id = '{{ thread_id }}';
+thread_id = '{{ thread_id }}' --required
+AND "openai-organization" = '{{ openai-organization}}'
+AND "openai-project" = '{{ openai-project}}'
+RETURNING
+id,
+created_at,
+metadata,
+object,
+tool_resources;
 ```
+</TabItem>
+</Tabs>
 
-## `DELETE` example
 
-Deletes the specified <code>threads</code> resource.
+## `DELETE` examples
+
+<Tabs
+    defaultValue="delete"
+    values={[
+        { label: 'delete', value: 'delete' }
+    ]}
+>
+<TabItem value="delete">
+
+No description available.
 
 ```sql
-/*+ delete */
 DELETE FROM openai.assistants.threads
-WHERE thread_id = '{{ thread_id }}';
+WHERE thread_id = '{{ thread_id }}' --required
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
+;
 ```
+</TabItem>
+</Tabs>
+
+
+## Lifecycle Methods
+
+<Tabs
+    defaultValue="create_thread_and_run"
+    values={[
+        { label: 'create_thread_and_run', value: 'create_thread_and_run' }
+    ]}
+>
+<TabItem value="create_thread_and_run">
+
+OK
+
+```sql
+EXEC openai.assistants.threads.create_thread_and_run 
+@openai-organization='{{ openai-organization }}', 
+@openai-project='{{ openai-project }}' 
+@@json=
+'{
+"assistant_id": "{{ assistant_id }}", 
+"thread": "{{ thread }}", 
+"model": "{{ model }}", 
+"instructions": "{{ instructions }}", 
+"tools": "{{ tools }}", 
+"tool_resources": "{{ tool_resources }}", 
+"metadata": "{{ metadata }}", 
+"temperature": {{ temperature }}, 
+"top_p": {{ top_p }}, 
+"stream": {{ stream }}, 
+"max_prompt_tokens": {{ max_prompt_tokens }}, 
+"max_completion_tokens": {{ max_completion_tokens }}, 
+"truncation_strategy": "{{ truncation_strategy }}", 
+"tool_choice": "{{ tool_choice }}", 
+"parallel_tool_calls": {{ parallel_tool_calls }}, 
+"response_format": "{{ response_format }}"
+}'
+;
+```
+</TabItem>
+</Tabs>
