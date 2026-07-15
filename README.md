@@ -52,7 +52,7 @@ The old provider version remains available in the registry for pinning.
 
 Deterministic and re-runnable throughout; every script validates and fails without writing. Node.js 20+ required.
 
-Stages 0-4 are implemented and run (fetch/filter, split, mappings, normalize, generate); the generated provider resolves in stackql (offline `SHOW`/`DESCRIBE` verified). Stages 5-7 (test, publish, docs) are documented as the intended invocations. The `bin/` wrappers (`normalize.mjs`, `generate-provider.mjs`) invoke the current `@stackql/provider-utils` directly; `generate-provider.sh` is a thin passthrough so no flag is dropped by the wrapper.
+Stages 0-4 are implemented and run (fetch/filter, split, mappings, normalize, generate); the generated provider resolves in stackql (offline `SHOW`/`DESCRIBE` verified). Stage 5 has a live pystackql smoke test (`tests/smoke_test.py`); the meta-route and mock integration layers, and stages 6-7 (publish, docs), are documented as the intended invocations. The `bin/` wrappers (`normalize.mjs`, `generate-provider.mjs`) invoke the current `@stackql/provider-utils` directly; `generate-provider.sh` is a thin passthrough so no flag is dropped by the wrapper.
 
 ### 0. Fetch, pin and filter the spec; inventory the predecessor
 
@@ -171,17 +171,22 @@ npm run stop-server
 
 **Integration tests (mock API server - no key required)** - a mock `api.openai.com` serving real OpenAI wire shapes, asserting row-level results for each archetype: `$.data` list unwrapping, the derived-cursor traversal (`after` = prior `last_id`, terminating on the empty final page), a vector store lifecycle with file membership (`create` -> `get` -> file attach -> `list` files -> `delete`), a fine-tuning cancel `EXEC`, the deprecation labels present on the assistants family, and the bearer plus optional org/project headers on every request. Run after every regeneration.
 
-**Smoke tests** - cost-tiered, `stackql-smoke-<stamp>` naming, breadcrumbs swept first, never against a production project:
-
-- **Ungated** (every CI run once a key exists) - reads and cost-free lifecycles: a file-metadata round trip, a vector store `create` / `delete` (no files attached, no embeddings billed), an upload `create` / `cancel` (metadata only).
-- **Gated** (mock-first; live only by explicit decision, never in CI defaults) - anything consuming tokens or training compute: fine-tuning job create, batch create, `vector_stores.search`, eval run create, assistants runs. The integration mock covers all of these so the gated tier's live value is confirmatory only.
+**Smoke tests** (`tests/smoke_test.py`, pystackql) - live against the real API, `stackql-smoke-<stamp>` naming, breadcrumbs swept first, never against a production project. Auth is the provider's declared `bearer` config on `OPENAI_API_KEY`, so the key is read from the environment (no credential on the command line). Runs against the local generated provider (default) or the published provider (`--registry public`, via `registry pull openai`).
 
 ```bash
 pip install pystackql
-python tests/smoke_test.py                       # local registry (default), ungated tier
-python tests/smoke_test.py --registry public     # published provider, doubles as post-publish verification
-python tests/smoke_test.py --cleanup-only        # just sweep breadcrumbs
+export OPENAI_API_KEY='sk-...'
+
+python tests/smoke_test.py                       # local provider, ungated tier
+python tests/smoke_test.py --registry public     # published provider (doubles as post-publish verification)
+python tests/smoke_test.py --with-completions    # also run the gated completions demo
+python tests/smoke_test.py --cleanup-only        # just sweep stackql-smoke breadcrumbs
 ```
+
+- **Ungated** (cost-free, run by default) - resolution (`SHOW SERVICES`), reads (`models`, `files` metadata, a `limit`-bounded read), and the vector store lifecycle: `create` -> find in `list` -> `get` by id -> `update` name -> `delete` -> confirm gone. No files attached and no embeddings billed. A valid key always returns the base model list, so an empty `models` read is treated as an auth/connectivity failure.
+- **Gated** (`--with-completions`, opt-in, consumes tokens) - a completions call with the prompt "explain how StackQL works". Chat/completions is inference (the data plane) and is deliberately not part of this provider, so this step calls the OpenAI API **directly** (same key, cheap model, small token cap), separately from the provider - it proves the key works end to end and returns a real answer without smuggling inference into the provider surface.
+
+Without `OPENAI_API_KEY` the resolution checks still pass and the live steps report `BLOCKED`, so the script is safe to run in any environment.
 
 **Authentication** - bearer token from `OPENAI_API_KEY`, matching the v1 provider:
 
