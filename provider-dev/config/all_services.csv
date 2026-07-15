@@ -138,12 +138,12 @@ fine_tuning.yaml,/fine_tuning/jobs/{fine_tuning_job_id}/resume,resumeFineTuningJ
 models.yaml,/models,listModels,list_models,get,ListModelsResponse,Models,models,models,list,select,$.data,"Lists the currently available models, and provides basic information about each one such as the owner and availability."
 models.yaml,/models/{model},retrieveModel,retrieve_model,get,Model,Models,models,models,get,select,,"Retrieves a model instance, providing basic information about the model such as the owner and permissioning."
 models.yaml,/models/{model},deleteModel,delete_model,delete,DeleteModelResponse,Models,models,models,delete,delete,,Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.
-skills.yaml,/skills,CreateSkill,create_skill,post,SkillResource,Skills,skills,skills,create,insert,,Create a new skill.
+skills.yaml,/skills,CreateSkill,create_skill,post,SkillResource,Skills,skills,skip_this_resource,,,,Create a new skill.
 skills.yaml,/skills,ListSkills,list_skills,get,SkillListResource,Skills,skills,skills,list,select,$.data,List all skills for the current project.
 skills.yaml,/skills/{skill_id},DeleteSkill,delete_skill,delete,DeletedSkillResource,Skills,skills,skills,delete,delete,,Delete a skill by its ID.
 skills.yaml,/skills/{skill_id},GetSkill,get_skill,get,SkillResource,Skills,skills,skills,get,select,,Get a skill by its ID.
 skills.yaml,/skills/{skill_id},UpdateSkillDefaultVersion,update_skill_default_version,post,SkillResource,Skills,skills,skills,update,update,,Update the default version pointer for a skill.
-skills.yaml,/skills/{skill_id}/versions,CreateSkillVersion,create_skill_version,post,SkillVersionResource,Skills,skills,versions,create,insert,,Create a new immutable skill version.
+skills.yaml,/skills/{skill_id}/versions,CreateSkillVersion,create_skill_version,post,SkillVersionResource,Skills,skills,skip_this_resource,,,,Create a new immutable skill version.
 skills.yaml,/skills/{skill_id}/versions,ListSkillVersions,list_skill_versions,get,SkillVersionListResource,Skills,skills,versions,list,select,$.data,List skill versions for a skill.
 skills.yaml,/skills/{skill_id}/versions/{version},GetSkillVersion,get_skill_version,get,SkillVersionResource,Skills,skills,versions,get,select,,Get a specific skill version.
 skills.yaml,/skills/{skill_id}/versions/{version},DeleteSkillVersion,delete_skill_version,delete,DeletedSkillVersionResource,Skills,skills,versions,delete,delete,,Delete a skill version.

@@ -99,8 +99,34 @@ if (files.length === 0) errors.push('no service specs in provider-dev/source');
 let headersInjected = 0;
 let opsTouched = 0;
 let deprecatedStamped = 0;
+let binaryPropsStripped = 0;
 const perFile = {};
 const docs = {};
+
+// A request-body property is a binary upload if its schema declares
+// `format: binary` anywhere (directly, in array items, or in a oneOf member).
+const isBinaryProp = (v) => v && typeof v === 'object' && JSON.stringify(v).includes('"binary"');
+
+// Strip binary upload properties from a request-body schema. any-sdk marshals
+// only JSON/XML request bodies (operation_store.go marshalBody), so a binary
+// property is never a functional column/param. Remove it and drop it from
+// `required`. Operations whose sole body is a required binary upload with no
+// non-binary alternative are skipped at the inventory level; this cleans the rest
+// (e.g. container file create stays usable via the non-binary file_id).
+function stripBinaryFromSchema(schema, resolve, seen) {
+  const s = schema && schema.$ref ? resolve(schema.$ref) : schema;
+  if (!s || typeof s !== 'object' || !s.properties || seen.has(s)) return 0;
+  seen.add(s);
+  let removed = 0;
+  for (const [k, v] of Object.entries(s.properties)) {
+    if (isBinaryProp(v)) {
+      delete s.properties[k];
+      if (Array.isArray(s.required)) s.required = s.required.filter((r) => r !== k);
+      removed++;
+    }
+  }
+  return removed;
+}
 
 for (const filename of files) {
   const filePath = path.join(sourceDir, filename);
@@ -139,6 +165,15 @@ for (const filename of files) {
         op.deprecated = true;
         deprecatedStamped++;
       }
+
+      const content = op.requestBody?.content;
+      if (content && typeof content === 'object') {
+        const resolve = (ref) => ref.replace(/^#\//, '').split('/').reduce((o, kk) => (o ? o[kk] : undefined), doc);
+        const seen = new Set();
+        for (const mt of Object.values(content)) {
+          if (mt?.schema) binaryPropsStripped += stripBinaryFromSchema(mt.schema, resolve, seen);
+        }
+      }
     }
   }
   perFile[filename] = fileHeaders;
@@ -157,4 +192,5 @@ for (const filename of files) {
 console.log(`Injected ${headersInjected} org/project header parameter(s) across ${opsTouched} operations in ${files.length} spec(s):`);
 for (const [f, n] of Object.entries(perFile).sort()) console.log(`  ${f}: ${n}`);
 console.log(`Stamped deprecated: true on ${deprecatedStamped} operation(s) not already flagged upstream (${deprecatedOpIds.size} deprecated per the inventory).`);
+console.log(`Stripped ${binaryPropsStripped} binary (format:binary) request-body property(ies) - not marshalable by any-sdk (JSON/XML only).`);
 console.log('No openapi 3.1.0 array-type nullable sites found; no downgrade needed against this pin.');

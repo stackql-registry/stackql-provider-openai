@@ -841,18 +841,9 @@ paths:
 components:
   schemas:
     CreateSkillBody:
-      properties:
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          maxItems: 500
-          description: Skill files to upload (directory upload) or a single zip file.
-          format: binary
+      properties: {}
       type: object
-      required:
-        - files
+      required: []
       title: Create skill request
       description: Uploads a skill either as a directory (multipart `files[]`) or as a single zip file.
     SkillResource:
@@ -956,20 +947,11 @@ components:
       description: Updates the default version pointer for a skill.
     CreateSkillVersionBody:
       properties:
-        files:
-          items:
-            type: string
-            format: binary
-          type: array
-          maxItems: 500
-          description: Skill files to upload (directory upload) or a single zip file.
-          format: binary
         default:
           type: boolean
           description: Whether to set this version as the default.
       type: object
-      required:
-        - files
+      required: []
       title: Create skill version request
       description: Uploads a new immutable version of a skill.
     SkillVersionResource:

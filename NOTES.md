@@ -107,7 +107,7 @@ No v1 resource lacks an obvious successor - every retirement carries a standing-
 
 ## 5. Endpoint inventory and the service split (tasks 5, 7)
 
-`build_inventory.mjs` over the filtered spec -> `endpoint_inventory.csv`: **100 operations, 99 mapped / 1 skipped (createFile: multipart-binary-body), 26 resources, 11 services** (select 43, insert 19, delete 16, exec 12, update 9). 23 deprecation-labelled ops (5 spec-flagged assistants CRUD + 18 family-rule), 9 update-POSTs, 20 async-job ops (create/poll/cancel triples on fine_tuning.jobs, batches, vector_stores.file_batches, uploads, assistants.runs, evals.runs; plus pause/resume/complete controls).
+`build_inventory.mjs` over the filtered spec -> `endpoint_inventory.csv`: **100 operations, 97 mapped / 3 skipped (createFile, CreateSkill, CreateSkillVersion: multipart-binary-body), 26 resources, 11 services** (select 43, insert 17, delete 16, exec 12, update 9). 23 deprecation-labelled ops (5 spec-flagged assistants CRUD + 18 family-rule), 9 update-POSTs, 20 async-job ops (create/poll/cancel triples on fine_tuning.jobs, batches, vector_stores.file_batches, uploads, assistants.runs, evals.runs; plus pause/resume/complete controls).
 
 **Service split (recorded in `service_names.json`, CLAUDE.md candidates updated):** `assistants` (assistants, threads, messages, runs, run_steps), `batches`, `containers` (containers, files), `conversations` (conversations, items), `evals` (evals, runs, run_output_items), `files`, `fine_tuning` (jobs, events, checkpoints, checkpoint_permissions), `models`, `skills` (skills, versions), `uploads`, `vector_stores` (vector_stores, files, file_batches, file_batch_files). Additions vs the CLAUDE.md candidates: `conversations` and `skills` (rationale in section 2). The split is tag-discriminated - the spec's tags map 1:1 to these services (the `Assistants` tag already spans `/assistants` + `/threads`), with two mechanics: the untagged Containers ops are tag-stamped in `clean_specs.mjs`, and `service_names.json` keys are provider-utils-normalized tag names (`batch` -> `batches` is the one real override; overrides apply after `normalizeServiceName`, verified in provider-utils 0.7.6 `split.js:127`).
 
@@ -160,6 +160,17 @@ Assessed against the OpenAI list surface, **none is a clean fit for v1**:
 **What users want (filter/limit/project) is already delivered by ordinary parameter binding**, not pushdown: the discrete query params are carried onto the list methods as WHERE-able parameters (verified on `files.list`: `purpose`, `limit`, `order`, `after`). `SELECT ... FROM openai.files.files WHERE purpose = 'fine-tune' AND order = 'desc' AND limit = 100` binds each to its query param today, no config needed. The only thing pushdown would add is SQL-clause ergonomics (`LIMIT 100` instead of `WHERE limit = 100`), which the pagination collision makes not worth it.
 
 **Engine candidate (phase 2, not a v1 gate):** if the REST acquire path is taught to bound eager cursor pagination by the pushed LIMIT (mirroring the GraphQL path's `GetPushdownLimit`), a `top` pushdown on `limit` becomes a clean ergonomic win - `LIMIT n` fetches exactly one bounded page. Until that lands, no pushdown config is emitted.
+
+## 9. Binary (multipart) request bodies - not expressible; skip or use file_id
+
+any-sdk marshals only JSON and XML request bodies (`operation_store.go` `marshalBody` -> `application/json` / `application/xml`, everything else returns `media type not supported`). There is no `multipart/form-data` or `application/octet-stream` path, so an operation whose request body carries a `format: binary` field (a file upload) cannot be sent, regardless of the SQL verb it maps to - EXEC does not change this, since the body still goes through `marshalBody`.
+
+Four in-scope operations declare binary request fields. The disposition follows the CLAUDE.md binary-transfer exclusion and the EXEC-minimisation rule (EXEC is reserved for genuine lifecycle ops - cancel/pause/resume/complete - not a bucket for "doesn't fit INSERT"):
+
+- **`createFile`, `CreateSkill`, `CreateSkillVersion`** - the binary `file`/`files` field is required with no non-binary alternative, and none is a lifecycle op, so they are **skipped** (`multipart-binary-body`). Consequence: `skills`/`versions` are metadata surfaces (list/get/delete, plus `skills.update` for the default version) with no create; file upload is out of scope exactly as file *content* upload is.
+- **`CreateContainerFile`** - the binary `file` is *optional* and there is a non-binary `file_id` (reference an already-uploaded file), so it stays **INSERT** via `file_id`; `pre_normalize.mjs` strips the dead binary `file` column (a general rule: `format: binary` request properties are removed and dropped from `required`, since they are never marshalable).
+
+The mapping totals move to 100 ops -> 97 mapped / 3 skipped (insert 17, select 43, delete 16, exec 12, update 9). If any-sdk gains multipart/octet-stream body support, these skips are revisited (the operations are recorded here, not lost).
 
 ## Open
 

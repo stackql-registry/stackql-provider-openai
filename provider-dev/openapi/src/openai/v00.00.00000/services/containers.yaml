@@ -1194,11 +1194,6 @@ components:
         file_id:
           type: string
           description: Name of the file to create.
-        file:
-          description: |
-            The File object (not file name) to be uploaded.
-          type: string
-          format: binary
       required: []
     ContainerFileResource:
       type: object

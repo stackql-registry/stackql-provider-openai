@@ -75,7 +75,7 @@ const OPS = {
   RetrieveContainer: { resource: 'containers', method: 'get', verb: 'select' },
   DeleteContainer: { resource: 'containers', method: 'delete', verb: 'delete' },
   ListContainerFiles: { resource: 'files', method: 'list', verb: 'select' },
-  CreateContainerFile: { resource: 'files', method: 'create', verb: 'insert', notes: 'json body variant (file_id reference); multipart variant not used' },
+  CreateContainerFile: { resource: 'files', method: 'create', verb: 'insert', notes: 'INSERT via the non-binary file_id (reference an existing file); the optional binary file upload column is stripped in pre_normalize (any-sdk marshals JSON/XML only)' },
   RetrieveContainerFile: { resource: 'files', method: 'get', verb: 'select' },
   DeleteContainerFile: { resource: 'files', method: 'delete', verb: 'delete' },
 
@@ -129,12 +129,12 @@ const OPS = {
 
   // skills (versioned metadata CRUD; in scope per NOTES Open decision)
   ListSkills: { resource: 'skills', method: 'list', verb: 'select' },
-  CreateSkill: { resource: 'skills', method: 'create', verb: 'insert', notes: 'json body variant; multipart variant not used' },
+  CreateSkill: { resource: 'skills', method: 'create', verb: '', skip: 'multipart-binary-body' },
   GetSkill: { resource: 'skills', method: 'get', verb: 'select' },
   UpdateSkillDefaultVersion: { resource: 'skills', method: 'update', verb: 'update', updatePost: true },
   DeleteSkill: { resource: 'skills', method: 'delete', verb: 'delete' },
   ListSkillVersions: { resource: 'versions', method: 'list', verb: 'select' },
-  CreateSkillVersion: { resource: 'versions', method: 'create', verb: 'insert', notes: 'json body variant; multipart variant not used' },
+  CreateSkillVersion: { resource: 'versions', method: 'create', verb: '', skip: 'multipart-binary-body' },
   GetSkillVersion: { resource: 'versions', method: 'get', verb: 'select' },
   DeleteSkillVersion: { resource: 'versions', method: 'delete', verb: 'delete' },
 

@@ -308,14 +308,12 @@ Creates a container file.<br />
 ```sql
 INSERT INTO openai.containers.files (
 file_id,
-file,
 container_id,
 OpenAI-Organization,
 OpenAI-Project
 )
 SELECT 
 '{{ file_id }}',
-'{{ file }}',
 '{{ container_id }}',
 '{{ OpenAI-Organization }}',
 '{{ OpenAI-Project }}'
@@ -342,10 +340,6 @@ source
       value: "{{ file_id }}"
       description: |
         Name of the file to create.
-    - name: file
-      value: "{{ file }}"
-      description: |
-        The File object (not file name) to be uploaded.
     - name: OpenAI-Organization
       value: "{{ OpenAI-Organization }}"
       description: Optionally scope the request to a specific organization (overrides the default associated with the API key).

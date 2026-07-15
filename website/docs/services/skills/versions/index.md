@@ -169,13 +169,6 @@ The following methods are available for this resource:
     <td></td>
 </tr>
 <tr>
-    <td><a href="#create"><CopyableCode code="create" /></a></td>
-    <td><CopyableCode code="insert" /></td>
-    <td><a href="#parameter-skill_id"><code>skill_id</code></a>, <a href="#parameter-files"><code>files</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
-    <td></td>
-</tr>
-<tr>
     <td><a href="#delete"><CopyableCode code="delete" /></a></td>
     <td><CopyableCode code="delete" /></td>
     <td><a href="#parameter-skill_id"><code>skill_id</code></a>, <a href="#parameter-version"><code>version</code></a></td>
@@ -288,75 +281,6 @@ AND OpenAI-Organization = '{{ OpenAI-Organization }}'
 AND OpenAI-Project = '{{ OpenAI-Project }}'
 ;
 ```
-</TabItem>
-</Tabs>
-
-
-## `INSERT` examples
-
-<Tabs
-    defaultValue="create"
-    values={[
-        { label: 'create', value: 'create' },
-        { label: 'Manifest', value: 'manifest' }
-    ]}
->
-<TabItem value="create">
-
-No description available.
-
-```sql
-INSERT INTO openai.skills.versions (
-files,
-default,
-skill_id,
-OpenAI-Organization,
-OpenAI-Project
-)
-SELECT 
-'{{ files }}' /* required */,
-{{ default }},
-'{{ skill_id }}',
-'{{ OpenAI-Organization }}',
-'{{ OpenAI-Project }}'
-RETURNING
-id,
-name,
-skill_id,
-created_at,
-description,
-object,
-version
-;
-```
-</TabItem>
-<TabItem value="manifest">
-
-<CodeBlock language="yaml">{`# Description fields are for documentation purposes
-- name: versions
-  props:
-    - name: skill_id
-      value: "{{ skill_id }}"
-      description: Required parameter for the versions resource.
-    - name: files
-      value:
-        - "{{ files }}"
-      description: |
-        Skill files to upload (directory upload) or a single zip file.
-    - name: default
-      value: {{ default }}
-      description: |
-        Whether to set this version as the default.
-    - name: OpenAI-Organization
-      value: "{{ OpenAI-Organization }}"
-      description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
-      description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
-    - name: OpenAI-Project
-      value: "{{ OpenAI-Project }}"
-      description: Optionally scope the request to a specific project (overrides the default associated with the API key).
-      description: Optionally scope the request to a specific project (overrides the default associated with the API key).
-`}</CodeBlock>
-
 </TabItem>
 </Tabs>
 

@@ -89,7 +89,7 @@ node bin/generate-mappings.mjs --provider-name openai --input-dir provider-dev/s
 node provider-dev/scripts/map_operations.mjs
 ```
 
-`map_operations.mjs` fills the `stackql_*` columns from the endpoint inventory (one deterministic rule table) and gates on: coverage both directions, unique method keys, unique path-param signatures per (resource, SQL verb), object keys on every list, and disposition consistency against the predecessor table. Current state: 99 operations mapped (select 43, insert 19, delete 16, exec 12, update 9), 26 resources across 11 services.
+`map_operations.mjs` fills the `stackql_*` columns from the endpoint inventory (one deterministic rule table) and gates on: coverage both directions, unique method keys, unique path-param signatures per (resource, SQL verb), object keys on every list, and disposition consistency against the predecessor table. Current state: 97 operations mapped (select 43, insert 17, delete 16, exec 12, update 9), 26 resources across 11 services.
 
 ### 3. Normalize the Service Specs
 
@@ -261,7 +261,7 @@ The regenerated docs carry the `openai_admin` sibling pointer and note the gener
 
 ## Service Coverage
 
-11 services, 26 resources, 99 mapped operations (select 43, insert 19, delete 16, exec 12, update 9).
+11 services, 26 resources, 97 mapped operations (select 43, insert 17, delete 16, exec 12, update 9).
 
 | Service | Resources | Notes |
 |---|---|---|
@@ -274,8 +274,8 @@ The regenerated docs carry the `openai_admin` sibling pointer and note the gener
 | `evals` | evals, runs, run_output_items | eval definitions and runs |
 | `conversations` | conversations, items | Responses-family state surface |
 | `uploads` | uploads | metadata lifecycle: create / complete / cancel |
-| `containers` | containers, files | code-interpreter container metadata |
-| `skills` | skills, versions | versioned skill metadata; content endpoints out of scope (binary) |
+| `containers` | containers, files | code-interpreter container metadata; files created via `file_id` reference (binary upload out of scope) |
+| `skills` | skills, versions | versioned skill metadata (list/get/delete, default-version update); skill creation is a multipart file upload, out of scope (binary) |
 
 The organization/admin surface (`/organization/...`) is the sibling `openai_admin` provider. See the Breaking Changes section above for the full v1 disposition.
 
