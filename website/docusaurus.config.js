@@ -14,12 +14,12 @@ const config = createConfig({
   },
 });
 
-// This provider's website lives at website/ within the stackql-provider-openai
-// repo (org `stackql`), so the "Edit this page" links point there rather than at
-// the shared config's stackql-registry default.
+// This provider's website lives at website/ within the canonical
+// stackql-registry/stackql-provider-openai repo, so the "Edit this page" links
+// point at that subdirectory (the shared config default omits the website/ path).
 config.projectName = 'stackql-provider-openai';
 config.presets[0][1].docs.editUrl =
-  'https://github.com/stackql/stackql-provider-openai/edit/main/website/';
+  'https://github.com/stackql-registry/stackql-provider-openai/edit/main/website/';
 
 // Use the locally vendored registry-branded logos (STACKQL>> | REGISTRY) instead
 // of the shared config's hotlinked main-site wordmark - self-contained assets, no

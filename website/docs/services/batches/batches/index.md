@@ -140,7 +140,7 @@ Batch retrieved successfully.
 <tr>
     <td><CopyableCode code="model" /></td>
     <td><code>string</code></td>
-    <td>Model ID used to process the batch, like `gpt-5-2025-08-07`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](/docs/models) to browse and compare available models. </td>
+    <td>Model ID used to process the batch, like `gpt-5-2025-08-07`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://platform.openai.com/docs/models) to browse and compare available models. </td>
 </tr>
 <tr>
     <td><CopyableCode code="object" /></td>
@@ -266,7 +266,7 @@ Batch listed successfully.
 <tr>
     <td><CopyableCode code="model" /></td>
     <td><code>string</code></td>
-    <td>Model ID used to process the batch, like `gpt-5-2025-08-07`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](/docs/models) to browse and compare available models. </td>
+    <td>Model ID used to process the batch, like `gpt-5-2025-08-07`. OpenAI offers a wide range of models with different capabilities, performance characteristics, and price points. Refer to the [model guide](https://platform.openai.com/docs/models) to browse and compare available models. </td>
 </tr>
 <tr>
     <td><CopyableCode code="object" /></td>
@@ -529,8 +529,8 @@ usage
       value: "{{ input_file_id }}"
       description: |
         The ID of an uploaded file that contains requests for the new batch.
-        See [upload file](/docs/api-reference/files/create) for how to upload a file.
-        Your input file must be formatted as a [JSONL file](/docs/api-reference/batch/request-input), and must be uploaded with the purpose \`batch\`. The file can contain up to 50,000 requests, and can be up to 200 MB in size.
+        See [upload file](https://platform.openai.com/docs/api-reference/files/create) for how to upload a file.
+        Your input file must be formatted as a [JSONL file](https://platform.openai.com/docs/api-reference/batch/request-input), and must be uploaded with the purpose \`batch\`. The file can contain up to 50,000 requests, and can be up to 200 MB in size.
     - name: endpoint
       value: "{{ endpoint }}"
       description: |

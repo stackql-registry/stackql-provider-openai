@@ -58,17 +58,17 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="assistant_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.</td>
+    <td>The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) associated with the run step.</td>
 </tr>
 <tr>
     <td><CopyableCode code="run_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [run](/docs/api-reference/runs) that this run step is a part of.</td>
+    <td>The ID of the [run](https://platform.openai.com/docs/api-reference/runs) that this run step is a part of.</td>
 </tr>
 <tr>
     <td><CopyableCode code="thread_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [thread](/docs/api-reference/threads) that was run.</td>
+    <td>The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="cancelled_at" /></td>
@@ -152,17 +152,17 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="assistant_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [assistant](/docs/api-reference/assistants) associated with the run step.</td>
+    <td>The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) associated with the run step.</td>
 </tr>
 <tr>
     <td><CopyableCode code="run_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [run](/docs/api-reference/runs) that this run step is a part of.</td>
+    <td>The ID of the [run](https://platform.openai.com/docs/api-reference/runs) that this run step is a part of.</td>
 </tr>
 <tr>
     <td><CopyableCode code="thread_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [thread](/docs/api-reference/threads) that was run.</td>
+    <td>The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="cancelled_at" /></td>
@@ -312,7 +312,7 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-include[]">
     <td><CopyableCode code="include[]" /></td>
     <td><code>array</code></td>
-    <td>A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.  See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information. </td>
+    <td>A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.  See the [file search tool documentation](https://platform.openai.com/docs/assistants/tools/file-search#customizing-file-search-settings) for more information. </td>
 </tr>
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>

@@ -58,17 +58,17 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="assistant_id" /></td>
     <td><code>string</code></td>
-    <td>If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message.</td>
+    <td>If applicable, the ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) that authored this message.</td>
 </tr>
 <tr>
     <td><CopyableCode code="run_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.</td>
+    <td>The ID of the [run](https://platform.openai.com/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.</td>
 </tr>
 <tr>
     <td><CopyableCode code="thread_id" /></td>
     <td><code>string</code></td>
-    <td>The [thread](/docs/api-reference/threads) ID that this message belongs to.</td>
+    <td>The [thread](https://platform.openai.com/docs/api-reference/threads) ID that this message belongs to.</td>
 </tr>
 <tr>
     <td><CopyableCode code="attachments" /></td>
@@ -142,17 +142,17 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="assistant_id" /></td>
     <td><code>string</code></td>
-    <td>If applicable, the ID of the [assistant](/docs/api-reference/assistants) that authored this message.</td>
+    <td>If applicable, the ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) that authored this message.</td>
 </tr>
 <tr>
     <td><CopyableCode code="run_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [run](/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.</td>
+    <td>The ID of the [run](https://platform.openai.com/docs/api-reference/runs) associated with the creation of this message. Value is `null` when messages are created manually using the create message or create thread endpoints.</td>
 </tr>
 <tr>
     <td><CopyableCode code="thread_id" /></td>
     <td><code>string</code></td>
-    <td>The [thread](/docs/api-reference/threads) ID that this message belongs to.</td>
+    <td>The [thread](https://platform.openai.com/docs/api-reference/threads) ID that this message belongs to.</td>
 </tr>
 <tr>
     <td><CopyableCode code="attachments" /></td>

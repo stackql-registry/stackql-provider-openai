@@ -191,10 +191,9 @@ Then run the smokes (`.venv` active, `OPENAI_API_KEY` in the environment):
 ```bash
 export OPENAI_API_KEY='sk-...'
 
-python3 tests/smoke_test.py                       # local provider, ungated tier
-python3 tests/smoke_test.py --registry public     # published provider (doubles as post-publish verification)
-python3 tests/smoke_test.py --with-completions    # also run the gated completions demo
 python3 tests/smoke_test.py --timeout 60          # cap the vector store readiness poll (default 120s)
+python3 tests/smoke_test.py --timeout 60 --with-completions    # also run the gated completions demo
+python3 tests/smoke_test.py --timeout 60 --registry public     # published provider (doubles as post-publish verification)
 python3 tests/smoke_test.py --cleanup-only        # just sweep stackql-smoke breadcrumbs
 ```
 
@@ -231,14 +230,15 @@ registry pull openai;
 
 ### 7. Generate Web Docs
 
-The existing doc microsite (`website/`, Docusaurus, served at `openai-provider.stackql.io`) is regenerated from the new provider output. Set the provider identity in `website/provider.js`:
+The doc microsite (`website/`, Docusaurus 3.10, served at `openai-provider.stackql.io`) is regenerated from the new provider output. It follows the shared-config pattern used across the provider microsites: the navbar/footer/theme/plugin configuration lives in [`stackql/docusaurus-config`](https://github.com/stackql/docusaurus-config), vendored into `.shared-config/` at build time (the `vendor-config` script runs automatically on `prestart`/`prebuild`). Site-local files are the provider identity (`website/provider.js`), thin wrappers (`docusaurus.config.js`, `sidebars.js`), the shared components/theme under `src/`, and static assets (including `static/CNAME`). The provider identity is already set:
 
 ```js
+// website/provider.js
 export const providerName = 'openai';
 export const providerTitle = 'OpenAI';
 ```
 
-Update `headerContent1.txt` / `headerContent2.txt` in `provider-dev/docgen/provider-data/` (the installation, connection and authentication sections of the landing page), then generate and build:
+The landing-page installation/authentication content is authored in `headerContent1.txt` / `headerContent2.txt` under `provider-dev/docgen/provider-data/`. Generate, sanitize, then build:
 
 ```bash
 npm run generate-docs -- \
@@ -247,11 +247,15 @@ npm run generate-docs -- \
   --output-dir ./website \
   --provider-data-dir ./provider-dev/docgen/provider-data
 
+node provider-dev/docgen/sanitize_docs.mjs   # fix OpenAI doc links (see below)
+
 cd website
 yarn install
-yarn build
+yarn build      # vendor-config clones the shared config first; network to GitHub required
 yarn serve
 ```
+
+`sanitize_docs.mjs` rewrites the relative OpenAI doc links carried through from the spec descriptions (`[Files API](/docs/api-reference/...)`, `/docs/guides/...`, `/docs/models`) by prefixing them with `https://platform.openai.com`. OpenAI's docs have moved to `developers.openai.com` with renamed paths that cannot be computed deterministically, but `platform.openai.com` serves a 301 redirect from every old `/docs/...` path to its current home, so the host prefix lands users on the right page and stays correct as OpenAI reorganises. Without this step the links resolve against the microsite and 404 (the shared config's `onBrokenLinks: 'warn'` keeps the build passing, but the links are dead).
 
 The regenerated docs carry the `openai_admin` sibling pointer and note the generation change once, per the cutover plan.
 

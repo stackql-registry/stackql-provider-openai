@@ -57,7 +57,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="vector_store_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to.</td>
+    <td>The ID of the [vector store](https://platform.openai.com/docs/api-reference/vector-stores/object) that the [File](https://platform.openai.com/docs/api-reference/files) is attached to.</td>
 </tr>
 <tr>
     <td><CopyableCode code="attributes" /></td>

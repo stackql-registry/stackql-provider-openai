@@ -58,12 +58,12 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="assistant_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.</td>
+    <td>The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for execution of this run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="thread_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.</td>
+    <td>The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was executed on as a part of this run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="cancelled_at" /></td>
@@ -98,7 +98,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="instructions" /></td>
     <td><code>string</code></td>
-    <td>The instructions that the [assistant](/docs/api-reference/assistants) used for this run.</td>
+    <td>The instructions that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="last_error" /></td>
@@ -123,7 +123,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="model" /></td>
     <td><code>string</code></td>
-    <td>The model that the [assistant](/docs/api-reference/assistants) used for this run.</td>
+    <td>The model that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="object" /></td>
@@ -133,7 +133,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="parallel_tool_calls" /></td>
     <td><code>boolean</code></td>
-    <td>Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.</td>
+    <td>Whether to enable [parallel function calling](https://platform.openai.com/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.</td>
 </tr>
 <tr>
     <td><CopyableCode code="required_action" /></td>
@@ -143,7 +143,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="response_format" /></td>
     <td><code>string</code></td>
-    <td>Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.  Setting to `&#123; "type": "json_schema", "json_schema": &#123;...&#125; &#125;` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).  Setting to `&#123; "type": "json_object" &#125;` enables JSON mode, which ensures the message the model generates is valid JSON.  **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.  (auto) (title: Text)</td>
+    <td>Specifies the format that the model must output. Compatible with [GPT-4o](https://platform.openai.com/docs/models#gpt-4o), [GPT-4 Turbo](https://platform.openai.com/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.  Setting to `&#123; "type": "json_schema", "json_schema": &#123;...&#125; &#125;` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs).  Setting to `&#123; "type": "json_object" &#125;` enables JSON mode, which ensures the message the model generates is valid JSON.  **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.  (auto) (title: Text)</td>
 </tr>
 <tr>
     <td><CopyableCode code="started_at" /></td>
@@ -168,7 +168,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="tools" /></td>
     <td><code>array</code></td>
-    <td>The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.</td>
+    <td>The list of tools that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="top_p" /></td>
@@ -207,12 +207,12 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="assistant_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [assistant](/docs/api-reference/assistants) used for execution of this run.</td>
+    <td>The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for execution of this run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="thread_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [thread](/docs/api-reference/threads) that was executed on as a part of this run.</td>
+    <td>The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) that was executed on as a part of this run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="cancelled_at" /></td>
@@ -247,7 +247,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="instructions" /></td>
     <td><code>string</code></td>
-    <td>The instructions that the [assistant](/docs/api-reference/assistants) used for this run.</td>
+    <td>The instructions that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="last_error" /></td>
@@ -272,7 +272,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="model" /></td>
     <td><code>string</code></td>
-    <td>The model that the [assistant](/docs/api-reference/assistants) used for this run.</td>
+    <td>The model that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="object" /></td>
@@ -282,7 +282,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="parallel_tool_calls" /></td>
     <td><code>boolean</code></td>
-    <td>Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.</td>
+    <td>Whether to enable [parallel function calling](https://platform.openai.com/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.</td>
 </tr>
 <tr>
     <td><CopyableCode code="required_action" /></td>
@@ -292,7 +292,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="response_format" /></td>
     <td><code>string</code></td>
-    <td>Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.  Setting to `&#123; "type": "json_schema", "json_schema": &#123;...&#125; &#125;` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).  Setting to `&#123; "type": "json_object" &#125;` enables JSON mode, which ensures the message the model generates is valid JSON.  **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.  (auto) (title: Text)</td>
+    <td>Specifies the format that the model must output. Compatible with [GPT-4o](https://platform.openai.com/docs/models#gpt-4o), [GPT-4 Turbo](https://platform.openai.com/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since `gpt-3.5-turbo-1106`.  Setting to `&#123; "type": "json_schema", "json_schema": &#123;...&#125; &#125;` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs).  Setting to `&#123; "type": "json_object" &#125;` enables JSON mode, which ensures the message the model generates is valid JSON.  **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if `finish_reason="length"`, which indicates the generation exceeded `max_tokens` or the conversation exceeded the max context length.  (auto) (title: Text)</td>
 </tr>
 <tr>
     <td><CopyableCode code="started_at" /></td>
@@ -317,7 +317,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="tools" /></td>
     <td><code>array</code></td>
-    <td>The list of tools that the [assistant](/docs/api-reference/assistants) used for this run.</td>
+    <td>The list of tools that the [assistant](https://platform.openai.com/docs/api-reference/assistants) used for this run.</td>
 </tr>
 <tr>
     <td><CopyableCode code="top_p" /></td>
@@ -420,7 +420,7 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-thread_id">
     <td><CopyableCode code="thread_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the [thread](/docs/api-reference/threads) to which this run belongs.</td>
+    <td>The ID of the [thread](https://platform.openai.com/docs/api-reference/threads) to which this run belongs.</td>
 </tr>
 <tr id="parameter-OpenAI-Organization">
     <td><CopyableCode code="OpenAI-Organization" /></td>
@@ -445,7 +445,7 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-include[]">
     <td><CopyableCode code="include[]" /></td>
     <td><code>array</code></td>
-    <td>A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.  See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information. </td>
+    <td>A list of additional fields to include in the response. Currently the only supported value is `step_details.tool_calls[*].file_search.results[*].content` to fetch the file search result content.  See the [file search tool documentation](https://platform.openai.com/docs/assistants/tools/file-search#customizing-file-search-settings) for more information. </td>
 </tr>
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>
@@ -658,11 +658,11 @@ usage
     - name: assistant_id
       value: "{{ assistant_id }}"
       description: |
-        The ID of the [assistant](/docs/api-reference/assistants) to use to execute this run.
+        The ID of the [assistant](https://platform.openai.com/docs/api-reference/assistants) to use to execute this run.
     - name: model
       value: "{{ model }}"
       description: |
-        The ID of the [Model](/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
+        The ID of the [Model](https://platform.openai.com/docs/api-reference/models) to be used to execute this run. If a value is provided here, it will override the model associated with the assistant. If not, the model associated with the assistant will be used.
       valid_values: ['gpt-5', 'gpt-5-mini', 'gpt-5-nano', 'gpt-5-2025-08-07', 'gpt-5-mini-2025-08-07', 'gpt-5-nano-2025-08-07', 'gpt-4.1', 'gpt-4.1-mini', 'gpt-4.1-nano', 'gpt-4.1-2025-04-14', 'gpt-4.1-mini-2025-04-14', 'gpt-4.1-nano-2025-04-14', 'o3-mini', 'o3-mini-2025-01-31', 'o1', 'o1-2024-12-17', 'gpt-4o', 'gpt-4o-2024-11-20', 'gpt-4o-2024-08-06', 'gpt-4o-2024-05-13', 'gpt-4o-mini', 'gpt-4o-mini-2024-07-18', 'gpt-4.5-preview', 'gpt-4.5-preview-2025-02-27', 'gpt-4-turbo', 'gpt-4-turbo-2024-04-09', 'gpt-4-0125-preview', 'gpt-4-turbo-preview', 'gpt-4-1106-preview', 'gpt-4-vision-preview', 'gpt-4', 'gpt-4-0314', 'gpt-4-0613', 'gpt-4-32k', 'gpt-4-32k-0314', 'gpt-4-32k-0613', 'gpt-3.5-turbo', 'gpt-3.5-turbo-16k', 'gpt-3.5-turbo-0613', 'gpt-3.5-turbo-1106', 'gpt-3.5-turbo-0125', 'gpt-3.5-turbo-16k-0613']
     - name: reasoning_effort
       value: "{{ reasoning_effort }}"
@@ -681,7 +681,7 @@ usage
     - name: instructions
       value: "{{ instructions }}"
       description: |
-        Overrides the [instructions](/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
+        Overrides the [instructions](https://platform.openai.com/docs/api-reference/assistants/createAssistant) of the assistant. This is useful for modifying the behavior on a per-run basis.
     - name: additional_instructions
       value: "{{ additional_instructions }}"
       description: |
@@ -747,20 +747,20 @@ usage
     - name: parallel_tool_calls
       value: {{ parallel_tool_calls }}
       description: |
-        Whether to enable [parallel function calling](/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
+        Whether to enable [parallel function calling](https://platform.openai.com/docs/guides/function-calling#configuring-parallel-function-calling) during tool use.
       default: true
     - name: response_format
       value: "{{ response_format }}"
       description: |
-        Specifies the format that the model must output. Compatible with [GPT-4o](/docs/models#gpt-4o), [GPT-4 Turbo](/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since \`gpt-3.5-turbo-1106\`.
-        Setting to \`{ "type": "json_schema", "json_schema": {...} }\` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](/docs/guides/structured-outputs).
+        Specifies the format that the model must output. Compatible with [GPT-4o](https://platform.openai.com/docs/models#gpt-4o), [GPT-4 Turbo](https://platform.openai.com/docs/models#gpt-4-turbo-and-gpt-4), and all GPT-3.5 Turbo models since \`gpt-3.5-turbo-1106\`.
+        Setting to \`{ "type": "json_schema", "json_schema": {...} }\` enables Structured Outputs which ensures the model will match your supplied JSON schema. Learn more in the [Structured Outputs guide](https://platform.openai.com/docs/guides/structured-outputs).
         Setting to \`{ "type": "json_object" }\` enables JSON mode, which ensures the message the model generates is valid JSON.
         **Important:** when using JSON mode, you **must** also instruct the model to produce JSON yourself via a system or user message. Without this, the model may generate an unending stream of whitespace until the generation reaches the token limit, resulting in a long-running and seemingly "stuck" request. Also note that the message content may be partially cut off if \`finish_reason="length"\`, which indicates the generation exceeded \`max_tokens\` or the conversation exceeded the max context length.
       valid_values: ['auto']
     - name: include[]
       value: "{{ include[] }}"
-      description: A list of additional fields to include in the response. Currently the only supported value is \`step_details.tool_calls[*].file_search.results[*].content\` to fetch the file search result content.  See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information. 
-      description: A list of additional fields to include in the response. Currently the only supported value is \`step_details.tool_calls[*].file_search.results[*].content\` to fetch the file search result content.  See the [file search tool documentation](/docs/assistants/tools/file-search#customizing-file-search-settings) for more information. 
+      description: A list of additional fields to include in the response. Currently the only supported value is \`step_details.tool_calls[*].file_search.results[*].content\` to fetch the file search result content.  See the [file search tool documentation](https://platform.openai.com/docs/assistants/tools/file-search#customizing-file-search-settings) for more information. 
+      description: A list of additional fields to include in the response. Currently the only supported value is \`step_details.tool_calls[*].file_search.results[*].content\` to fetch the file search result content.  See the [file search tool documentation](https://platform.openai.com/docs/assistants/tools/file-search#customizing-file-search-settings) for more information. 
     - name: OpenAI-Organization
       value: "{{ OpenAI-Organization }}"
       description: Optionally scope the request to a specific organization (overrides the default associated with the API key).

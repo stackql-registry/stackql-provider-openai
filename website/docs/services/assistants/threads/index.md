@@ -235,7 +235,7 @@ tool_resources
   props:
     - name: messages
       description: |
-        A list of [messages](/docs/api-reference/messages) to start the thread with.
+        A list of [messages](https://platform.openai.com/docs/api-reference/messages) to start the thread with.
       value:
         - role: "{{ role }}"
           content: "{{ content }}"

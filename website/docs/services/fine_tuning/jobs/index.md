@@ -118,7 +118,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="result_files" /></td>
     <td><code>array</code></td>
-    <td>The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the [Files API](/docs/api-reference/files/retrieve-contents).</td>
+    <td>The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the [Files API](https://platform.openai.com/docs/api-reference/files/retrieve-contents).</td>
 </tr>
 <tr>
     <td><CopyableCode code="seed" /></td>
@@ -138,12 +138,12 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="training_file" /></td>
     <td><code>string</code></td>
-    <td>The file ID used for training. You can retrieve the training data with the [Files API](/docs/api-reference/files/retrieve-contents).</td>
+    <td>The file ID used for training. You can retrieve the training data with the [Files API](https://platform.openai.com/docs/api-reference/files/retrieve-contents).</td>
 </tr>
 <tr>
     <td><CopyableCode code="validation_file" /></td>
     <td><code>string</code></td>
-    <td>The file ID used for validation. You can retrieve the validation results with the [Files API](/docs/api-reference/files/retrieve-contents).</td>
+    <td>The file ID used for validation. You can retrieve the validation results with the [Files API](https://platform.openai.com/docs/api-reference/files/retrieve-contents).</td>
 </tr>
 </tbody>
 </table>
@@ -227,7 +227,7 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="result_files" /></td>
     <td><code>array</code></td>
-    <td>The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the [Files API](/docs/api-reference/files/retrieve-contents).</td>
+    <td>The compiled results file ID(s) for the fine-tuning job. You can retrieve the results with the [Files API](https://platform.openai.com/docs/api-reference/files/retrieve-contents).</td>
 </tr>
 <tr>
     <td><CopyableCode code="seed" /></td>
@@ -247,12 +247,12 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="training_file" /></td>
     <td><code>string</code></td>
-    <td>The file ID used for training. You can retrieve the training data with the [Files API](/docs/api-reference/files/retrieve-contents).</td>
+    <td>The file ID used for training. You can retrieve the training data with the [Files API](https://platform.openai.com/docs/api-reference/files/retrieve-contents).</td>
 </tr>
 <tr>
     <td><CopyableCode code="validation_file" /></td>
     <td><code>string</code></td>
-    <td>The file ID used for validation. You can retrieve the validation results with the [Files API](/docs/api-reference/files/retrieve-contents).</td>
+    <td>The file ID used for validation. You can retrieve the validation results with the [Files API](https://platform.openai.com/docs/api-reference/files/retrieve-contents).</td>
 </tr>
 </tbody>
 </table>
@@ -514,16 +514,16 @@ validation_file
       value: "{{ model }}"
       description: |
         The name of the model to fine-tune. You can select one of the
-        [supported models](/docs/guides/fine-tuning#which-models-can-be-fine-tuned).
+        [supported models](https://platform.openai.com/docs/guides/fine-tuning#which-models-can-be-fine-tuned).
       valid_values: ['babbage-002', 'davinci-002', 'gpt-3.5-turbo', 'gpt-4o-mini']
     - name: training_file
       value: "{{ training_file }}"
       description: |
         The ID of an uploaded file that contains training data.
-        See [upload file](/docs/api-reference/files/create) for how to upload a file.
+        See [upload file](https://platform.openai.com/docs/api-reference/files/create) for how to upload a file.
         Your dataset must be formatted as a JSONL file. Additionally, you must upload your file with the purpose \`fine-tune\`.
-        The contents of the file should differ depending on if the model uses the [chat](/docs/api-reference/fine-tuning/chat-input), [completions](/docs/api-reference/fine-tuning/completions-input) format, or if the fine-tuning method uses the [preference](/docs/api-reference/fine-tuning/preference-input) format.
-        See the [fine-tuning guide](/docs/guides/model-optimization) for more details.
+        The contents of the file should differ depending on if the model uses the [chat](https://platform.openai.com/docs/api-reference/fine-tuning/chat-input), [completions](https://platform.openai.com/docs/api-reference/fine-tuning/completions-input) format, or if the fine-tuning method uses the [preference](https://platform.openai.com/docs/api-reference/fine-tuning/preference-input) format.
+        See the [fine-tuning guide](https://platform.openai.com/docs/guides/model-optimization) for more details.
     - name: hyperparameters
       description: |
         The hyperparameters used for the fine-tuning job.
@@ -547,7 +547,7 @@ validation_file
         the fine-tuning results file.
         The same data should not be present in both train and validation files.
         Your dataset must be formatted as a JSONL file. You must upload your file with the purpose \`fine-tune\`.
-        See the [fine-tuning guide](/docs/guides/model-optimization) for more details.
+        See the [fine-tuning guide](https://platform.openai.com/docs/guides/model-optimization) for more details.
     - name: integrations
       description: |
         A list of integrations to enable for your fine-tuning job.

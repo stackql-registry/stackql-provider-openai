@@ -506,7 +506,7 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-include">
     <td><CopyableCode code="include" /></td>
     <td><code>array</code></td>
-    <td>Additional fields to include in the response. See the `include` parameter for [listing Conversation items above](/docs/api-reference/conversations/list-items#conversations_list_items-include) for more information. </td>
+    <td>Additional fields to include in the response. See the `include` parameter for [listing Conversation items above](https://platform.openai.com/docs/api-reference/conversations/list-items#conversations_list_items-include) for more information. </td>
 </tr>
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>
@@ -737,8 +737,8 @@ object
           input: "{{ input }}"
     - name: include
       value: "{{ include }}"
-      description: Additional fields to include in the response. See the \`include\` parameter for [listing Conversation items above](/docs/api-reference/conversations/list-items#conversations_list_items-include) for more information. 
-      description: Additional fields to include in the response. See the \`include\` parameter for [listing Conversation items above](/docs/api-reference/conversations/list-items#conversations_list_items-include) for more information. 
+      description: Additional fields to include in the response. See the \`include\` parameter for [listing Conversation items above](https://platform.openai.com/docs/api-reference/conversations/list-items#conversations_list_items-include) for more information. 
+      description: Additional fields to include in the response. See the \`include\` parameter for [listing Conversation items above](https://platform.openai.com/docs/api-reference/conversations/list-items#conversations_list_items-include) for more information. 
     - name: OpenAI-Organization
       value: "{{ OpenAI-Organization }}"
       description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
