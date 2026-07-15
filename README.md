@@ -128,7 +128,7 @@ npm run generate-provider -- \
   --config-path provider-dev/config/all_services.csv \
   --servers '[{"url": "https://api.openai.com/v1"}]' \
   --provider-config '{"auth": {"type": "bearer", "credentialsenvvar": "OPENAI_API_KEY"}}' \
-  --service-config '{"pagination": {"requestToken": {"key": "after", "location": "query"}, "responseToken": {"key": "$.last_id", "location": "body"}}}' \
+  --service-config '{"pagination": {"requestToken": {"key": "after", "location": "query"}, "responseToken": {"key": "$.last_id", "location": "body"}}, "queryParamPushdown": {"top": {"paramName": "limit", "maxValue": 100}}}' \
   --naive-req-body-translate \
   --overwrite
 ```
@@ -137,7 +137,17 @@ npm run generate-provider -- \
 - **`--service-config`** injects the derived-cursor pagination at the service level (provider-level inheritance is broken in any-sdk). The OpenAI list contract has no dedicated next-token field: `after` on the next request is fed from the previous page's `$.last_id`, and traversal ends when the token is absent on the final empty page. Two `fine_tuning` lists (`jobs`, `events`) omit `last_id` and `models` is unpaginated - these ship as documented first-page-plus-parameters reads under the same config (the token simply misses and the loop stops after page 1). See NOTES.md section 3 for the engine analysis and the `has_more` one-request overshoot.
 - **`--naive-req-body-translate`** makes `INSERT` / `UPDATE` body columns the native wire property names (`model`, `training_file`, `metadata`), replacing the v1 `data__` prefix (`data__model`). The request-body-column change is a breaking change beyond the resource and method renames the phase 1 disposition table captures; it is folded into the generated Breaking Changes section.
 
-No post-generate rewrite step is needed for this provider. The two corrections a generated provider commonly requires are both already clean in the OpenAI output, verified after generation:
+`--service-config` also enables **LIMIT pushdown**: `top` maps a SQL `LIMIT n` clause to the wire `limit` parameter (capped at OpenAI's max of 100), so `SELECT ... LIMIT 10` sends `limit=10` and users never hand-write `WHERE limit = 10`. `ORDER BY` is *not* pushed down - any-sdk's `orderBy` renderer is OData-only and emits `<column> <direction>`, while OpenAI's `order` takes a bare `asc`/`desc`; `order` therefore stays an ordinary parameter (`WHERE "order" = 'desc'`). Both the gap and the requested general directive are written up in `provider-dev/config/any-sdk-order-pushdown-issue.md`.
+
+Then post-process:
+
+```bash
+node provider-dev/scripts/post_process.mjs
+```
+
+`post_process.mjs` stamps `request.nativeCasing: kebab` on every method. The optional org/project scoping headers are declared with their wire-valid lowercase kebab names (`openai-organization` / `openai-project` - HTTP field names are case-insensitive per RFC 7230 s3.2, so these are the vendor's `OpenAI-Organization` / `OpenAI-Project` headers). Declaring a native wire casing is the forward-compatible setup for snake_case SQL aliases; it is a no-op until any-sdk's `casing.ToSnake` handles hyphens (see `provider-dev/config/any-sdk-casing-hyphen-issue.md`), so today these headers are addressed quoted: `WHERE "openai-organization" = 'org-...'`. The stamp is additive and cannot disturb request bodies - OpenAI's body properties are already snake_case and are matched exactly.
+
+Beyond that, no post-generate rewriting is needed. The two corrections a generated provider commonly requires are both already clean in the OpenAI output, verified after generation:
 
 - **Response media type** - all 99 methods resolve to `application/json`; the spec has no competing content types that would need rewriting.
 - **Update / EXEC request binding** - the update-POST methods (`modify*`, `update*`) and the body-carrying EXEC methods (`vector_stores.search`, `uploads.complete`, `runs.submit_tool_outputs`) all carry the naive request-body translation, so their columns bind without intervention.
@@ -255,7 +265,10 @@ yarn build      # vendor-config clones the shared config first; network to GitHu
 yarn serve
 ```
 
-`sanitize_docs.mjs` rewrites the relative OpenAI doc links carried through from the spec descriptions (`[Files API](/docs/api-reference/...)`, `/docs/guides/...`, `/docs/models`) by prefixing them with `https://platform.openai.com`. OpenAI's docs have moved to `developers.openai.com` with renamed paths that cannot be computed deterministically, but `platform.openai.com` serves a 301 redirect from every old `/docs/...` path to its current home, so the host prefix lands users on the right page and stays correct as OpenAI reorganises. Without this step the links resolve against the microsite and 404 (the shared config's `onBrokenLinks: 'warn'` keeps the build passing, but the links are dead).
+`sanitize_docs.mjs` does two things the doc generator cannot:
+
+- **Doc links** - rewrites the relative OpenAI doc links carried through from the spec descriptions (`[Files API](/docs/api-reference/...)`, `/docs/guides/...`, `/docs/models`) by prefixing them with `https://platform.openai.com`. OpenAI's docs have moved to `developers.openai.com` with renamed paths that cannot be computed deterministically, but `platform.openai.com` serves a 301 redirect from every old `/docs/...` path to its current home, so the host prefix lands users on the right page and stays correct as OpenAI reorganises. Without this step the links resolve against the microsite and 404 (the shared config's `onBrokenLinks: 'warn'` keeps the build passing, but the links are dead).
+- **SQL examples** - the generator emits every parameter into the example `WHERE` clause and `INSERT` column list verbatim, which produces SQL that does not parse: `order` is a reserved word (`syntax error ... near 'order'`) and the header parameters are hyphenated (`unexpected: openai - organization`). Both are double-quoted. `limit` is dropped from the examples entirely, since a SQL `LIMIT` clause supplies it via the `top` pushdown; the params table still documents it, annotated by `pre_normalize.mjs`.
 
 The regenerated docs carry the `openai_admin` sibling pointer and note the generation change once, per the cutover plan.
 
