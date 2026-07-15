@@ -52,6 +52,8 @@ The old provider version remains available in the registry for pinning.
 
 Deterministic and re-runnable throughout; every script validates and fails without writing. Node.js 20+ required.
 
+Stages 0-2 are implemented and run (the phase 1 groundwork: fetch/filter, split, mappings). Stages 3-7 are the remaining pipeline documented here as the intended invocations, tuned to the phase 1 findings in [NOTES.md](NOTES.md); the `bin/` wrappers for those stages (`normalize.mjs`, the current-toolchain `generate-provider.mjs`) are synced from the [k8s reference](https://github.com/stackql/stackql-provider-k8s) when they run. Normalize and generate against the openapi 3.1.0 source are unexercised - any breakage is absorbed as deterministic downgrades in `pre_normalize.mjs`.
+
 ### 0. Fetch, pin and filter the spec; inventory the predecessor
 
 ```bash
@@ -89,9 +91,165 @@ node provider-dev/scripts/map_operations.mjs
 
 `map_operations.mjs` fills the `stackql_*` columns from the endpoint inventory (one deterministic rule table) and gates on: coverage both directions, unique method keys, unique path-param signatures per (resource, SQL verb), object keys on every list, and disposition consistency against the predecessor table. Current state: 99 operations mapped (select 43, insert 19, delete 16, exec 12, update 9), 26 resources across 11 services.
 
-### Later stages
+### 3. Normalize the Service Specs
 
-Normalize, generate, test, publish and docs follow the [k8s provider](https://github.com/stackql/stackql-provider-k8s) pattern and are documented here as they land.
+StackQL models providers as relational data sources, and relational databases have no native polymorphism - the `oneOf` / `anyOf` / `allOf` composition in the specs must be lowered to concrete schemas before generation. The OpenAI source is openapi 3.1.0 and composition-heavy (across the split specs: 253 `anyOf`, 128 `oneOf`, 16 `allOf`); most `anyOf` sites are the 3.1 nullable idiom (`anyOf: [{...}, {type: "null"}]`), while `oneOf` carries genuine polymorphism (message content parts, tool configs, eval data sources, fine-tuning method blocks). Normalization runs in place on `provider-dev/source`:
+
+```bash
+node provider-dev/scripts/pre_normalize.mjs
+npm run normalize -- --api-dir provider-dev/source
+```
+
+`pre_normalize.mjs` applies the OpenAI-specific adjustments the generic normalizer cannot infer:
+
+- **Injects the optional org/project headers** on every operation - `OpenAI-Organization` and `OpenAI-Project` as `required: false` header parameters (the anthropic `anthropic-version` mechanism; the spec declares neither header). They surface as optional query parameters, never in required params.
+- **Downgrades any openapi 3.1.0 construct** the normalizer or generator cannot consume (the unexercised-leg risk from NOTES.md) as a deterministic rewrite - e.g. the `type: ["string", "null"]` array-type nullable form lowered to the single member type with the null marker retained.
+
+`npm run normalize` (the `normalize` function in `@stackql/provider-utils`) then flattens `allOf` and lowers `oneOf` / `anyOf` to concrete merged schemas, and lifts path-item-level `parameters` onto each operation (StackQL's request builder reads operation-level parameters only). Deep configuration blocks - `hyperparameters` and `method` on fine-tuning jobs, `chunking_strategy` on vector store files, tool configs on assistants - lower to object columns addressed with `json_extract`, so the wire shape is preserved without exploding into hundreds of scalar columns. The list envelope is an object (`{object, data, ...}`), not a bare array, so no bare-array wrapping is needed and the `$.data` object key set during mapping carries through unchanged.
+
+Re-running `map_operations.mjs` against the normalized specs produces an identical `all_services.csv` - normalization changes schemas only, never paths, verbs, or operations.
+
+### 4. Generate the Provider
+
+Transform the normalized service specs into a StackQL provider using the mappings:
+
+```bash
+rm -rf provider-dev/openapi/*
+npm run generate-provider -- \
+  --provider-name openai \
+  --input-dir provider-dev/source \
+  --output-dir provider-dev/openapi/src/openai \
+  --config-path provider-dev/config/all_services.csv \
+  --servers '[{"url": "https://api.openai.com/v1"}]' \
+  --provider-config '{"auth": {"type": "bearer", "credentialsenvvar": "OPENAI_API_KEY"}}' \
+  --service-config '{"pagination": {"requestToken": {"key": "after", "location": "query"}, "responseToken": {"key": "$.last_id", "location": "body"}}}' \
+  --naive-req-body-translate \
+  --overwrite
+```
+
+- **Fixed server** - `https://api.openai.com/v1` is a literal host with no server variables, so there is no route-matching caveat (the k8s dot-free-host constraint applies only to server variables spanning dots) and no `WHERE` server parameters.
+- **`--service-config`** injects the derived-cursor pagination at the service level (provider-level inheritance is broken in any-sdk). The OpenAI list contract has no dedicated next-token field: `after` on the next request is fed from the previous page's `$.last_id`, and traversal ends when the token is absent on the final empty page. Two `fine_tuning` lists (`jobs`, `events`) omit `last_id` and `models` is unpaginated - these ship as documented first-page-plus-parameters reads under the same config (the token simply misses and the loop stops after page 1). See NOTES.md section 3 for the engine analysis and the `has_more` one-request overshoot.
+- **`--naive-req-body-translate`** makes `INSERT` / `UPDATE` body columns the native wire property names (`model`, `training_file`, `metadata`), replacing the v1 `data__` prefix (`data__model`). This is consistent with the current registry direction (aws, azure, google, snowflake, k8s). The request-body-column change is a breaking change beyond the resource and method renames the phase 1 disposition table captures; it is folded into the generated Breaking Changes section when generation lands.
+
+Then post-process:
+
+```bash
+node provider-dev/scripts/post_process.mjs
+```
+
+`post_process.mjs` applies the fixes the generator cannot make on its own (confirmed against the integration suite after the first regeneration):
+
+- **Assistants family deprecation labelling** - the vendor flags only the five `/assistants` CRUD operations `deprecated: true`; the family rule stamps the deprecation label across the rest of the assistants service (threads, messages, runs, run_steps) so the docs carry the migration-to-Responses posture uniformly.
+- Any response media type or request binding corrections the mock integration tests surface (the k8s build found response-mediaType and patch-binding issues this way; the equivalents for this provider are confirmed, not assumed, after the first mock run).
+
+### 5. Test the Provider
+
+Four layers, mirroring the k8s suite.
+
+**Validate offline** - resolves the provider with no network:
+
+```bash
+REG_PATH="$(pwd)/provider-dev/openapi"
+REG="{\"url\":\"file://${REG_PATH}\",\"localDocRoot\":\"${REG_PATH}\",\"verifyConfig\":{\"nopVerify\":true}}"
+
+stackql --registry="$REG" exec "SHOW SERVICES IN openai"
+stackql --registry="$REG" exec "SHOW RESOURCES IN openai.vector_stores"
+stackql --registry="$REG" exec "SHOW METHODS IN openai.fine_tuning.jobs"
+stackql --registry="$REG" exec "DESCRIBE EXTENDED openai.vector_stores.vector_stores"
+```
+
+**Meta-route suite** - walks every service, resource and method, asserting each resource has methods, no two methods on one SQL verb share a required-params signature, and every selectable resource yields non-empty `DESCRIBE EXTENDED`:
+
+```bash
+PROVIDER_REGISTRY_ROOT_DIR="$(pwd)/provider-dev/openapi"
+npm run start-server -- --provider openai --registry $PROVIDER_REGISTRY_ROOT_DIR
+npm run test-meta-routes -- openai --verbose
+npm run stop-server
+```
+
+**Integration tests (mock API server - no key required)** - a mock `api.openai.com` serving real OpenAI wire shapes, asserting row-level results for each archetype: `$.data` list unwrapping, the derived-cursor traversal (`after` = prior `last_id`, terminating on the empty final page), a vector store lifecycle with file membership (`create` -> `get` -> file attach -> `list` files -> `delete`), a fine-tuning cancel `EXEC`, the deprecation labels present on the assistants family, and the bearer plus optional org/project headers on every request. Run after every regeneration.
+
+**Smoke tests** - cost-tiered, `stackql-smoke-<stamp>` naming, breadcrumbs swept first, never against a production project:
+
+- **Ungated** (every CI run once a key exists) - reads and cost-free lifecycles: a file-metadata round trip, a vector store `create` / `delete` (no files attached, no embeddings billed), an upload `create` / `cancel` (metadata only).
+- **Gated** (mock-first; live only by explicit decision, never in CI defaults) - anything consuming tokens or training compute: fine-tuning job create, batch create, `vector_stores.search`, eval run create, assistants runs. The integration mock covers all of these so the gated tier's live value is confirmatory only.
+
+```bash
+pip install pystackql
+python tests/smoke_test.py                       # local registry (default), ungated tier
+python tests/smoke_test.py --registry public     # published provider, doubles as post-publish verification
+python tests/smoke_test.py --cleanup-only        # just sweep breadcrumbs
+```
+
+**Authentication** - bearer token from `OPENAI_API_KEY`, matching the v1 provider:
+
+```bash
+export OPENAI_API_KEY='sk-...'
+stackql shell   # OPENAI_API_KEY is the default credential env var
+```
+
+Optional organization and project scoping is set per query via the injected header parameters (`SELECT ... WHERE "OpenAI-Organization" = 'org-...'`), or globally through the runtime auth override.
+
+### 6. Publish the Provider
+
+Cutover replaces the v1 provider (see the archive and acceptance plan in NOTES.md section 7): the v1 doc artifacts move to `legacy/` in one commit (history preserved), the new provider version replaces the v1 version in the [`stackql-provider-registry`](https://github.com/stackql/stackql-provider-registry) per the [registry release flow](https://github.com/stackql/stackql-provider-registry/blob/dev/docs/build-and-deployment.md) (the old version stays pullable for pinning), and the v1 documented example queries re-run against the new provider - each passes unchanged or is covered by a Breaking Changes entry.
+
+Pull and verify from the dev registry:
+
+```bash
+export DEV_REG="{ \"url\": \"https://registry-dev.stackql.app/providers\" }"
+./stackql --registry="${DEV_REG}" shell
+```
+
+```sql
+registry pull openai;
+```
+
+### 7. Generate Web Docs
+
+The existing doc microsite (`website/`, Docusaurus, served at `openai-provider.stackql.io`) is regenerated from the new provider output. Set the provider identity in `website/provider.js`:
+
+```js
+export const providerName = 'openai';
+export const providerTitle = 'OpenAI';
+```
+
+Update `headerContent1.txt` / `headerContent2.txt` in `provider-dev/docgen/provider-data/` (the installation, connection and authentication sections of the landing page), then generate and build:
+
+```bash
+npm run generate-docs -- \
+  --provider-name openai \
+  --provider-dir ./provider-dev/openapi/src/openai/v00.00.00000 \
+  --output-dir ./website \
+  --provider-data-dir ./provider-dev/docgen/provider-data
+
+cd website
+yarn install
+yarn build
+yarn serve
+```
+
+The regenerated docs carry the `openai_admin` sibling pointer and note the generation change once, per the cutover plan.
+
+## Service Coverage
+
+11 services, 26 resources, 99 mapped operations (select 43, insert 19, delete 16, exec 12, update 9).
+
+| Service | Resources | Notes |
+|---|---|---|
+| `models` | models | list / get / delete |
+| `files` | files | metadata (list / get / delete); content upload and download out of scope |
+| `fine_tuning` | jobs, events, checkpoints, checkpoint_permissions | async-job archetype: create / poll / cancel / pause / resume |
+| `batches` | batches | in-scope async job control: create / poll / cancel |
+| `vector_stores` | vector_stores, files, file_batches, file_batch_files | CRUD flagship with file membership; `search` is `EXEC` (gated) |
+| `assistants` | assistants, threads, messages, runs, run_steps | deprecation-labelled (vendor migration to Responses) |
+| `evals` | evals, runs, run_output_items | eval definitions and runs |
+| `conversations` | conversations, items | Responses-family state surface |
+| `uploads` | uploads | metadata lifecycle: create / complete / cancel |
+| `containers` | containers, files | code-interpreter container metadata |
+| `skills` | skills, versions | versioned skill metadata; content endpoints out of scope (binary) |
+
+The organization/admin surface (`/organization/...`) is the sibling `openai_admin` provider. See the Breaking Changes section above for the full v1 disposition.
 
 ## License
 
