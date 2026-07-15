@@ -13,7 +13,7 @@
     "generate-docs": "./bin/generate-docs.sh",
     "split": "./bin/split.sh",
     "generate-mappings": "./bin/generate-mappings.sh",
-    "generate-provider": "./bin/generate-provider.sh",
+    "generate-provider": "node ./bin/generate-provider.mjs",
     "start-server": "bash ./bin/start-server.sh",
     "stop-server": "bash ./bin/stop-server.sh",
     "server-status": "bash ./bin/server-status.sh",

@@ -52,7 +52,7 @@ The old provider version remains available in the registry for pinning.
 
 Deterministic and re-runnable throughout; every script validates and fails without writing. Node.js 20+ required.
 
-Stages 0-2 are implemented and run (the phase 1 groundwork: fetch/filter, split, mappings). Stages 3-7 are the remaining pipeline documented here as the intended invocations, tuned to the phase 1 findings in [NOTES.md](NOTES.md); the `bin/` wrappers for those stages (`normalize.mjs`, the current-toolchain `generate-provider.mjs`) are synced from the [k8s reference](https://github.com/stackql/stackql-provider-k8s) when they run. Normalize and generate against the openapi 3.1.0 source are unexercised - any breakage is absorbed as deterministic downgrades in `pre_normalize.mjs`.
+Stages 0-4 are implemented and run (fetch/filter, split, mappings, normalize, generate); the generated provider resolves in stackql (offline `SHOW`/`DESCRIBE` verified). Stages 5-7 (test, publish, docs) are documented as the intended invocations. The `bin/` wrappers (`normalize.mjs`, `generate-provider.mjs`) invoke the current `@stackql/provider-utils` directly; `generate-provider.sh` is a thin passthrough so no flag is dropped by the wrapper.
 
 ### 0. Fetch, pin and filter the spec; inventory the predecessor
 
