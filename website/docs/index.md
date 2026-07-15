@@ -71,13 +71,6 @@ stackql.exe shell --auth=$Auth
 ```
 </details>
 
-## Reading the surface
-
-Two conventions run through every resource:
-
-- **Deep blocks are JSON columns.** Nested API objects (`hyperparameters`, `method`, `request_counts`, `file_counts`, `metrics`, `last_error`) are lowered to object columns and read with `json_extract` rather than exploded into scalars.
-- **`LIMIT` is pushed to the wire.** `SELECT ... LIMIT 10` sends `limit=10` on the request; there is no need to set the `limit` parameter by hand. Timestamps are Unix epoch seconds - `date(created_at, 'unixepoch')` renders them.
-
 ## Fine-tuning history and checkpoints
 
 Every fine-tuning job, newest first, with the tuning method and any failure reason:
