@@ -185,7 +185,25 @@ def read_smokes(sq, rep, key_present):
     rep.record("read: files with limit=2 param", "FAIL" if err else "PASS", detail)
 
 
-def vector_store_lifecycle(sq, rep, key_present, stamp):
+def poll_until(fn, timeout, interval):
+    """Poll fn() until it returns a truthy value or the timeout elapses.
+
+    Returns (value, elapsed_seconds, timed_out). fn is a zero-arg callable
+    performing one probe; a truthy return ends the poll. This is the async-job
+    wait pattern (create, then SELECT-poll) applied to resource readiness.
+    """
+    start = time.time()
+    while True:
+        val = fn()
+        elapsed = time.time() - start
+        if val:
+            return val, elapsed, False
+        if elapsed >= timeout:
+            return None, elapsed, True
+        time.sleep(min(interval, max(0.0, timeout - elapsed)))
+
+
+def vector_store_lifecycle(sq, rep, key_present, stamp, timeout, interval):
     if not key_present:
         rep.record("lifecycle: vector store create/get/update/delete", "BLOCKED", "OPENAI_API_KEY not set")
         return
@@ -197,13 +215,37 @@ def vector_store_lifecycle(sq, rep, key_present, stamp):
         return
     rep.record("lifecycle: create vector store", "PASS", name)
 
-    rows, err = q(sq, "SELECT id, name, status FROM openai.vector_stores.vector_stores")
-    match = next((r for r in rows if r.get("name") == name), None) if not err else None
-    if err or not match:
-        rep.record("lifecycle: find created store in list", "FAIL", err or "not found")
+    # The created store may not be listable immediately (eventual consistency), so
+    # poll the list for it up to --timeout. last_rows is captured so that on timeout
+    # we can report diagnostics: the row count (exactly the default page size points
+    # at pagination not traversing) and a sample of names (a blank-named store points
+    # at the INSERT not binding `name`).
+    last = {"rows": []}
+
+    def probe():
+        rows, perr = q(sq, "SELECT id, name, status FROM openai.vector_stores.vector_stores")
+        if perr:
+            last["err"] = perr
+            return "ERROR"
+        last["rows"] = rows
+        return next((r for r in rows if r.get("name") == name), None)
+
+    match, elapsed, timed_out = poll_until(probe, timeout, interval)
+    if match == "ERROR":
+        rep.record("lifecycle: find created store (poll)", "FAIL", last.get("err", "list error"))
+        return
+    if timed_out or not match:
+        rows = last["rows"]
+        names = [str(r.get("name")) for r in rows]
+        smoke_seen = sum(1 for n in names if n.startswith(SMOKE_PREFIX))
+        sample = ", ".join(names[:6]) if names else "(none)"
+        rep.record("lifecycle: find created store (poll)", "FAIL",
+                   f"'{name}' not found after {elapsed:.0f}s among {len(rows)} stores "
+                   f"({smoke_seen} smoke-named; sample: {sample})")
         return
     vsid = match["id"]
-    rep.record("lifecycle: find created store in list", "PASS", vsid)
+    rep.record("lifecycle: find created store (poll)", "PASS",
+               f"{vsid} after {elapsed:.0f}s ({len(last['rows'])} listed)")
 
     rows, err = q(sq, f"SELECT id, name, status FROM openai.vector_stores.vector_stores WHERE vector_store_id = '{vsid}'")
     got = (not err) and len(rows) == 1 and rows[0].get("id") == vsid
@@ -259,6 +301,10 @@ def main():
     ap.add_argument("--with-completions", action="store_true",
                     help="run the gated, token-consuming completions demonstration (direct API call)")
     ap.add_argument("--model", default="gpt-4o-mini", help="model for the completions demo (default gpt-4o-mini)")
+    ap.add_argument("--timeout", type=float, default=120.0,
+                    help="seconds to poll for the created vector store to become listable (default 120)")
+    ap.add_argument("--poll-interval", type=float, default=3.0,
+                    help="seconds between poll attempts (default 3)")
     ap.add_argument("--cleanup-only", action="store_true", help="only sweep stackql-smoke breadcrumbs, then exit")
     args = ap.parse_args()
 
@@ -287,7 +333,7 @@ def main():
         sys.exit(0 if ok else 1)
 
     read_smokes(sq, rep, key_present)
-    vector_store_lifecycle(sq, rep, key_present, stamp)
+    vector_store_lifecycle(sq, rep, key_present, stamp, args.timeout, args.poll_interval)
 
     if args.with_completions:
         completions_demo(sq, rep, key_present, args.model)

@@ -176,7 +176,7 @@ npm run stop-server
 Set up an isolated virtual environment and install the test dependencies (`tests/requirements.txt` pins `pystackql`):
 
 ```bash
-python -m venv .venv
+python3 -m venv .venv
 
 # activate the venv:
 source .venv/bin/activate          # macOS / Linux
@@ -191,15 +191,16 @@ Then run the smokes (`.venv` active, `OPENAI_API_KEY` in the environment):
 ```bash
 export OPENAI_API_KEY='sk-...'
 
-python tests/smoke_test.py                       # local provider, ungated tier
-python tests/smoke_test.py --registry public     # published provider (doubles as post-publish verification)
-python tests/smoke_test.py --with-completions    # also run the gated completions demo
-python tests/smoke_test.py --cleanup-only        # just sweep stackql-smoke breadcrumbs
+python3 tests/smoke_test.py                       # local provider, ungated tier
+python3 tests/smoke_test.py --registry public     # published provider (doubles as post-publish verification)
+python3 tests/smoke_test.py --with-completions    # also run the gated completions demo
+python3 tests/smoke_test.py --timeout 60          # cap the vector store readiness poll (default 120s)
+python3 tests/smoke_test.py --cleanup-only        # just sweep stackql-smoke breadcrumbs
 ```
 
 The `.venv/` directory is gitignored. `pystackql` downloads the `stackql` binary on first use if one is not already on `PATH`.
 
-- **Ungated** (cost-free, run by default) - resolution (`SHOW SERVICES`), reads (`models`, `files` metadata, a `limit`-bounded read), and the vector store lifecycle: `create` -> find in `list` -> `get` by id -> `update` name -> `delete` -> confirm gone. No files attached and no embeddings billed. A valid key always returns the base model list, so an empty `models` read is treated as an auth/connectivity failure.
+- **Ungated** (cost-free, run by default) - resolution (`SHOW SERVICES`), reads (`models`, `files` metadata, a `limit`-bounded read), and the vector store lifecycle: `create` -> poll the `list` until the store is listable (`--timeout`/`--poll-interval`, the create/SELECT-poll pattern the async resources use) -> `get` by id -> `update` name -> `delete` -> confirm gone. No files attached and no embeddings billed. A valid key always returns the base model list, so an empty `models` read is treated as an auth/connectivity failure.
 - **Gated** (`--with-completions`, opt-in, consumes tokens) - a completions call with the prompt "explain how StackQL works". Chat/completions is inference (the data plane) and is deliberately not part of this provider, so this step calls the OpenAI API **directly** (same key, cheap model, small token cap), separately from the provider - it proves the key works end to end and returns a real answer without smuggling inference into the provider surface.
 
 Without `OPENAI_API_KEY` the resolution checks still pass and the live steps report `BLOCKED`, so the script is safe to run in any environment.
