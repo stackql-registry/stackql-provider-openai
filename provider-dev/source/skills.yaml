@@ -10,7 +10,19 @@ paths:
         - Skills
       summary: Create a new skill.
       operationId: CreateSkill
-      parameters: []
+      parameters:
+        - name: OpenAI-Organization
+          in: header
+          required: false
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          schema:
+            type: string
+        - name: OpenAI-Project
+          in: header
+          required: false
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          schema:
+            type: string
       requestBody:
         content:
           multipart/form-data:
@@ -91,9 +103,7 @@ paths:
             maximum: 100
         - name: order
           in: query
-          description: >-
-            Sort order of results by timestamp. Use `asc` for ascending order or
-            `desc` for descending order.
+          description: Sort order of results by timestamp. Use `asc` for ascending order or `desc` for descending order.
           required: false
           schema:
             $ref: '#/components/schemas/OrderEnum'
@@ -103,6 +113,18 @@ paths:
           required: false
           schema:
             description: Identifier for the last item from the previous pagination request
+            type: string
+        - name: OpenAI-Organization
+          in: header
+          required: false
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          schema:
+            type: string
+        - name: OpenAI-Project
+          in: header
+          required: false
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          schema:
             type: string
       responses:
         '200':
@@ -176,6 +198,18 @@ paths:
           schema:
             example: skill_123
             type: string
+        - name: OpenAI-Organization
+          in: header
+          required: false
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          schema:
+            type: string
+        - name: OpenAI-Project
+          in: header
+          required: false
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          schema:
+            type: string
       responses:
         '200':
           description: Success
@@ -246,6 +280,18 @@ paths:
           required: true
           schema:
             example: skill_123
+            type: string
+        - name: OpenAI-Organization
+          in: header
+          required: false
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          schema:
+            type: string
+        - name: OpenAI-Project
+          in: header
+          required: false
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          schema:
             type: string
       responses:
         '200':
@@ -318,6 +364,18 @@ paths:
           schema:
             example: skill_123
             type: string
+        - name: OpenAI-Organization
+          in: header
+          required: false
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          schema:
+            type: string
+        - name: OpenAI-Project
+          in: header
+          required: false
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -337,18 +395,14 @@ paths:
         examples:
           response: ''
           request:
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const skill = await client.skills.update('skill_123', {
-              default_version: 'default_version' });
-
+              const skill = await client.skills.update('skill_123', { default_version: 'default_version' });
 
               console.log(skill.id);
             python: |-
@@ -385,16 +439,12 @@ paths:
                       Skill skill = client.skills().update(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              skill = openai.skills.update("skill_123", default_version:
-              "default_version")
-
+              skill = openai.skills.update("skill_123", default_version: "default_version")
 
               puts(skill)
   /skills/{skill_id}/versions:
@@ -410,6 +460,18 @@ paths:
           required: true
           schema:
             example: skill_123
+            type: string
+        - name: OpenAI-Organization
+          in: header
+          required: false
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          schema:
+            type: string
+        - name: OpenAI-Project
+          in: header
+          required: false
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          schema:
             type: string
       requestBody:
         content:
@@ -430,18 +492,14 @@ paths:
         examples:
           response: ''
           request:
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const skillVersion = await
-              client.skills.versions.create('skill_123');
-
+              const skillVersion = await client.skills.versions.create('skill_123');
 
               console.log(skillVersion.id);
             python: |-
@@ -515,6 +573,18 @@ paths:
           schema:
             example: skillver_123
             type: string
+        - name: OpenAI-Organization
+          in: header
+          required: false
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          schema:
+            type: string
+        - name: OpenAI-Project
+          in: header
+          required: false
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          schema:
+            type: string
       responses:
         '200':
           description: Success
@@ -526,19 +596,15 @@ paths:
         examples:
           response: ''
           request:
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
               // Automatically fetches more pages as needed.
-
-              for await (const skillVersion of
-              client.skills.versions.list('skill_123')) {
+              for await (const skillVersion of client.skills.versions.list('skill_123')) {
                 console.log(skillVersion.id);
               }
             python: |-
@@ -600,6 +666,18 @@ paths:
           schema:
             description: The version number to retrieve.
             type: string
+        - name: OpenAI-Organization
+          in: header
+          required: false
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          schema:
+            type: string
+        - name: OpenAI-Project
+          in: header
+          required: false
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          schema:
+            type: string
       responses:
         '200':
           description: Success
@@ -611,19 +689,14 @@ paths:
         examples:
           response: ''
           request:
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const skillVersion = await
-              client.skills.versions.retrieve('version', { skill_id: 'skill_123'
-              });
-
+              const skillVersion = await client.skills.versions.retrieve('version', { skill_id: 'skill_123' });
 
               console.log(skillVersion.id);
             python: |-
@@ -660,16 +733,12 @@ paths:
                       SkillVersion skillVersion = client.skills().versions().retrieve(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              skill_version = openai.skills.versions.retrieve("version",
-              skill_id: "skill_123")
-
+              skill_version = openai.skills.versions.retrieve("version", skill_id: "skill_123")
 
               puts(skill_version)
     delete:
@@ -692,6 +761,18 @@ paths:
           schema:
             description: The skill version number.
             type: string
+        - name: OpenAI-Organization
+          in: header
+          required: false
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          schema:
+            type: string
+        - name: OpenAI-Project
+          in: header
+          required: false
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          schema:
+            type: string
       responses:
         '200':
           description: Success
@@ -703,20 +784,16 @@ paths:
         examples:
           response: ''
           request:
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const deletedSkillVersion = await
-              client.skills.versions.delete('version', {
+              const deletedSkillVersion = await client.skills.versions.delete('version', {
                 skill_id: 'skill_123',
               });
-
 
               console.log(deletedSkillVersion.id);
             python: |-
@@ -753,16 +830,12 @@ paths:
                       DeletedSkillVersion deletedSkillVersion = client.skills().versions().delete(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              deleted_skill_version = openai.skills.versions.delete("version",
-              skill_id: "skill_123")
-
+              deleted_skill_version = openai.skills.versions.delete("version", skill_id: "skill_123")
 
               puts(deleted_skill_version)
 components:
@@ -770,23 +843,18 @@ components:
     CreateSkillBody:
       properties:
         files:
-          oneOf:
-            - items:
-                type: string
-                format: binary
-              type: array
-              maxItems: 500
-              description: Skill files to upload (directory upload) or a single zip file.
-            - type: string
-              format: binary
-              description: Skill zip file to upload.
+          items:
+            type: string
+            format: binary
+          type: array
+          maxItems: 500
+          description: Skill files to upload (directory upload) or a single zip file.
+          format: binary
       type: object
       required:
         - files
       title: Create skill request
-      description: >-
-        Uploads a skill either as a directory (multipart `files[]`) or as a
-        single zip file.
+      description: Uploads a skill either as a directory (multipart `files[]`) or as a single zip file.
     SkillResource:
       properties:
         id:
@@ -844,15 +912,11 @@ components:
           type: array
           description: A list of items
         first_id:
-          anyOf:
-            - type: string
-              description: The ID of the first item in the list.
-            - type: 'null'
+          type: string
+          description: The ID of the first item in the list.
         last_id:
-          anyOf:
-            - type: string
-              description: The ID of the last item in the list.
-            - type: 'null'
+          type: string
+          description: The ID of the last item in the list.
         has_more:
           type: boolean
           description: Whether there are more items available.
@@ -893,16 +957,13 @@ components:
     CreateSkillVersionBody:
       properties:
         files:
-          oneOf:
-            - items:
-                type: string
-                format: binary
-              type: array
-              maxItems: 500
-              description: Skill files to upload (directory upload) or a single zip file.
-            - type: string
-              format: binary
-              description: Skill zip file to upload.
+          items:
+            type: string
+            format: binary
+          type: array
+          maxItems: 500
+          description: Skill files to upload (directory upload) or a single zip file.
+          format: binary
         default:
           type: boolean
           description: Whether to set this version as the default.
@@ -963,15 +1024,11 @@ components:
           type: array
           description: A list of items
         first_id:
-          anyOf:
-            - type: string
-              description: The ID of the first item in the list.
-            - type: 'null'
+          type: string
+          description: The ID of the first item in the list.
         last_id:
-          anyOf:
-            - type: string
-              description: The ID of the last item in the list.
-            - type: 'null'
+          type: string
+          description: The ID of the last item in the list.
         has_more:
           type: boolean
           description: Whether there are more items available.

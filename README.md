@@ -93,21 +93,26 @@ node provider-dev/scripts/map_operations.mjs
 
 ### 3. Normalize the Service Specs
 
-StackQL models providers as relational data sources, and relational databases have no native polymorphism - the `oneOf` / `anyOf` / `allOf` composition in the specs must be lowered to concrete schemas before generation. The OpenAI source is openapi 3.1.0 and composition-heavy (across the split specs: 253 `anyOf`, 128 `oneOf`, 16 `allOf`); most `anyOf` sites are the 3.1 nullable idiom (`anyOf: [{...}, {type: "null"}]`), while `oneOf` carries genuine polymorphism (message content parts, tool configs, eval data sources, fine-tuning method blocks). Normalization runs in place on `provider-dev/source`:
+StackQL models providers as relational data sources, and relational databases have no native polymorphism - the `oneOf` / `anyOf` / `allOf` composition must be lowered to concrete schemas before generation. Only the **column-producing sites** matter: the request-body and 200-response schema roots and their direct properties (a resource's columns). Polymorphism nested deeper lives inside object columns and is addressed with `json_extract`, so it is intentionally left alone. The OpenAI source is openapi 3.1.0 and composition-heavy (across the split specs before normalize: 253 `anyOf`, 128 `oneOf`, 16 `allOf`); most `anyOf` sites are the 3.1 nullable idiom (`anyOf: [{...}, {type: "null"}]`), while `oneOf` carries genuine polymorphism (message content parts, tool configs, eval data sources).
+
+Stage 3 runs in place on `provider-dev/source`:
 
 ```bash
-node provider-dev/scripts/pre_normalize.mjs
-npm run normalize -- --api-dir provider-dev/source
+node provider-dev/scripts/pre_normalize.mjs             # OpenAI-specific source edits
+npm run normalize -- --api-dir provider-dev/source      # generic allOf flatten + oneOf/anyOf lowering
+node provider-dev/scripts/lower_residual_variants.mjs   # lower any union left at a column site
 ```
 
-`pre_normalize.mjs` applies the OpenAI-specific adjustments the generic normalizer cannot infer:
+**`pre_normalize.mjs`** applies the adjustments the generic normalizer cannot infer, before the flatten:
 
-- **Injects the optional org/project headers** on every operation - `OpenAI-Organization` and `OpenAI-Project` as `required: false` header parameters (the anthropic `anthropic-version` mechanism; the spec declares neither header). They surface as optional query parameters, never in required params.
-- **Downgrades any openapi 3.1.0 construct** the normalizer or generator cannot consume (the unexercised-leg risk from NOTES.md) as a deterministic rewrite - e.g. the `type: ["string", "null"]` array-type nullable form lowered to the single member type with the null marker retained.
+- **Injects the optional org/project headers** on every operation (200 parameters across all 100 operations) - `OpenAI-Organization` and `OpenAI-Project` as `required: false` header parameters (the anthropic `anthropic-version` mechanism; the spec declares neither). They surface as optional query parameters, never in required params.
+- **Guards against the openapi 3.1.0 array-type nullable form** (`type: ["string", "null"]`). This form is absent in the current pin, and the `anyOf: [{realType}, {type: "null"}]` idiom flattens safely under the normalizer's first-wins merge (the real type is always the first member), so no rewrite is needed here. The guard fails the run if a future spec refresh introduces the array-type form, so the downgrade is written deliberately rather than discovered during generate.
 
-`npm run normalize` (the `normalize` function in `@stackql/provider-utils`) then flattens `allOf` and lowers `oneOf` / `anyOf` to concrete merged schemas, and lifts path-item-level `parameters` onto each operation (StackQL's request builder reads operation-level parameters only). Deep configuration blocks - `hyperparameters` and `method` on fine-tuning jobs, `chunking_strategy` on vector store files, tool configs on assistants - lower to object columns addressed with `json_extract`, so the wire shape is preserved without exploding into hundreds of scalar columns. The list envelope is an object (`{object, data, ...}`), not a bare array, so no bare-array wrapping is needed and the `$.data` object key set during mapping carries through unchanged.
+**`npm run normalize`** (the `normalize` function in `@stackql/provider-utils`) renames `oneOf` / `anyOf` to `allOf` at the column-producing sites and flattens all `allOf` into single merged schemas (569 flattened, 300 variants renamed against this pin), resolving the nullable idiom to the real type in passing. Deep configuration blocks - `hyperparameters` and `method` on fine-tuning jobs, `chunking_strategy` on vector store files, tool configs on assistants - lower to object columns queried with `json_extract`, preserving the wire shape without exploding into hundreds of scalar columns. The list envelope is an object (`{object, data, ...}`), not a bare array, so no bare-array wrapping is needed and the `$.data` object key set during mapping carries through unchanged.
 
-Re-running `map_operations.mjs` against the normalized specs produces an identical `all_services.csv` - normalization changes schemas only, never paths, verbs, or operations.
+**`lower_residual_variants.mjs`** finishes the job at the boundary the generic normalizer leaves shallow. After the flatten, nullable wrappers at column sites are already resolved, so any variant keyword remaining on a request/response property is an irreducible union (for example a conversation item's `environment`, a discriminated `oneOf` of a local environment or a container reference). A relational column cannot be a union, so it is lowered to a JSON-blob string column addressed with `json_extract` - the same posture the normalizer applies to structureless objects. A variant left at a schema *root* (which would collapse a whole resource into one blob column) is a defect and fails the run rather than being auto-lowered. Against this pin exactly one residual is lowered; the pass is idempotent.
+
+The three steps are deterministic and re-runnable from a fresh split. Re-running `generate-mappings` and `map_operations.mjs` against the normalized specs produces a byte-identical mapping (`filename, path, operationId, resource, method, verb, object_key`) - normalization changes schemas only, never paths, verbs, or the resource/method mapping.
 
 ### 4. Generate the Provider
 
