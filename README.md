@@ -173,8 +173,22 @@ npm run stop-server
 
 **Smoke tests** (`tests/smoke_test.py`, pystackql) - live against the real API, `stackql-smoke-<stamp>` naming, breadcrumbs swept first, never against a production project. Auth is the provider's declared `bearer` config on `OPENAI_API_KEY`, so the key is read from the environment (no credential on the command line). Runs against the local generated provider (default) or the published provider (`--registry public`, via `registry pull openai`).
 
+Set up an isolated virtual environment and install the test dependencies (`tests/requirements.txt` pins `pystackql`):
+
 ```bash
-pip install pystackql
+python -m venv .venv
+
+# activate the venv:
+source .venv/bin/activate          # macOS / Linux
+# .venv\Scripts\Activate.ps1       # Windows PowerShell
+# .venv\Scripts\activate.bat       # Windows cmd
+
+pip install -r tests/requirements.txt
+```
+
+Then run the smokes (`.venv` active, `OPENAI_API_KEY` in the environment):
+
+```bash
 export OPENAI_API_KEY='sk-...'
 
 python tests/smoke_test.py                       # local provider, ungated tier
@@ -182,6 +196,8 @@ python tests/smoke_test.py --registry public     # published provider (doubles a
 python tests/smoke_test.py --with-completions    # also run the gated completions demo
 python tests/smoke_test.py --cleanup-only        # just sweep stackql-smoke breadcrumbs
 ```
+
+The `.venv/` directory is gitignored. `pystackql` downloads the `stackql` binary on first use if one is not already on `PATH`.
 
 - **Ungated** (cost-free, run by default) - resolution (`SHOW SERVICES`), reads (`models`, `files` metadata, a `limit`-bounded read), and the vector store lifecycle: `create` -> find in `list` -> `get` by id -> `update` name -> `delete` -> confirm gone. No files attached and no embeddings billed. A valid key always returns the base model list, so an empty `models` read is treated as an auth/connectivity failure.
 - **Gated** (`--with-completions`, opt-in, consumes tokens) - a completions call with the prompt "explain how StackQL works". Chat/completions is inference (the data plane) and is deliberately not part of this provider, so this step calls the OpenAI API **directly** (same key, cheap model, small token cap), separately from the provider - it proves the key works end to end and returns a real answer without smuggling inference into the provider surface.
