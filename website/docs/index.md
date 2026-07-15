@@ -16,7 +16,7 @@ id: 'provider-intro'
 
 import CopyableCode from '@site/src/components/CopyableCode/CopyableCode';
 
-The OpenAI platform surface available to standard API keys - models, files, fine-tuning, batches, vector stores, assistants, evals, conversations, uploads, containers and skills - queried and managed with SQL. The organization/admin surface is the sibling `openai_admin` provider.
+The OpenAI platform surface available to standard API keys - models, files, fine-tuning, batches, vector stores, assistants, evals, conversations, uploads, containers and skills - queried and managed with SQL. The organization/admin surface is the sibling [`openai_admin`](https://openai-admin-provider.stackql.io) provider.
 
 
 :::info[Provider Summary] 
