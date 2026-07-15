@@ -147,6 +147,20 @@ No signature collisions anywhere (the oci `GetCompartment` failure mode does not
 4. Acceptance: the v1 documented example queries re-run - each passes unchanged or is covered by a Breaking Changes entry, no third state. Extracted target list (22 SELECT + 12 DELETE FROM-targets across the 35 v1 resource pages, plus the INSERT examples): every target resolves through `predecessor_dispositions.csv` - carried targets must pass verbatim; the 5 renamed vector_stores/batch/fine_tuning targets and the retired org-admin/data-plane targets are covered by the generated Breaking Changes section. The extraction command and the per-target expectation are re-derived from the dispositions CSV at acceptance time (deterministic, no hand-kept list).
 5. Docs site regenerated (`openai-provider.stackql.io`) with the generation-change note and the `openai_admin` sibling pointer.
 
+## 8. Query-parameter pushdown - investigated, no clean v1 opportunity
+
+any-sdk's `queryParamPushdown` config (translating SQL clauses to query params) is a **live, wired** engine feature, unlike `responseTerminator`: stackql's `internal/stackql/pushdown` extracts a neutral intent (projection/predicates/order-by/limit/offset/count) from the SELECT, gated on the method carrying the config, and any-sdk's `ApplyPushdown` renders it. Six pushdown types exist: `select` (`$select`), `filter` (`$filter`), `orderBy`, `top` (LIMIT), `skip` (OFFSET), `count`. Purely an optimisation - client-side WHERE/projection/LIMIT stay authoritative, so a partial or absent translation never changes results.
+
+Assessed against the OpenAI list surface, **none is a clean fit for v1**:
+
+- **`filter` and `orderBy` render OData syntax only** (`applyPushdownFilter`/`applyPushdownOrderBy` require `syntax: odata` and emit `col eq 'v'` / `col desc`). OpenAI has no filter DSL - it uses discrete named query params - and its `order` is direction-only (`asc`/`desc`, implicitly on `created_at`), not a `col dir` expression. No renderer fits.
+- **`select`/`skip`/`count` have no OpenAI equivalent** - no sparse fieldsets on lists, cursor pagination not offset, no count endpoints in scope.
+- **`top` (LIMIT -> `limit`) is the only structural candidate, and it collides with pagination.** OpenAI's `limit` IS the pagination page-size parameter. The REST acquire path's pagination loop (`mono_valent_execution.go:1277-1304`) is eager - it fetches every page until the cursor token is absent and never consults the SQL LIMIT (only the GraphQL path bounds pages by `GetPushdownLimit`). So a `top` pushdown on `limit` would set the page size without reducing rows fetched, and for a small `LIMIT` it shrinks pages and *increases* request count. Counterproductive while cursor pagination is on.
+
+**What users want (filter/limit/project) is already delivered by ordinary parameter binding**, not pushdown: the discrete query params are carried onto the list methods as WHERE-able parameters (verified on `files.list`: `purpose`, `limit`, `order`, `after`). `SELECT ... FROM openai.files.files WHERE purpose = 'fine-tune' AND order = 'desc' AND limit = 100` binds each to its query param today, no config needed. The only thing pushdown would add is SQL-clause ergonomics (`LIMIT 100` instead of `WHERE limit = 100`), which the pagination collision makes not worth it.
+
+**Engine candidate (phase 2, not a v1 gate):** if the REST acquire path is taught to bound eager cursor pagination by the pushed LIMIT (mirroring the GraphQL path's `GetPushdownLimit`), a `top` pushdown on `limit` becomes a clean ergonomic win - `LIMIT n` fetches exactly one bounded page. Until that lands, no pushdown config is emitted.
+
 ## Open
 
 1. **Live runbooks blocked on `OPENAI_API_KEY`** - the section 3 two-page traversal, the vector store cost-free lifecycle, the update-POST field-drop probes, rate-limit observation. All other phase 1 results are offline-proven; these execute unchanged when a key is present. (nvidia/vsphere blocked-on-key pattern.)
