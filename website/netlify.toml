@@ -1,0 +1,9 @@
+# Netlify site: openai-provider.stackql.io
+# Base directory (set in Netlify UI): website
+
+[build]
+  command = "yarn build"
+  publish = "build"
+
+[build.environment]
+  NODE_VERSION = "22"
