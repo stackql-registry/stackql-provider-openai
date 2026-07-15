@@ -123,16 +123,16 @@ paths:
               ]
             }
       parameters:
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
   /models/{model}:
@@ -149,16 +149,16 @@ paths:
             type: string
             example: gpt-4o-mini
           description: The ID of the model to use for this request
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -267,16 +267,16 @@ paths:
             type: string
             example: ft:gpt-4o-mini:acemeco:suffix:abc123
           description: The model to delete
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:

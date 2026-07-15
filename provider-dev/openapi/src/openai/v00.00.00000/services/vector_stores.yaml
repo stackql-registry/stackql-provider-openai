@@ -13,18 +13,18 @@ paths:
       parameters:
         - name: limit
           in: query
-          description: >
-            A limit on the number of objects to be returned. Limit can range
-            between 1 and 100, and the default is 20.
+          description: |-
+            A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
           required: false
           schema:
             type: integer
             default: 20
         - name: order
           in: query
-          description: >
-            Sort order by the `created_at` timestamp of the objects. `asc` for
-            ascending order and `desc` for descending order.
+          description: |
+            Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
           schema:
             type: string
             default: desc
@@ -33,37 +33,26 @@ paths:
               - desc
         - name: after
           in: query
-          description: >
-            A cursor for use in pagination. `after` is an object ID that defines
-            your place in the list. For instance, if you make a list request and
-            receive 100 objects, ending with obj_foo, your subsequent call can
-            include after=obj_foo in order to fetch the next page of the list.
+          description: |
+            A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
         - name: before
           in: query
-          description: >
-            A cursor for use in pagination. `before` is an object ID that
-            defines your place in the list. For instance, if you make a list
-            request and receive 100 objects, starting with obj_foo, your
-            subsequent call can include before=obj_foo in order to fetch the
-            previous page of the list.
+          description: |
+            A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
           schema:
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -284,20 +273,16 @@ paths:
               }
             }
       parameters:
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
   /vector_stores/{vector_store_id}:
@@ -313,20 +298,16 @@ paths:
           schema:
             type: string
           description: The ID of the vector store to retrieve.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -369,18 +350,14 @@ paths:
               }
 
               main();
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const vectorStore = await
-              client.vectorStores.retrieve('vector_store_id');
-
+              const vectorStore = await client.vectorStores.retrieve('vector_store_id');
 
               console.log(vectorStore.id);
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tvectorStore, err := client.VectorStores.Get(context.TODO(), \"vector_store_id\")\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", vectorStore.ID)\n}\n"
@@ -427,20 +404,16 @@ paths:
           schema:
             type: string
           description: The ID of the vector store to modify.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -495,18 +468,14 @@ paths:
               }
 
               main();
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const vectorStore = await
-              client.vectorStores.update('vector_store_id');
-
+              const vectorStore = await client.vectorStores.update('vector_store_id');
 
               console.log(vectorStore.id);
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tvectorStore, err := client.VectorStores.Update(\n\t\tcontext.TODO(),\n\t\t\"vector_store_id\",\n\t\topenai.VectorStoreUpdateParams{},\n\t)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", vectorStore.ID)\n}\n"
@@ -563,20 +532,16 @@ paths:
           schema:
             type: string
           description: The ID of the vector store to delete.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -620,18 +585,14 @@ paths:
               }
 
               main();
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const vectorStoreDeleted = await
-              client.vectorStores.delete('vector_store_id');
-
+              const vectorStoreDeleted = await client.vectorStores.delete('vector_store_id');
 
               console.log(vectorStoreDeleted.id);
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tvectorStoreDeleted, err := client.VectorStores.Delete(context.TODO(), \"vector_store_id\")\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", vectorStoreDeleted.ID)\n}\n"
@@ -652,16 +613,12 @@ paths:
                       VectorStoreDeleted vectorStoreDeleted = client.vectorStores().delete("vector_store_id");
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              vector_store_deleted =
-              openai.vector_stores.delete("vector_store_id")
-
+              vector_store_deleted = openai.vector_stores.delete("vector_store_id")
 
               puts(vector_store_deleted)
           response: |
@@ -676,15 +633,10 @@ paths:
       tags:
         - Vector stores
       summary: Create a vector store file batch.
-      description: >
+      description: |
         The maximum number of files in a single batch request is 2000.
-
-        Vector store file attach requests are rate limited per vector store (300
-        requests per minute across both this endpoint and
-        `/vector_stores/{vector_store_id}/files`).
-
-        For ingesting multiple files into the same vector store, this batch
-        endpoint is recommended.
+        Vector store file attach requests are rate limited per vector store (300 requests per minute across both this endpoint and `/vector_stores/{vector_store_id}/files`).
+        For ingesting multiple files into the same vector store, this batch endpoint is recommended.
       parameters:
         - in: path
           name: vector_store_id
@@ -694,20 +646,16 @@ paths:
             example: vs_abc123
           description: |
             The ID of the vector store for which to create a File Batch.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -726,16 +674,12 @@ paths:
       x-oaiMeta:
         name: Create vector store file batch
         group: vector_stores
-        description: >
-          Attaches multiple files to a vector store in one request. This is the
-          recommended approach for multi-file ingestion, especially because
-          per-vector-store file attach writes are rate-limited (300
-          requests/minute shared with `/vector_stores/{vector_store_id}/files`).
+        description: |
+          Attaches multiple files to a vector store in one request. This is the recommended approach for multi-file ingestion, especially because per-vector-store file attach writes are rate-limited (300 requests/minute shared with `/vector_stores/{vector_store_id}/files`).
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/vector_stores/vs_abc123/file_batches \
+            curl: |
+              curl https://api.openai.com/v1/vector_stores/vs_abc123/file_batches \
                   -H "Authorization: Bearer $OPENAI_API_KEY" \
                   -H "Content-Type: application/json \
                   -H "OpenAI-Beta: assistants=v2" \
@@ -755,21 +699,16 @@ paths:
                       }
                     ]
                   }'
-            python: >-
+            python: |-
               import os
-
               from openai import OpenAI
-
 
               client = OpenAI(
                   api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
               )
-
-              vector_store_file_batch =
-              client.vector_stores.file_batches.create(
+              vector_store_file_batch = client.vector_stores.file_batches.create(
                   vector_store_id="vs_abc123",
               )
-
               print(vector_store_file_batch.id)
             javascript: |
               import OpenAI from "openai";
@@ -799,35 +738,24 @@ paths:
               }
 
               main();
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const vectorStoreFileBatch = await
-              client.vectorStores.fileBatches.create('vs_abc123');
-
+              const vectorStoreFileBatch = await client.vectorStores.fileBatches.create('vs_abc123');
 
               console.log(vectorStoreFileBatch.id);
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tvectorStoreFileBatch, err := client.VectorStores.FileBatches.New(\n\t\tcontext.TODO(),\n\t\t\"vs_abc123\",\n\t\topenai.VectorStoreFileBatchNewParams{},\n\t)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", vectorStoreFileBatch.ID)\n}\n"
-            java: >-
+            java: |-
               package com.openai.example;
 
-
               import com.openai.client.OpenAIClient;
-
               import com.openai.client.okhttp.OpenAIOkHttpClient;
-
-              import
-              com.openai.models.vectorstores.filebatches.FileBatchCreateParams;
-
-              import
-              com.openai.models.vectorstores.filebatches.VectorStoreFileBatch;
-
+              import com.openai.models.vectorstores.filebatches.FileBatchCreateParams;
+              import com.openai.models.vectorstores.filebatches.VectorStoreFileBatch;
 
               public final class Main {
                   private Main() {}
@@ -838,16 +766,12 @@ paths:
                       VectorStoreFileBatch vectorStoreFileBatch = client.vectorStores().fileBatches().create("vs_abc123");
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              vector_store_file_batch =
-              openai.vector_stores.file_batches.create("vs_abc123")
-
+              vector_store_file_batch = openai.vector_stores.file_batches.create("vs_abc123")
 
               puts(vector_store_file_batch)
           response: |
@@ -886,20 +810,16 @@ paths:
             type: string
             example: vsfb_abc123
           description: The ID of the file batch being retrieved.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -914,29 +834,22 @@ paths:
         group: vector_stores
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/vector_stores/vs_abc123/file_batches/vsfb_abc123
-              \
+            curl: |
+              curl https://api.openai.com/v1/vector_stores/vs_abc123/file_batches/vsfb_abc123 \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json" \
                 -H "OpenAI-Beta: assistants=v2"
-            python: >-
+            python: |-
               import os
-
               from openai import OpenAI
-
 
               client = OpenAI(
                   api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
               )
-
-              vector_store_file_batch =
-              client.vector_stores.file_batches.retrieve(
+              vector_store_file_batch = client.vector_stores.file_batches.retrieve(
                   batch_id="vsfb_abc123",
                   vector_store_id="vs_abc123",
               )
-
               print(vector_store_file_batch.id)
             javascript: |
               import OpenAI from "openai";
@@ -951,37 +864,26 @@ paths:
               }
 
               main();
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const vectorStoreFileBatch = await
-              client.vectorStores.fileBatches.retrieve('vsfb_abc123', {
+              const vectorStoreFileBatch = await client.vectorStores.fileBatches.retrieve('vsfb_abc123', {
                 vector_store_id: 'vs_abc123',
               });
 
-
               console.log(vectorStoreFileBatch.id);
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tvectorStoreFileBatch, err := client.VectorStores.FileBatches.Get(\n\t\tcontext.TODO(),\n\t\t\"vs_abc123\",\n\t\t\"vsfb_abc123\",\n\t)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", vectorStoreFileBatch.ID)\n}\n"
-            java: >-
+            java: |-
               package com.openai.example;
 
-
               import com.openai.client.OpenAIClient;
-
               import com.openai.client.okhttp.OpenAIOkHttpClient;
-
-              import
-              com.openai.models.vectorstores.filebatches.FileBatchRetrieveParams;
-
-              import
-              com.openai.models.vectorstores.filebatches.VectorStoreFileBatch;
-
+              import com.openai.models.vectorstores.filebatches.FileBatchRetrieveParams;
+              import com.openai.models.vectorstores.filebatches.VectorStoreFileBatch;
 
               public final class Main {
                   private Main() {}
@@ -996,17 +898,12 @@ paths:
                       VectorStoreFileBatch vectorStoreFileBatch = client.vectorStores().fileBatches().retrieve(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              vector_store_file_batch =
-              openai.vector_stores.file_batches.retrieve("vsfb_abc123",
-              vector_store_id: "vs_abc123")
-
+              vector_store_file_batch = openai.vector_stores.file_batches.retrieve("vsfb_abc123", vector_store_id: "vs_abc123")
 
               puts(vector_store_file_batch)
           response: |
@@ -1029,9 +926,7 @@ paths:
       operationId: cancelVectorStoreFileBatch
       tags:
         - Vector stores
-      summary: >-
-        Cancel a vector store file batch. This attempts to cancel the processing
-        of files in this batch as soon as possible.
+      summary: Cancel a vector store file batch. This attempts to cancel the processing of files in this batch as soon as possible.
       parameters:
         - in: path
           name: vector_store_id
@@ -1045,20 +940,16 @@ paths:
           schema:
             type: string
           description: The ID of the file batch to cancel.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -1073,30 +964,23 @@ paths:
         group: vector_stores
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/vector_stores/vs_abc123/files_batches/vsfb_abc123/cancel
-              \
+            curl: |
+              curl https://api.openai.com/v1/vector_stores/vs_abc123/files_batches/vsfb_abc123/cancel \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json" \
                 -H "OpenAI-Beta: assistants=v2" \
                 -X POST
-            python: >-
+            python: |-
               import os
-
               from openai import OpenAI
-
 
               client = OpenAI(
                   api_key=os.environ.get("OPENAI_API_KEY"),  # This is the default and can be omitted
               )
-
-              vector_store_file_batch =
-              client.vector_stores.file_batches.cancel(
+              vector_store_file_batch = client.vector_stores.file_batches.cancel(
                   batch_id="batch_id",
                   vector_store_id="vector_store_id",
               )
-
               print(vector_store_file_batch.id)
             javascript: |
               import OpenAI from "openai";
@@ -1111,37 +995,26 @@ paths:
               }
 
               main();
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const vectorStoreFileBatch = await
-              client.vectorStores.fileBatches.cancel('batch_id', {
+              const vectorStoreFileBatch = await client.vectorStores.fileBatches.cancel('batch_id', {
                 vector_store_id: 'vector_store_id',
               });
 
-
               console.log(vectorStoreFileBatch.id);
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tvectorStoreFileBatch, err := client.VectorStores.FileBatches.Cancel(\n\t\tcontext.TODO(),\n\t\t\"vector_store_id\",\n\t\t\"batch_id\",\n\t)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", vectorStoreFileBatch.ID)\n}\n"
-            java: >-
+            java: |-
               package com.openai.example;
 
-
               import com.openai.client.OpenAIClient;
-
               import com.openai.client.okhttp.OpenAIOkHttpClient;
-
-              import
-              com.openai.models.vectorstores.filebatches.FileBatchCancelParams;
-
-              import
-              com.openai.models.vectorstores.filebatches.VectorStoreFileBatch;
-
+              import com.openai.models.vectorstores.filebatches.FileBatchCancelParams;
+              import com.openai.models.vectorstores.filebatches.VectorStoreFileBatch;
 
               public final class Main {
                   private Main() {}
@@ -1156,17 +1029,12 @@ paths:
                       VectorStoreFileBatch vectorStoreFileBatch = client.vectorStores().fileBatches().cancel(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              vector_store_file_batch =
-              openai.vector_stores.file_batches.cancel("batch_id",
-              vector_store_id: "vector_store_id")
-
+              vector_store_file_batch = openai.vector_stores.file_batches.cancel("batch_id", vector_store_id: "vector_store_id")
 
               puts(vector_store_file_batch)
           response: |
@@ -1205,18 +1073,18 @@ paths:
             type: string
         - name: limit
           in: query
-          description: >
-            A limit on the number of objects to be returned. Limit can range
-            between 1 and 100, and the default is 20.
+          description: |-
+            A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
           required: false
           schema:
             type: integer
             default: 20
         - name: order
           in: query
-          description: >
-            Sort order by the `created_at` timestamp of the objects. `asc` for
-            ascending order and `desc` for descending order.
+          description: |
+            Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
           schema:
             type: string
             default: desc
@@ -1225,28 +1093,19 @@ paths:
               - desc
         - name: after
           in: query
-          description: >
-            A cursor for use in pagination. `after` is an object ID that defines
-            your place in the list. For instance, if you make a list request and
-            receive 100 objects, ending with obj_foo, your subsequent call can
-            include after=obj_foo in order to fetch the next page of the list.
+          description: |
+            A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
         - name: before
           in: query
-          description: >
-            A cursor for use in pagination. `before` is an object ID that
-            defines your place in the list. For instance, if you make a list
-            request and receive 100 objects, starting with obj_foo, your
-            subsequent call can include before=obj_foo in order to fetch the
-            previous page of the list.
+          description: |
+            A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
           schema:
             type: string
         - name: filter
           in: query
-          description: >-
-            Filter by file status. One of `in_progress`, `completed`, `failed`,
-            `cancelled`.
+          description: Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`.
           schema:
             type: string
             enum:
@@ -1254,20 +1113,16 @@ paths:
               - completed
               - failed
               - cancelled
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -1282,10 +1137,8 @@ paths:
         group: vector_stores
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/vector_stores/vs_abc123/files_batches/vsfb_abc123/files
-              \
+            curl: |
+              curl https://api.openai.com/v1/vector_stores/vs_abc123/files_batches/vsfb_abc123/files \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json" \
                 -H "OpenAI-Beta: assistants=v2"
@@ -1315,38 +1168,27 @@ paths:
               }
 
               main();
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
               // Automatically fetches more pages as needed.
-
-              for await (const vectorStoreFile of
-              client.vectorStores.fileBatches.listFiles('batch_id', {
+              for await (const vectorStoreFile of client.vectorStores.fileBatches.listFiles('batch_id', {
                 vector_store_id: 'vector_store_id',
               })) {
                 console.log(vectorStoreFile.id);
               }
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tpage, err := client.VectorStores.FileBatches.ListFiles(\n\t\tcontext.TODO(),\n\t\t\"vector_store_id\",\n\t\t\"batch_id\",\n\t\topenai.VectorStoreFileBatchListFilesParams{},\n\t)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", page)\n}\n"
-            java: >-
+            java: |-
               package com.openai.example;
 
-
               import com.openai.client.OpenAIClient;
-
               import com.openai.client.okhttp.OpenAIOkHttpClient;
-
-              import
-              com.openai.models.vectorstores.filebatches.FileBatchListFilesPage;
-
-              import
-              com.openai.models.vectorstores.filebatches.FileBatchListFilesParams;
-
+              import com.openai.models.vectorstores.filebatches.FileBatchListFilesPage;
+              import com.openai.models.vectorstores.filebatches.FileBatchListFilesParams;
 
               public final class Main {
                   private Main() {}
@@ -1361,16 +1203,12 @@ paths:
                       FileBatchListFilesPage page = client.vectorStores().fileBatches().listFiles(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              page = openai.vector_stores.file_batches.list_files("batch_id",
-              vector_store_id: "vector_store_id")
-
+              page = openai.vector_stores.file_batches.list_files("batch_id", vector_store_id: "vector_store_id")
 
               puts(page)
           response: |
@@ -1409,18 +1247,18 @@ paths:
             type: string
         - name: limit
           in: query
-          description: >
-            A limit on the number of objects to be returned. Limit can range
-            between 1 and 100, and the default is 20.
+          description: |-
+            A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
           required: false
           schema:
             type: integer
             default: 20
         - name: order
           in: query
-          description: >
-            Sort order by the `created_at` timestamp of the objects. `asc` for
-            ascending order and `desc` for descending order.
+          description: |
+            Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
           schema:
             type: string
             default: desc
@@ -1429,28 +1267,19 @@ paths:
               - desc
         - name: after
           in: query
-          description: >
-            A cursor for use in pagination. `after` is an object ID that defines
-            your place in the list. For instance, if you make a list request and
-            receive 100 objects, ending with obj_foo, your subsequent call can
-            include after=obj_foo in order to fetch the next page of the list.
+          description: |
+            A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
         - name: before
           in: query
-          description: >
-            A cursor for use in pagination. `before` is an object ID that
-            defines your place in the list. For instance, if you make a list
-            request and receive 100 objects, starting with obj_foo, your
-            subsequent call can include before=obj_foo in order to fetch the
-            previous page of the list.
+          description: |
+            A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list.
           schema:
             type: string
         - name: filter
           in: query
-          description: >-
-            Filter by file status. One of `in_progress`, `completed`, `failed`,
-            `cancelled`.
+          description: Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`.
           schema:
             type: string
             enum:
@@ -1458,20 +1287,16 @@ paths:
               - completed
               - failed
               - cancelled
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -1515,19 +1340,15 @@ paths:
               }
 
               main();
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
               // Automatically fetches more pages as needed.
-
-              for await (const vectorStoreFile of
-              client.vectorStores.files.list('vector_store_id')) {
+              for await (const vectorStoreFile of client.vectorStores.files.list('vector_store_id')) {
                 console.log(vectorStoreFile.id);
               }
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tpage, err := client.VectorStores.Files.List(\n\t\tcontext.TODO(),\n\t\t\"vector_store_id\",\n\t\topenai.VectorStoreFileListParams{},\n\t)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", page)\n}\n"
@@ -1581,17 +1402,10 @@ paths:
       operationId: createVectorStoreFile
       tags:
         - Vector stores
-      summary: >-
-        Create a vector store file by attaching a
-        [File](/docs/api-reference/files) to a [vector
-        store](/docs/api-reference/vector-stores/object).
-      description: >-
-        This endpoint is subject to a per-vector-store write rate limit of 300
-        requests per minute, shared with
-        `/vector_stores/{vector_store_id}/file_batches`.
-
-        For uploading multiple files to the same vector store, use the file
-        batches endpoint to reduce request volume.
+      summary: Create a vector store file by attaching a [File](/docs/api-reference/files) to a [vector store](/docs/api-reference/vector-stores/object).
+      description: |-
+        This endpoint is subject to a per-vector-store write rate limit of 300 requests per minute, shared with `/vector_stores/{vector_store_id}/file_batches`.
+        For uploading multiple files to the same vector store, use the file batches endpoint to reduce request volume.
       parameters:
         - in: path
           name: vector_store_id
@@ -1601,20 +1415,16 @@ paths:
             example: vs_abc123
           description: |
             The ID of the vector store for which to create a File.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -1633,11 +1443,8 @@ paths:
       x-oaiMeta:
         name: Create vector store file
         group: vector_stores
-        description: >
-          Attaches one file to a vector store. File attach writes are
-          rate-limited per vector store (300 requests/minute shared with
-          `/vector_stores/{vector_store_id}/file_batches`), so use file batches
-          when uploading multiple files.
+        description: |
+          Attaches one file to a vector store. File attach writes are rate-limited per vector store (300 requests/minute shared with `/vector_stores/{vector_store_id}/file_batches`), so use file batches when uploading multiple files.
         examples:
           request:
             curl: |
@@ -1675,19 +1482,14 @@ paths:
               }
 
               main();
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const vectorStoreFile = await
-              client.vectorStores.files.create('vs_abc123', { file_id: 'file_id'
-              });
-
+              const vectorStoreFile = await client.vectorStores.files.create('vs_abc123', { file_id: 'file_id' });
 
               console.log(vectorStoreFile.id);
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tvectorStoreFile, err := client.VectorStores.Files.New(\n\t\tcontext.TODO(),\n\t\t\"vs_abc123\",\n\t\topenai.VectorStoreFileNewParams{\n\t\t\tFileID: \"file_id\",\n\t\t},\n\t)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", vectorStoreFile.ID)\n}\n"
@@ -1712,16 +1514,12 @@ paths:
                       VectorStoreFile vectorStoreFile = client.vectorStores().files().create(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              vector_store_file = openai.vector_stores.files.create("vs_abc123",
-              file_id: "file_id")
-
+              vector_store_file = openai.vector_stores.files.create("vs_abc123", file_id: "file_id")
 
               puts(vector_store_file)
           response: |
@@ -1755,20 +1553,16 @@ paths:
             type: string
             example: file-abc123
           description: The ID of the file being retrieved.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -1783,10 +1577,8 @@ paths:
         group: vector_stores
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/vector_stores/vs_abc123/files/file-abc123
-              \
+            curl: |
+              curl https://api.openai.com/v1/vector_stores/vs_abc123/files/file-abc123 \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json" \
                 -H "OpenAI-Beta: assistants=v2"
@@ -1815,20 +1607,16 @@ paths:
               }
 
               main();
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const vectorStoreFile = await
-              client.vectorStores.files.retrieve('file-abc123', {
+              const vectorStoreFile = await client.vectorStores.files.retrieve('file-abc123', {
                 vector_store_id: 'vs_abc123',
               });
-
 
               console.log(vectorStoreFile.id);
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tvectorStoreFile, err := client.VectorStores.Files.Get(\n\t\tcontext.TODO(),\n\t\t\"vs_abc123\",\n\t\t\"file-abc123\",\n\t)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", vectorStoreFile.ID)\n}\n"
@@ -1853,17 +1641,12 @@ paths:
                       VectorStoreFile vectorStoreFile = client.vectorStores().files().retrieve(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              vector_store_file =
-              openai.vector_stores.files.retrieve("file-abc123",
-              vector_store_id: "vs_abc123")
-
+              vector_store_file = openai.vector_stores.files.retrieve("file-abc123", vector_store_id: "vs_abc123")
 
               puts(vector_store_file)
           response: |
@@ -1879,10 +1662,7 @@ paths:
       operationId: deleteVectorStoreFile
       tags:
         - Vector stores
-      summary: >-
-        Delete a vector store file. This will remove the file from the vector
-        store but the file itself will not be deleted. To delete the file, use
-        the [delete file](/docs/api-reference/files/delete) endpoint.
+      summary: Delete a vector store file. This will remove the file from the vector store but the file itself will not be deleted. To delete the file, use the [delete file](/docs/api-reference/files/delete) endpoint.
       parameters:
         - in: path
           name: vector_store_id
@@ -1896,20 +1676,16 @@ paths:
           schema:
             type: string
           description: The ID of the file to delete.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -1924,10 +1700,8 @@ paths:
         group: vector_stores
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/vector_stores/vs_abc123/files/file-abc123
-              \
+            curl: |
+              curl https://api.openai.com/v1/vector_stores/vs_abc123/files/file-abc123 \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json" \
                 -H "OpenAI-Beta: assistants=v2" \
@@ -1957,36 +1731,26 @@ paths:
               }
 
               main();
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const vectorStoreFileDeleted = await
-              client.vectorStores.files.delete('file_id', {
+              const vectorStoreFileDeleted = await client.vectorStores.files.delete('file_id', {
                 vector_store_id: 'vector_store_id',
               });
 
-
               console.log(vectorStoreFileDeleted.id);
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tvectorStoreFileDeleted, err := client.VectorStores.Files.Delete(\n\t\tcontext.TODO(),\n\t\t\"vector_store_id\",\n\t\t\"file_id\",\n\t)\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", vectorStoreFileDeleted.ID)\n}\n"
-            java: >-
+            java: |-
               package com.openai.example;
 
-
               import com.openai.client.OpenAIClient;
-
               import com.openai.client.okhttp.OpenAIOkHttpClient;
-
               import com.openai.models.vectorstores.files.FileDeleteParams;
-
-              import
-              com.openai.models.vectorstores.files.VectorStoreFileDeleted;
-
+              import com.openai.models.vectorstores.files.VectorStoreFileDeleted;
 
               public final class Main {
                   private Main() {}
@@ -2001,17 +1765,12 @@ paths:
                       VectorStoreFileDeleted vectorStoreFileDeleted = client.vectorStores().files().delete(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              vector_store_file_deleted =
-              openai.vector_stores.files.delete("file_id", vector_store_id:
-              "vector_store_id")
-
+              vector_store_file_deleted = openai.vector_stores.files.delete("file_id", vector_store_id: "vector_store_id")
 
               puts(vector_store_file_deleted)
           response: |
@@ -2040,20 +1799,16 @@ paths:
             type: string
             example: file-abc123
           description: The ID of the file to update attributes.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -2074,28 +1829,22 @@ paths:
         group: vector_stores
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/vector_stores/{vector_store_id}/files/{file_id}
-              \
+            curl: |
+              curl https://api.openai.com/v1/vector_stores/{vector_store_id}/files/{file_id} \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json" \
                 -d '{"attributes": {"key1": "value1", "key2": 2}}'
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const vectorStoreFile = await
-              client.vectorStores.files.update('file-abc123', {
+              const vectorStoreFile = await client.vectorStores.files.update('file-abc123', {
                 vector_store_id: 'vs_abc123',
                 attributes: { foo: 'string' },
               });
-
 
               console.log(vectorStoreFile.id);
             python: |-
@@ -2168,9 +1917,7 @@ paths:
       operationId: searchVectorStore
       tags:
         - Vector stores
-      summary: >-
-        Search a vector store for relevant chunks based on a query and file
-        attributes filter.
+      summary: Search a vector store for relevant chunks based on a query and file attributes filter.
       parameters:
         - in: path
           name: vector_store_id
@@ -2179,20 +1926,16 @@ paths:
             type: string
             example: vs_abc123
           description: The ID of the vector store to search.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -2219,19 +1962,15 @@ paths:
               -H "Authorization: Bearer $OPENAI_API_KEY" \
               -H "Content-Type: application/json" \
               -d '{"query": "What is the return policy?", "filters": {...}}'
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
               // Automatically fetches more pages as needed.
-
-              for await (const vectorStoreSearchResponse of
-              client.vectorStores.search('vs_abc123', {
+              for await (const vectorStoreSearchResponse of client.vectorStores.search('vs_abc123', {
                 query: 'string',
               })) {
                 console.log(vectorStoreSearchResponse.file_id);
@@ -2350,10 +2089,7 @@ components:
       additionalProperties: false
       properties:
         file_ids:
-          description: >-
-            A list of [File](/docs/api-reference/files) IDs that the vector
-            store should use. Useful for tools like `file_search` that can
-            access files.
+          description: A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.
           type: array
           maxItems: 500
           items:
@@ -2362,17 +2098,13 @@ components:
           description: The name of the vector store.
           type: string
         description:
-          description: >-
-            A description for the vector store. Can be used to describe the
-            vector store's purpose.
+          description: A description for the vector store. Can be used to describe the vector store's purpose.
           type: string
         expires_after:
           $ref: '#/components/schemas/VectorStoreExpirationAfter'
         chunking_strategy:
           type: object
-          description: >-
-            The chunking strategy used to chunk the file(s). If not set, will
-            use the `auto` strategy. Only applicable if `file_ids` is non-empty.
+          description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. Only applicable if `file_ids` is non-empty.
           title: Auto Chunking Strategy
           additionalProperties: false
           properties:
@@ -2392,9 +2124,7 @@ components:
     VectorStoreObject:
       type: object
       title: Vector store
-      description: >-
-        A vector store is a collection of processed files can be used by the
-        `file_search` tool.
+      description: A vector store is a collection of processed files can be used by the `file_search` tool.
       properties:
         id:
           description: The identifier, which can be referenced in API endpoints.
@@ -2406,9 +2136,7 @@ components:
             - vector_store
           x-stainless-const: true
         created_at:
-          description: >-
-            The Unix timestamp (in seconds) for when the vector store was
-            created.
+          description: The Unix timestamp (in seconds) for when the vector store was created.
           type: integer
           format: unixtime
         name:
@@ -2442,10 +2170,7 @@ components:
             - cancelled
             - total
         status:
-          description: >-
-            The status of the vector store, which can be either `expired`,
-            `in_progress`, or `completed`. A status of `completed` indicates
-            that the vector store is ready for use.
+          description: The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use.
           type: string
           enum:
             - expired
@@ -2454,15 +2179,11 @@ components:
         expires_after:
           $ref: '#/components/schemas/VectorStoreExpirationAfter'
         expires_at:
-          description: >-
-            The Unix timestamp (in seconds) for when the vector store will
-            expire.
+          description: The Unix timestamp (in seconds) for when the vector store will expire.
           type: integer
           format: unixtime
         last_active_at:
-          description: >-
-            The Unix timestamp (in seconds) for when the vector store was last
-            active.
+          description: The Unix timestamp (in seconds) for when the vector store was last active.
           type: integer
           format: unixtime
         metadata:
@@ -2511,17 +2232,13 @@ components:
           description: The expiration policy for a vector store.
           properties:
             anchor:
-              description: >-
-                Anchor timestamp after which the expiration policy applies.
-                Supported anchors: `last_active_at`.
+              description: 'Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`.'
               type: string
               enum:
                 - last_active_at
               x-stainless-const: true
             days:
-              description: >-
-                The number of days after the anchor time that the vector store
-                will expire.
+              description: The number of days after the anchor time that the vector store will expire.
               type: integer
               minimum: 1
               maximum: 365
@@ -2552,29 +2269,14 @@ components:
       additionalProperties: false
       properties:
         file_ids:
-          description: >-
-            A list of [File](/docs/api-reference/files) IDs that the vector
-            store should use. Useful for tools like `file_search` that can
-            access files.  If `attributes` or `chunking_strategy` are provided,
-            they will be  applied to all files in the batch. The maximum batch
-            size is 2000 files. This endpoint is recommended for multi-file
-            ingestion and helps reduce per-vector-store write request pressure.
-            Mutually exclusive with `files`.
+          description: A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like `file_search` that can access files.  If `attributes` or `chunking_strategy` are provided, they will be  applied to all files in the batch. The maximum batch size is 2000 files. This endpoint is recommended for multi-file ingestion and helps reduce per-vector-store write request pressure. Mutually exclusive with `files`.
           type: array
           minItems: 1
           maxItems: 2000
           items:
             type: string
         files:
-          description: >-
-            A list of objects that each include a `file_id` plus optional
-            `attributes` or `chunking_strategy`. Use this when you need to
-            override metadata for specific files. The global `attributes` or
-            `chunking_strategy` will be ignored and must be specified for each
-            file. The maximum batch size is 2000 files. This endpoint is
-            recommended for multi-file ingestion and helps reduce
-            per-vector-store write request pressure. Mutually exclusive with
-            `file_ids`.
+          description: A list of objects that each include a `file_id` plus optional `attributes` or `chunking_strategy`. Use this when you need to override metadata for specific files. The global `attributes` or `chunking_strategy` will be ignored and must be specified for each file. The maximum batch size is 2000 files. This endpoint is recommended for multi-file ingestion and helps reduce per-vector-store write request pressure. Mutually exclusive with `file_ids`.
           type: array
           minItems: 1
           maxItems: 2000
@@ -2602,21 +2304,14 @@ components:
             - vector_store.files_batch
           x-stainless-const: true
         created_at:
-          description: >-
-            The Unix timestamp (in seconds) for when the vector store files
-            batch was created.
+          description: The Unix timestamp (in seconds) for when the vector store files batch was created.
           type: integer
           format: unixtime
         vector_store_id:
-          description: >-
-            The ID of the [vector
-            store](/docs/api-reference/vector-stores/object) that the
-            [File](/docs/api-reference/files) is attached to.
+          description: The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to.
           type: string
         status:
-          description: >-
-            The status of the vector store files batch, which can be either
-            `in_progress`, `completed`, `cancelled` or `failed`.
+          description: The status of the vector store files batch, which can be either `in_progress`, `completed`, `cancelled` or `failed`.
           type: string
           enum:
             - in_progress
@@ -2702,12 +2397,7 @@ components:
       additionalProperties: false
       properties:
         file_id:
-          description: >-
-            A [File](/docs/api-reference/files) ID that the vector store should
-            use. Useful for tools like `file_search` that can access files. For
-            multi-file ingestion, we recommend
-            [`file_batches`](/docs/api-reference/vector-stores-file-batches/createBatch)
-            to minimize per-vector-store write requests.
+          description: A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like `file_search` that can access files. For multi-file ingestion, we recommend [`file_batches`](/docs/api-reference/vector-stores-file-batches/createBatch) to minimize per-vector-store write requests.
           type: string
         chunking_strategy:
           $ref: '#/components/schemas/ChunkingStrategyRequestParam'
@@ -2730,27 +2420,17 @@ components:
             - vector_store.file
           x-stainless-const: true
         usage_bytes:
-          description: >-
-            The total vector store usage in bytes. Note that this may be
-            different from the original file size.
+          description: The total vector store usage in bytes. Note that this may be different from the original file size.
           type: integer
         created_at:
-          description: >-
-            The Unix timestamp (in seconds) for when the vector store file was
-            created.
+          description: The Unix timestamp (in seconds) for when the vector store file was created.
           type: integer
           format: unixtime
         vector_store_id:
-          description: >-
-            The ID of the [vector
-            store](/docs/api-reference/vector-stores/object) that the
-            [File](/docs/api-reference/files) is attached to.
+          description: The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to.
           type: string
         status:
-          description: >-
-            The status of the vector store file, which can be either
-            `in_progress`, `completed`, `cancelled`, or `failed`. The status
-            `completed` indicates that the vector store file is ready for use.
+          description: The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use.
           type: string
           enum:
             - in_progress
@@ -2759,9 +2439,7 @@ components:
             - failed
         last_error:
           type: object
-          description: >-
-            The last error associated with this vector store file. Will be
-            `null` if there are no errors.
+          description: The last error associated with this vector store file. Will be `null` if there are no errors.
           properties:
             code:
               type: string
@@ -2865,9 +2543,7 @@ components:
           type: boolean
           default: false
         max_num_results:
-          description: >-
-            The maximum number of results to return. This number should be
-            between 1 and 50 inclusive.
+          description: The maximum number of results to return. This number should be between 1 and 50 inclusive.
           type: integer
           default: 10
           minimum: 1
@@ -2890,32 +2566,21 @@ components:
                 - lte
                 - in
                 - nin
-              description: >
-                Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`,
-                `lt`, `lte`, `in`, `nin`.
-
+              description: |
+                Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`, `nin`.
                 - `eq`: equals
-
                 - `ne`: not equal
-
                 - `gt`: greater than
-
                 - `gte`: greater than or equal
-
                 - `lt`: less than
-
                 - `lte`: less than or equal
-
                 - `in`: in
-
                 - `nin`: not in
             key:
               type: string
               description: The key to compare against the value.
             value:
-              description: >-
-                The value to compare against the attribute key; supports string,
-                number, or boolean types.
+              description: The value to compare against the attribute key; supports string, number, or boolean types.
               type: string
               items:
                 oneOf:
@@ -2923,9 +2588,7 @@ components:
                   - type: number
             filters:
               type: array
-              description: >-
-                Array of filters to combine. Items can be `ComparisonFilter` or
-                `CompoundFilter`.
+              description: Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.
               items:
                 oneOf:
                   - $ref: '#/components/schemas/ComparisonFilter'
@@ -2946,9 +2609,7 @@ components:
           additionalProperties: false
           properties:
             ranker:
-              description: >-
-                Enable re-ranking; set to `none` to disable, which can help
-                reduce latency.
+              description: Enable re-ranking; set to `none` to disable, which can help reduce latency.
               type: string
               enum:
                 - none
@@ -3005,17 +2666,13 @@ components:
       description: The expiration policy for a vector store.
       properties:
         anchor:
-          description: >-
-            Anchor timestamp after which the expiration policy applies.
-            Supported anchors: `last_active_at`.
+          description: 'Anchor timestamp after which the expiration policy applies. Supported anchors: `last_active_at`.'
           type: string
           enum:
             - last_active_at
           x-stainless-const: true
         days:
-          description: >-
-            The number of days after the anchor time that the vector store will
-            expire.
+          description: The number of days after the anchor time that the vector store will expire.
           type: integer
           minimum: 1
           maximum: 365
@@ -3025,9 +2682,7 @@ components:
     AutoChunkingStrategyRequestParam:
       type: object
       title: Auto Chunking Strategy
-      description: >-
-        The default strategy. This strategy currently uses a
-        `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
+      description: The default strategy. This strategy currently uses a `max_chunk_size_tokens` of `800` and `chunk_overlap_tokens` of `400`.
       additionalProperties: false
       properties:
         type:
@@ -3041,9 +2696,7 @@ components:
     StaticChunkingStrategyRequestParam:
       type: object
       title: Static Chunking Strategy
-      description: >-
-        Customize your own chunking strategy by setting chunk size and chunk
-        overlap.
+      description: Customize your own chunking strategy by setting chunk size and chunk overlap.
       additionalProperties: false
       properties:
         type:
@@ -3059,27 +2712,19 @@ components:
         - static
     Metadata:
       type: object
-      description: >
+      description: |
         Set of 16 key-value pairs that can be attached to an object. This can be
-
-        useful for storing additional information about the object in a
-        structured
-
+        useful for storing additional information about the object in a structured
         format, and querying for objects via API or the dashboard.
 
-
-        Keys are strings with a maximum length of 64 characters. Values are
-        strings
-
+        Keys are strings with a maximum length of 64 characters. Values are strings
         with a maximum length of 512 characters.
       additionalProperties:
         type: string
       x-oaiTypeLabel: map
     ChunkingStrategyRequestParam:
       type: object
-      description: >-
-        The chunking strategy used to chunk the file(s). If not set, will use
-        the `auto` strategy.
+      description: The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy.
       discriminator:
         propertyName: type
       title: Auto Chunking Strategy
@@ -3098,18 +2743,11 @@ components:
         - static
     VectorStoreFileAttributes:
       type: object
-      description: >
+      description: |
         Set of 16 key-value pairs that can be attached to an object. This can be
-
-        useful for storing additional information about the object in a
-        structured
-
-        format, and querying for objects via API or the dashboard. Keys are
-        strings
-
-        with a maximum length of 64 characters. Values are strings with a
-        maximum
-
+        useful for storing additional information about the object in a structured
+        format, and querying for objects via API or the dashboard. Keys are strings
+        with a maximum length of 64 characters. Values are strings with a maximum
         length of 512 characters, booleans, or numbers.
       maxProperties: 16
       propertyNames:
@@ -3141,10 +2779,7 @@ components:
     OtherChunkingStrategyResponseParam:
       type: object
       title: Other Chunking Strategy
-      description: >-
-        This is returned when the chunking strategy is unknown. Typically, this
-        is because the file was indexed before the `chunking_strategy` concept
-        was introduced in the API.
+      description: This is returned when the chunking strategy is unknown. Typically, this is because the file was indexed before the `chunking_strategy` concept was introduced in the API.
       additionalProperties: false
       properties:
         type:
@@ -3159,9 +2794,8 @@ components:
       type: object
       additionalProperties: false
       title: Comparison Filter
-      description: >
-        A filter used to compare a specified attribute key to a given value
-        using a defined comparison operation.
+      description: |
+        A filter used to compare a specified attribute key to a given value using a defined comparison operation.
       properties:
         type:
           type: string
@@ -3175,32 +2809,21 @@ components:
             - lte
             - in
             - nin
-          description: >
-            Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`,
-            `lte`, `in`, `nin`.
-
+          description: |
+            Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`, `nin`.
             - `eq`: equals
-
             - `ne`: not equal
-
             - `gt`: greater than
-
             - `gte`: greater than or equal
-
             - `lt`: less than
-
             - `lte`: less than or equal
-
             - `in`: in
-
             - `nin`: not in
         key:
           type: string
           description: The key to compare against the value.
         value:
-          description: >-
-            The value to compare against the attribute key; supports string,
-            number, or boolean types.
+          description: The value to compare against the attribute key; supports string, number, or boolean types.
           type: string
           items:
             oneOf:
@@ -3227,9 +2850,7 @@ components:
             - or
         filters:
           type: array
-          description: >-
-            Array of filters to combine. Items can be `ComparisonFilter` or
-            `CompoundFilter`.
+          description: Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.
           items:
             oneOf:
               - $ref: '#/components/schemas/ComparisonFilter'
@@ -3279,18 +2900,13 @@ components:
           type: integer
           minimum: 100
           maximum: 4096
-          description: >-
-            The maximum number of tokens in each chunk. The default value is
-            `800`. The minimum value is `100` and the maximum value is `4096`.
+          description: The maximum number of tokens in each chunk. The default value is `800`. The minimum value is `100` and the maximum value is `4096`.
         chunk_overlap_tokens:
           type: integer
-          description: >
-            The number of tokens that overlap between chunks. The default value
-            is `400`.
+          description: |
+            The number of tokens that overlap between chunks. The default value is `400`.
 
-
-            Note that the overlap must not exceed half of
-            `max_chunk_size_tokens`.
+            Note that the overlap must not exceed half of `max_chunk_size_tokens`.
       required:
         - max_chunk_size_tokens
         - chunk_overlap_tokens
@@ -3324,6 +2940,8 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
+          request:
+            nativeCasing: kebab
         create:
           config:
             requestBodyTranslate:
@@ -3333,12 +2951,16 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         get:
           operation:
             $ref: '#/paths/~1vector_stores~1{vector_store_id}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         update:
           config:
             requestBodyTranslate:
@@ -3348,12 +2970,16 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         delete:
           operation:
             $ref: '#/paths/~1vector_stores~1{vector_store_id}/delete'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         search:
           config:
             requestBodyTranslate:
@@ -3363,6 +2989,8 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/vector_stores/methods/get'
@@ -3388,20 +3016,24 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         get:
           operation:
-            $ref: >-
-              #/paths/~1vector_stores~1{vector_store_id}~1file_batches~1{batch_id}/get
+            $ref: '#/paths/~1vector_stores~1{vector_store_id}~1file_batches~1{batch_id}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         cancel:
           operation:
-            $ref: >-
-              #/paths/~1vector_stores~1{vector_store_id}~1file_batches~1{batch_id}~1cancel/post
+            $ref: '#/paths/~1vector_stores~1{vector_store_id}~1file_batches~1{batch_id}~1cancel/post'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/file_batches/methods/get'
@@ -3417,12 +3049,13 @@ components:
       methods:
         list:
           operation:
-            $ref: >-
-              #/paths/~1vector_stores~1{vector_store_id}~1file_batches~1{batch_id}~1files/get
+            $ref: '#/paths/~1vector_stores~1{vector_store_id}~1file_batches~1{batch_id}~1files/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
+          request:
+            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/file_batch_files/methods/list'
@@ -3442,6 +3075,8 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
+          request:
+            nativeCasing: kebab
         create:
           config:
             requestBodyTranslate:
@@ -3451,19 +3086,24 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         get:
           operation:
             $ref: '#/paths/~1vector_stores~1{vector_store_id}~1files~1{file_id}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         delete:
           operation:
-            $ref: >-
-              #/paths/~1vector_stores~1{vector_store_id}~1files~1{file_id}/delete
+            $ref: '#/paths/~1vector_stores~1{vector_store_id}~1files~1{file_id}/delete'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         update:
           config:
             requestBodyTranslate:
@@ -3473,6 +3113,8 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/files/methods/get'
@@ -3494,3 +3136,7 @@ x-stackQL-config:
     responseToken:
       key: $.last_id
       location: body
+  queryParamPushdown:
+    top:
+      paramName: limit
+      maxValue: 100

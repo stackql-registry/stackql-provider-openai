@@ -108,7 +108,7 @@ The following methods are available for this resource:
     <td><a href="#list"><CopyableCode code="list" /></a></td>
     <td><CopyableCode code="select" /></td>
     <td><a href="#parameter-fine_tuning_job_id"><code>fine_tuning_job_id</code></a></td>
-    <td><a href="#parameter-after"><code>after</code></a>, <a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-after"><code>after</code></a>, <a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 </tbody>
@@ -132,16 +132,6 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
     <td><code>string</code></td>
     <td>The ID of the fine-tuning job to get events for. </td>
 </tr>
-<tr id="parameter-OpenAI-Organization">
-    <td><CopyableCode code="OpenAI-Organization" /></td>
-    <td><code>string</code></td>
-    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key).</td>
-</tr>
-<tr id="parameter-OpenAI-Project">
-    <td><CopyableCode code="OpenAI-Project" /></td>
-    <td><code>string</code></td>
-    <td>Optionally scope the request to a specific project (overrides the default associated with the API key).</td>
-</tr>
 <tr id="parameter-after">
     <td><CopyableCode code="after" /></td>
     <td><code>string</code></td>
@@ -150,7 +140,17 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>
     <td><code>integer</code></td>
-    <td>Number of events to retrieve.</td>
+    <td>Number of events to retrieve.  Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.</td>
+</tr>
+<tr id="parameter-openai-organization">
+    <td><CopyableCode code="openai-organization" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.</td>
+</tr>
+<tr id="parameter-openai-project">
+    <td><CopyableCode code="openai-project" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.</td>
 </tr>
 </tbody>
 </table>
@@ -179,9 +179,8 @@ type
 FROM openai.fine_tuning.events
 WHERE fine_tuning_job_id = '{{ fine_tuning_job_id }}' -- required
 AND after = '{{ after }}'
-AND limit = '{{ limit }}'
-AND OpenAI-Organization = '{{ OpenAI-Organization }}'
-AND OpenAI-Project = '{{ OpenAI-Project }}'
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
 ```
 </TabItem>

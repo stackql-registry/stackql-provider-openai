@@ -158,21 +158,21 @@ The following methods are available for this resource:
     <td><a href="#get"><CopyableCode code="get" /></a></td>
     <td><CopyableCode code="select" /></td>
     <td><a href="#parameter-skill_id"><code>skill_id</code></a>, <a href="#parameter-version"><code>version</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#list"><CopyableCode code="list" /></a></td>
     <td><CopyableCode code="select" /></td>
     <td><a href="#parameter-skill_id"><code>skill_id</code></a></td>
-    <td><a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-after"><code>after</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-after"><code>after</code></a>, <a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#delete"><CopyableCode code="delete" /></a></td>
     <td><CopyableCode code="delete" /></td>
     <td><a href="#parameter-skill_id"><code>skill_id</code></a>, <a href="#parameter-version"><code>version</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 </tbody>
@@ -201,16 +201,6 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
     <td><code>string</code></td>
     <td>The skill version number.</td>
 </tr>
-<tr id="parameter-OpenAI-Organization">
-    <td><CopyableCode code="OpenAI-Organization" /></td>
-    <td><code>string</code></td>
-    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key).</td>
-</tr>
-<tr id="parameter-OpenAI-Project">
-    <td><CopyableCode code="OpenAI-Project" /></td>
-    <td><code>string</code></td>
-    <td>Optionally scope the request to a specific project (overrides the default associated with the API key).</td>
-</tr>
 <tr id="parameter-after">
     <td><CopyableCode code="after" /></td>
     <td><code>string</code></td>
@@ -219,7 +209,17 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>
     <td><code>integer</code></td>
-    <td>Number of versions to retrieve.</td>
+    <td>Number of versions to retrieve.  Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.</td>
+</tr>
+<tr id="parameter-openai-organization">
+    <td><CopyableCode code="openai-organization" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.</td>
+</tr>
+<tr id="parameter-openai-project">
+    <td><CopyableCode code="openai-project" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.</td>
 </tr>
 <tr id="parameter-order">
     <td><CopyableCode code="order" /></td>
@@ -254,8 +254,8 @@ version
 FROM openai.skills.versions
 WHERE skill_id = '{{ skill_id }}' -- required
 AND version = '{{ version }}' -- required
-AND OpenAI-Organization = '{{ OpenAI-Organization }}'
-AND OpenAI-Project = '{{ OpenAI-Project }}'
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
 ```
 </TabItem>
@@ -274,11 +274,10 @@ object,
 version
 FROM openai.skills.versions
 WHERE skill_id = '{{ skill_id }}' -- required
-AND limit = '{{ limit }}'
-AND order = '{{ order }}'
+AND "order" = '{{ order }}'
 AND after = '{{ after }}'
-AND OpenAI-Organization = '{{ OpenAI-Organization }}'
-AND OpenAI-Project = '{{ OpenAI-Project }}'
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
 ```
 </TabItem>
@@ -301,8 +300,8 @@ No description available.
 DELETE FROM openai.skills.versions
 WHERE skill_id = '{{ skill_id }}' --required
 AND version = '{{ version }}' --required
-AND OpenAI-Organization = '{{ OpenAI-Organization }}'
-AND OpenAI-Project = '{{ OpenAI-Project }}'
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
 ```
 </TabItem>

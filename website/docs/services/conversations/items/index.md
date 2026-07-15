@@ -438,28 +438,28 @@ The following methods are available for this resource:
     <td><a href="#get"><CopyableCode code="get" /></a></td>
     <td><CopyableCode code="select" /></td>
     <td><a href="#parameter-conversation_id"><code>conversation_id</code></a>, <a href="#parameter-item_id"><code>item_id</code></a></td>
-    <td><a href="#parameter-include"><code>include</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-include"><code>include</code></a>, <a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#list"><CopyableCode code="list" /></a></td>
     <td><CopyableCode code="select" /></td>
     <td><a href="#parameter-conversation_id"><code>conversation_id</code></a></td>
-    <td><a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-after"><code>after</code></a>, <a href="#parameter-include"><code>include</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-after"><code>after</code></a>, <a href="#parameter-include"><code>include</code></a>, <a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#create"><CopyableCode code="create" /></a></td>
     <td><CopyableCode code="insert" /></td>
     <td><a href="#parameter-conversation_id"><code>conversation_id</code></a>, <a href="#parameter-items"><code>items</code></a></td>
-    <td><a href="#parameter-include"><code>include</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-include"><code>include</code></a>, <a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#delete"><CopyableCode code="delete" /></a></td>
     <td><CopyableCode code="delete" /></td>
     <td><a href="#parameter-conversation_id"><code>conversation_id</code></a>, <a href="#parameter-item_id"><code>item_id</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 </tbody>
@@ -488,16 +488,6 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
     <td><code>string</code></td>
     <td>The ID of the item to delete.</td>
 </tr>
-<tr id="parameter-OpenAI-Organization">
-    <td><CopyableCode code="OpenAI-Organization" /></td>
-    <td><code>string</code></td>
-    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key).</td>
-</tr>
-<tr id="parameter-OpenAI-Project">
-    <td><CopyableCode code="OpenAI-Project" /></td>
-    <td><code>string</code></td>
-    <td>Optionally scope the request to a specific project (overrides the default associated with the API key).</td>
-</tr>
 <tr id="parameter-after">
     <td><CopyableCode code="after" /></td>
     <td><code>string</code></td>
@@ -511,7 +501,17 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>
     <td><code>integer</code></td>
-    <td>A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20. </td>
+    <td>A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.  Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.</td>
+</tr>
+<tr id="parameter-openai-organization">
+    <td><CopyableCode code="openai-organization" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.</td>
+</tr>
+<tr id="parameter-openai-project">
+    <td><CopyableCode code="openai-project" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.</td>
 </tr>
 <tr id="parameter-order">
     <td><CopyableCode code="order" /></td>
@@ -575,8 +575,8 @@ FROM openai.conversations.items
 WHERE conversation_id = '{{ conversation_id }}' -- required
 AND item_id = '{{ item_id }}' -- required
 AND include = '{{ include }}'
-AND OpenAI-Organization = '{{ OpenAI-Organization }}'
-AND OpenAI-Project = '{{ OpenAI-Project }}'
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
 ```
 </TabItem>
@@ -623,12 +623,11 @@ tools,
 type
 FROM openai.conversations.items
 WHERE conversation_id = '{{ conversation_id }}' -- required
-AND limit = '{{ limit }}'
-AND order = '{{ order }}'
+AND "order" = '{{ order }}'
 AND after = '{{ after }}'
 AND include = '{{ include }}'
-AND OpenAI-Organization = '{{ OpenAI-Organization }}'
-AND OpenAI-Project = '{{ OpenAI-Project }}'
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
 ```
 </TabItem>
@@ -653,15 +652,15 @@ INSERT INTO openai.conversations.items (
 items,
 conversation_id,
 include,
-OpenAI-Organization,
-OpenAI-Project
+"openai-organization",
+"openai-project"
 )
 SELECT 
 '{{ items }}' /* required */,
 '{{ conversation_id }}',
 '{{ include }}',
-'{{ OpenAI-Organization }}',
-'{{ OpenAI-Project }}'
+'{{ openai-organization }}',
+'{{ openai-project }}'
 RETURNING
 first_id,
 last_id,
@@ -739,14 +738,14 @@ object
       value: "{{ include }}"
       description: Additional fields to include in the response. See the \`include\` parameter for [listing Conversation items above](https://platform.openai.com/docs/api-reference/conversations/list-items#conversations_list_items-include) for more information. 
       description: Additional fields to include in the response. See the \`include\` parameter for [listing Conversation items above](https://platform.openai.com/docs/api-reference/conversations/list-items#conversations_list_items-include) for more information. 
-    - name: OpenAI-Organization
-      value: "{{ OpenAI-Organization }}"
-      description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
-      description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
-    - name: OpenAI-Project
-      value: "{{ OpenAI-Project }}"
-      description: Optionally scope the request to a specific project (overrides the default associated with the API key).
-      description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+    - name: openai-organization
+      value: "{{ openai-organization }}"
+      description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as \`openai_organization\`.
+      description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as \`openai_organization\`.
+    - name: openai-project
+      value: "{{ openai-project }}"
+      description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as \`openai_project\`.
+      description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as \`openai_project\`.
 `}</CodeBlock>
 
 </TabItem>
@@ -769,8 +768,8 @@ No description available.
 DELETE FROM openai.conversations.items
 WHERE conversation_id = '{{ conversation_id }}' --required
 AND item_id = '{{ item_id }}' --required
-AND OpenAI-Organization = '{{ OpenAI-Organization }}'
-AND OpenAI-Project = '{{ OpenAI-Project }}'
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
 ```
 </TabItem>

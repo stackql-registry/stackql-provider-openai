@@ -192,14 +192,14 @@ The following methods are available for this resource:
     <td><a href="#get"><CopyableCode code="get" /></a></td>
     <td><CopyableCode code="select" /></td>
     <td><a href="#parameter-eval_id"><code>eval_id</code></a>, <a href="#parameter-run_id"><code>run_id</code></a>, <a href="#parameter-output_item_id"><code>output_item_id</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#list"><CopyableCode code="list" /></a></td>
     <td><CopyableCode code="select" /></td>
     <td><a href="#parameter-eval_id"><code>eval_id</code></a>, <a href="#parameter-run_id"><code>run_id</code></a></td>
-    <td><a href="#parameter-after"><code>after</code></a>, <a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-status"><code>status</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-after"><code>after</code></a>, <a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-status"><code>status</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 </tbody>
@@ -233,16 +233,6 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
     <td><code>string</code></td>
     <td>The ID of the run to retrieve output items for.</td>
 </tr>
-<tr id="parameter-OpenAI-Organization">
-    <td><CopyableCode code="OpenAI-Organization" /></td>
-    <td><code>string</code></td>
-    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key).</td>
-</tr>
-<tr id="parameter-OpenAI-Project">
-    <td><CopyableCode code="OpenAI-Project" /></td>
-    <td><code>string</code></td>
-    <td>Optionally scope the request to a specific project (overrides the default associated with the API key).</td>
-</tr>
 <tr id="parameter-after">
     <td><CopyableCode code="after" /></td>
     <td><code>string</code></td>
@@ -251,7 +241,17 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>
     <td><code>integer</code></td>
-    <td>Number of output items to retrieve.</td>
+    <td>Number of output items to retrieve.  Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.</td>
+</tr>
+<tr id="parameter-openai-organization">
+    <td><CopyableCode code="openai-organization" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.</td>
+</tr>
+<tr id="parameter-openai-project">
+    <td><CopyableCode code="openai-project" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.</td>
 </tr>
 <tr id="parameter-order">
     <td><CopyableCode code="order" /></td>
@@ -295,8 +295,8 @@ FROM openai.evals.run_output_items
 WHERE eval_id = '{{ eval_id }}' -- required
 AND run_id = '{{ run_id }}' -- required
 AND output_item_id = '{{ output_item_id }}' -- required
-AND OpenAI-Organization = '{{ OpenAI-Organization }}'
-AND OpenAI-Project = '{{ OpenAI-Project }}'
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
 ```
 </TabItem>
@@ -320,11 +320,10 @@ FROM openai.evals.run_output_items
 WHERE eval_id = '{{ eval_id }}' -- required
 AND run_id = '{{ run_id }}' -- required
 AND after = '{{ after }}'
-AND limit = '{{ limit }}'
 AND status = '{{ status }}'
-AND order = '{{ order }}'
-AND OpenAI-Organization = '{{ OpenAI-Organization }}'
-AND OpenAI-Project = '{{ OpenAI-Project }}'
+AND "order" = '{{ order }}'
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
 ```
 </TabItem>

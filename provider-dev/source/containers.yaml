@@ -12,8 +12,10 @@ paths:
       parameters:
         - name: limit
           in: query
-          description: |
+          description: |-
             A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
           required: false
           schema:
             type: integer
@@ -40,16 +42,16 @@ paths:
           required: false
           schema:
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -144,16 +146,16 @@ paths:
       description: Creates a container.
       operationId: CreateContainer
       parameters:
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -278,16 +280,16 @@ paths:
           required: true
           schema:
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -380,16 +382,16 @@ paths:
           required: true
           schema:
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -470,16 +472,16 @@ paths:
           required: true
           schema:
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -580,8 +582,10 @@ paths:
             type: string
         - name: limit
           in: query
-          description: |
+          description: |-
             A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
           required: false
           schema:
             type: integer
@@ -602,16 +606,16 @@ paths:
             A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -715,16 +719,16 @@ paths:
           required: true
           schema:
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -822,16 +826,16 @@ paths:
           required: true
           schema:
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:

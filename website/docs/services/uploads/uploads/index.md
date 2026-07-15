@@ -54,21 +54,21 @@ The following methods are available for this resource:
     <td><a href="#create"><CopyableCode code="create" /></a></td>
     <td><CopyableCode code="insert" /></td>
     <td><a href="#parameter-filename"><code>filename</code></a>, <a href="#parameter-purpose"><code>purpose</code></a>, <a href="#parameter-bytes"><code>bytes</code></a>, <a href="#parameter-mime_type"><code>mime_type</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#cancel"><CopyableCode code="cancel" /></a></td>
     <td><CopyableCode code="exec" /></td>
     <td><a href="#parameter-upload_id"><code>upload_id</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#complete"><CopyableCode code="complete" /></a></td>
     <td><CopyableCode code="exec" /></td>
     <td><a href="#parameter-upload_id"><code>upload_id</code></a>, <a href="#parameter-part_ids"><code>part_ids</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 </tbody>
@@ -92,15 +92,15 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
     <td><code>string</code></td>
     <td>The ID of the Upload. </td>
 </tr>
-<tr id="parameter-OpenAI-Organization">
-    <td><CopyableCode code="OpenAI-Organization" /></td>
+<tr id="parameter-openai-organization">
+    <td><CopyableCode code="openai-organization" /></td>
     <td><code>string</code></td>
-    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key).</td>
+    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.</td>
 </tr>
-<tr id="parameter-OpenAI-Project">
-    <td><CopyableCode code="OpenAI-Project" /></td>
+<tr id="parameter-openai-project">
+    <td><CopyableCode code="openai-project" /></td>
     <td><code>string</code></td>
-    <td>Optionally scope the request to a specific project (overrides the default associated with the API key).</td>
+    <td>Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.</td>
 </tr>
 </tbody>
 </table>
@@ -125,8 +125,8 @@ purpose,
 bytes,
 mime_type,
 expires_after,
-OpenAI-Organization,
-OpenAI-Project
+"openai-organization",
+"openai-project"
 )
 SELECT 
 '{{ filename }}' /* required */,
@@ -134,8 +134,8 @@ SELECT
 {{ bytes }} /* required */,
 '{{ mime_type }}' /* required */,
 '{{ expires_after }}',
-'{{ OpenAI-Organization }}',
-'{{ OpenAI-Project }}'
+'{{ openai-organization }}',
+'{{ openai-project }}'
 RETURNING
 id,
 bytes,
@@ -181,14 +181,14 @@ status
       value:
         anchor: "{{ anchor }}"
         seconds: {{ seconds }}
-    - name: OpenAI-Organization
-      value: "{{ OpenAI-Organization }}"
-      description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
-      description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
-    - name: OpenAI-Project
-      value: "{{ OpenAI-Project }}"
-      description: Optionally scope the request to a specific project (overrides the default associated with the API key).
-      description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+    - name: openai-organization
+      value: "{{ openai-organization }}"
+      description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as \`openai_organization\`.
+      description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as \`openai_organization\`.
+    - name: openai-project
+      value: "{{ openai-project }}"
+      description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as \`openai_project\`.
+      description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as \`openai_project\`.
 `}</CodeBlock>
 
 </TabItem>
@@ -211,8 +211,8 @@ OK
 ```sql
 EXEC openai.uploads.uploads.cancel 
 @upload_id='{{ upload_id }}' --required, 
-@OpenAI-Organization='{{ OpenAI-Organization }}', 
-@OpenAI-Project='{{ OpenAI-Project }}'
+@openai-organization='{{ openai-organization }}', 
+@openai-project='{{ openai-project }}'
 ;
 ```
 </TabItem>
@@ -223,8 +223,8 @@ OK
 ```sql
 EXEC openai.uploads.uploads.complete 
 @upload_id='{{ upload_id }}' --required, 
-@OpenAI-Organization='{{ OpenAI-Organization }}', 
-@OpenAI-Project='{{ OpenAI-Project }}' 
+@openai-organization='{{ openai-organization }}', 
+@openai-project='{{ openai-project }}' 
 @@json=
 '{
 "part_ids": "{{ part_ids }}", 

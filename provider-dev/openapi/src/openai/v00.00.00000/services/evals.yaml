@@ -20,16 +20,17 @@ paths:
             type: string
         - name: limit
           in: query
-          description: Number of evals to retrieve.
+          description: |-
+            Number of evals to retrieve.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
           required: false
           schema:
             type: integer
             default: 20
         - name: order
           in: query
-          description: >-
-            Sort order for evals by timestamp. Use `asc` for ascending order or
-            `desc` for descending order.
+          description: Sort order for evals by timestamp. Use `asc` for ascending order or `desc` for descending order.
           required: false
           schema:
             type: string
@@ -39,11 +40,9 @@ paths:
             default: asc
         - name: order_by
           in: query
-          description: >
+          description: |
             Evals can be ordered by creation time or last updated time. Use
-
-            `created_at` for creation time or `updated_at` for last updated
-            time.
+            `created_at` for creation time or `updated_at` for last updated time.
           required: false
           schema:
             type: string
@@ -51,20 +50,16 @@ paths:
               - created_at
               - updated_at
             default: created_at
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -214,15 +209,9 @@ paths:
       operationId: createEval
       tags:
         - Evals
-      summary: >
-        Create the structure of an evaluation that can be used to test a model's
-        performance.
-
-        An evaluation is a set of testing criteria and the config for a data
-        source, which dictates the schema of the data used in the evaluation.
-        After creating an evaluation, you can run it on different models and
-        model parameters. We support several types of graders and datasources.
-
+      summary: |
+        Create the structure of an evaluation that can be used to test a model's performance.
+        An evaluation is a set of testing criteria and the config for a data source, which dictates the schema of the data used in the evaluation. After creating an evaluation, you can run it on different models and model parameters. We support several types of graders and datasources.
         For more information, see the [Evals guide](/docs/guides/evals).
       requestBody:
         required: true
@@ -476,20 +465,16 @@ paths:
               }
             }
       parameters:
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
   /evals/{eval_id}:
@@ -506,20 +491,16 @@ paths:
           schema:
             type: string
           description: The ID of the evaluation to retrieve.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -535,10 +516,8 @@ paths:
         path: get
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/evals/eval_67abd54d9b0081909a86353f6fb9317a
-              \
+            curl: |
+              curl https://api.openai.com/v1/evals/eval_67abd54d9b0081909a86353f6fb9317a \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json"
             python: |-
@@ -552,16 +531,12 @@ paths:
                   "eval_id",
               )
               print(eval.id)
-            javascript: >
+            javascript: |
               import OpenAI from "openai";
-
 
               const openai = new OpenAI();
 
-
-              const evalObj = await
-              openai.evals.retrieve("eval_67abd54d9b0081909a86353f6fb9317a");
-
+              const evalObj = await openai.evals.retrieve("eval_67abd54d9b0081909a86353f6fb9317a");
               console.log(evalObj);
             node.js: |-
               import OpenAI from 'openai';
@@ -655,20 +630,16 @@ paths:
           schema:
             type: string
           description: The ID of the evaluation to update.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -697,10 +668,8 @@ paths:
         path: update
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/evals/eval_67abd54d9b0081909a86353f6fb9317a
-              \
+            curl: |
+              curl https://api.openai.com/v1/evals/eval_67abd54d9b0081909a86353f6fb9317a \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json" \
                 -d '{"name": "Updated Eval", "metadata": {"description": "Updated description"}}'
@@ -820,20 +789,16 @@ paths:
           schema:
             type: string
           description: The ID of the evaluation to delete.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -953,16 +918,17 @@ paths:
             type: string
         - name: limit
           in: query
-          description: Number of runs to retrieve.
+          description: |-
+            Number of runs to retrieve.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
           required: false
           schema:
             type: integer
             default: 20
         - name: order
           in: query
-          description: >-
-            Sort order for runs by timestamp. Use `asc` for ascending order or
-            `desc` for descending order. Defaults to `asc`.
+          description: Sort order for runs by timestamp. Use `asc` for ascending order or `desc` for descending order. Defaults to `asc`.
           required: false
           schema:
             type: string
@@ -972,9 +938,7 @@ paths:
             default: asc
         - name: status
           in: query
-          description: >-
-            Filter runs by status. One of `queued` | `in_progress` | `failed` |
-            `completed` | `canceled`.
+          description: Filter runs by status. One of `queued` | `in_progress` | `failed` | `completed` | `canceled`.
           required: false
           schema:
             type: string
@@ -984,20 +948,16 @@ paths:
               - completed
               - canceled
               - failed
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -1013,10 +973,8 @@ paths:
         path: get-runs
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/evals/egroup_67abd54d9b0081909a86353f6fb9317a/runs
-              \
+            curl: |
+              curl https://api.openai.com/v1/evals/egroup_67abd54d9b0081909a86353f6fb9317a/runs \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json"
             python: |-
@@ -1031,30 +989,22 @@ paths:
               )
               page = page.data[0]
               print(page.id)
-            javascript: >
+            javascript: |
               import OpenAI from "openai";
-
 
               const openai = new OpenAI();
 
-
-              const runs = await
-              openai.evals.runs.list("egroup_67abd54d9b0081909a86353f6fb9317a");
-
+              const runs = await openai.evals.runs.list("egroup_67abd54d9b0081909a86353f6fb9317a");
               console.log(runs);
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
               // Automatically fetches more pages as needed.
-
-              for await (const runListResponse of
-              client.evals.runs.list('eval_id')) {
+              for await (const runListResponse of client.evals.runs.list('eval_id')) {
                 console.log(runListResponse.id);
               }
             java: |-
@@ -1166,10 +1116,8 @@ paths:
       operationId: createEvalRun
       tags:
         - Evals
-      summary: >
-        Kicks off a new run for a given evaluation, specifying the data source,
-        and what model configuration to use to test. The datasource will be
-        validated against the schema specified in the config of the evaluation.
+      summary: |
+        Kicks off a new run for a given evaluation, specifying the data source, and what model configuration to use to test. The datasource will be validated against the schema specified in the config of the evaluation.
       parameters:
         - in: path
           name: eval_id
@@ -1177,20 +1125,16 @@ paths:
           schema:
             type: string
           description: The ID of the evaluation to create a run for.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -1217,10 +1161,8 @@ paths:
         group: evals
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/evals/eval_67e579652b548190aaa83ada4b125f47/runs
-              \
+            curl: |
+              curl https://api.openai.com/v1/evals/eval_67e579652b548190aaa83ada4b125f47/runs \
                 -X POST \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json" \
@@ -1432,20 +1374,16 @@ paths:
           schema:
             type: string
           description: The ID of the run to retrieve.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -1461,10 +1399,8 @@ paths:
         path: get
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/evals/eval_67abd54d9b0081909a86353f6fb9317a/runs/evalrun_67abd54d60ec8190832b46859da808f7
-              \
+            curl: |
+              curl https://api.openai.com/v1/evals/eval_67abd54d9b0081909a86353f6fb9317a/runs/evalrun_67abd54d60ec8190832b46859da808f7 \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json"
             python: |-
@@ -1489,18 +1425,14 @@ paths:
                 { eval_id: "eval_67abd54d9b0081909a86353f6fb9317a" }
               );
               console.log(run);
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const run = await client.evals.runs.retrieve('run_id', { eval_id:
-              'eval_id' });
-
+              const run = await client.evals.runs.retrieve('run_id', { eval_id: 'eval_id' });
 
               console.log(run.id);
             java: |-
@@ -1698,20 +1630,16 @@ paths:
           schema:
             type: string
           description: The ID of the run to cancel.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -1727,10 +1655,8 @@ paths:
         path: post
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/evals/eval_67abd54d9b0081909a86353f6fb9317a/runs/evalrun_67abd54d60ec8190832b46859da808f7/cancel
-              \
+            curl: |
+              curl https://api.openai.com/v1/evals/eval_67abd54d9b0081909a86353f6fb9317a/runs/evalrun_67abd54d60ec8190832b46859da808f7/cancel \
                 -X POST \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json"
@@ -1756,18 +1682,14 @@ paths:
                 { eval_id: "eval_67abd54d9b0081909a86353f6fb9317a" }
               );
               console.log(canceledRun);
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const response = await client.evals.runs.cancel('run_id', {
-              eval_id: 'eval_id' });
-
+              const response = await client.evals.runs.cancel('run_id', { eval_id: 'eval_id' });
 
               console.log(response.id);
             java: |-
@@ -1965,20 +1887,16 @@ paths:
           schema:
             type: string
           description: The ID of the run to delete.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -2010,9 +1928,8 @@ paths:
         path: delete
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/evals/eval_123abc/runs/evalrun_abc456 \
+            curl: |
+              curl https://api.openai.com/v1/evals/eval_123abc/runs/evalrun_abc456 \
                 -X DELETE \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json"
@@ -2038,18 +1955,14 @@ paths:
                 "evalrun_abc456"
               );
               console.log(deleted);
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const run = await client.evals.runs.delete('run_id', { eval_id:
-              'eval_id' });
-
+              const run = await client.evals.runs.delete('run_id', { eval_id: 'eval_id' });
 
               console.log(run.run_id);
             java: |-
@@ -2109,25 +2022,24 @@ paths:
           description: The ID of the run to retrieve output items for.
         - name: after
           in: query
-          description: >-
-            Identifier for the last output item from the previous pagination
-            request.
+          description: Identifier for the last output item from the previous pagination request.
           required: false
           schema:
             type: string
         - name: limit
           in: query
-          description: Number of output items to retrieve.
+          description: |-
+            Number of output items to retrieve.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
           required: false
           schema:
             type: integer
             default: 20
         - name: status
           in: query
-          description: >
-            Filter output items by status. Use `failed` to filter by failed
-            output
-
+          description: |
+            Filter output items by status. Use `failed` to filter by failed output
             items or `pass` to filter by passed output items.
           required: false
           schema:
@@ -2137,9 +2049,7 @@ paths:
               - pass
         - name: order
           in: query
-          description: >-
-            Sort order for output items by timestamp. Use `asc` for ascending
-            order or `desc` for descending order. Defaults to `asc`.
+          description: Sort order for output items by timestamp. Use `asc` for ascending order or `desc` for descending order. Defaults to `asc`.
           required: false
           schema:
             type: string
@@ -2147,20 +2057,16 @@ paths:
               - asc
               - desc
             default: asc
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -2176,10 +2082,8 @@ paths:
         path: get
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/evals/egroup_67abd54d9b0081909a86353f6fb9317a/runs/erun_67abd54d60ec8190832b46859da808f7/output_items
-              \
+            curl: |
+              curl https://api.openai.com/v1/evals/egroup_67abd54d9b0081909a86353f6fb9317a/runs/erun_67abd54d60ec8190832b46859da808f7/output_items \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json"
             python: |-
@@ -2205,37 +2109,26 @@ paths:
                 "erun_67abd54d60ec8190832b46859da808f7"
               );
               console.log(outputItems);
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
               // Automatically fetches more pages as needed.
-
-              for await (const outputItemListResponse of
-              client.evals.runs.outputItems.list('run_id', {
+              for await (const outputItemListResponse of client.evals.runs.outputItems.list('run_id', {
                 eval_id: 'eval_id',
               })) {
                 console.log(outputItemListResponse.id);
               }
-            java: >-
+            java: |-
               package com.openai.example;
 
-
               import com.openai.client.OpenAIClient;
-
               import com.openai.client.okhttp.OpenAIOkHttpClient;
-
-              import
-              com.openai.models.evals.runs.outputitems.OutputItemListPage;
-
-              import
-              com.openai.models.evals.runs.outputitems.OutputItemListParams;
-
+              import com.openai.models.evals.runs.outputitems.OutputItemListPage;
+              import com.openai.models.evals.runs.outputitems.OutputItemListParams;
 
               public final class Main {
                   private Main() {}
@@ -2250,16 +2143,12 @@ paths:
                       OutputItemListPage page = client.evals().runs().outputItems().list(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              page = openai.evals.runs.output_items.list("run_id", eval_id:
-              "eval_id")
-
+              page = openai.evals.runs.output_items.list("run_id", eval_id: "eval_id")
 
               puts(page)
           response: |
@@ -2358,20 +2247,16 @@ paths:
           schema:
             type: string
           description: The ID of the output item to retrieve.
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -2387,10 +2272,8 @@ paths:
         path: get
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/evals/eval_67abd54d9b0081909a86353f6fb9317a/runs/evalrun_67abd54d60ec8190832b46859da808f7/output_items/outputitem_67abd55eb6548190bb580745d5644a33
-              \
+            curl: |
+              curl https://api.openai.com/v1/evals/eval_67abd54d9b0081909a86353f6fb9317a/runs/evalrun_67abd54d60ec8190832b46859da808f7/output_items/outputitem_67abd55eb6548190bb580745d5644a33 \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -H "Content-Type: application/json"
             python: |-
@@ -2419,37 +2302,26 @@ paths:
                 }
               );
               console.log(outputItem);
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const outputItem = await
-              client.evals.runs.outputItems.retrieve('output_item_id', {
+              const outputItem = await client.evals.runs.outputItems.retrieve('output_item_id', {
                 eval_id: 'eval_id',
                 run_id: 'run_id',
               });
 
-
               console.log(outputItem.id);
-            java: >-
+            java: |-
               package com.openai.example;
 
-
               import com.openai.client.OpenAIClient;
-
               import com.openai.client.okhttp.OpenAIOkHttpClient;
-
-              import
-              com.openai.models.evals.runs.outputitems.OutputItemRetrieveParams;
-
-              import
-              com.openai.models.evals.runs.outputitems.OutputItemRetrieveResponse;
-
+              import com.openai.models.evals.runs.outputitems.OutputItemRetrieveParams;
+              import com.openai.models.evals.runs.outputitems.OutputItemRetrieveResponse;
 
               public final class Main {
                   private Main() {}
@@ -2465,17 +2337,12 @@ paths:
                       OutputItemRetrieveResponse outputItem = client.evals().runs().outputItems().retrieve(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              output_item =
-              openai.evals.runs.output_items.retrieve("output_item_id", eval_id:
-              "eval_id", run_id: "run_id")
-
+              output_item = openai.evals.runs.output_items.retrieve("output_item_id", eval_id: "eval_id", run_id: "run_id")
 
               puts(output_item)
           response: |
@@ -2643,9 +2510,7 @@ components:
           $ref: '#/components/schemas/Metadata'
         data_source_config:
           type: object
-          description: >-
-            The configuration for the data source used for the evaluation runs.
-            Dictates the schema of the data used in the evaluation.
+          description: The configuration for the data source used for the evaluation runs. Dictates the schema of the data used in the evaluation.
           title: CustomDataSourceConfig
           properties:
             type:
@@ -2671,9 +2536,7 @@ components:
             include_sample_schema:
               type: boolean
               default: false
-              description: >-
-                Whether the eval should expect you to populate the sample
-                namespace (ie, by generating responses off of your data source)
+              description: Whether the eval should expect you to populate the sample namespace (ie, by generating responses off of your data source)
             metadata:
               type: object
               description: Metadata filters for the logs data source.
@@ -2704,11 +2567,7 @@ components:
           deprecated: true
         testing_criteria:
           type: array
-          description: >-
-            A list of graders for all eval runs in this group. Graders can
-            reference variables in the data source using double curly braces
-            notation, like `{{item.variable_name}}`. To reference the model's
-            output, use the `sample` namespace (ie, `{{sample.output_text}}`).
+          description: A list of graders for all eval runs in this group. Graders can reference variables in the data source using double curly braces notation, like `{{item.variable_name}}`. To reference the model's output, use the `sample` namespace (ie, `{{sample.output_text}}`).
           items:
             oneOf:
               - $ref: '#/components/schemas/CreateEvalLabelModelGrader'
@@ -2758,11 +2617,9 @@ components:
               x-stainless-const: true
             schema:
               type: object
-              description: >
+              description: |
                 The json schema for the run data source items.
-
-                Learn how to build JSON schemas
-                [here](https://json-schema.org/).
+                Learn how to build JSON schemas [here](https://json-schema.org/).
               additionalProperties: true
               example: |
                 {
@@ -2864,18 +2721,12 @@ components:
           }
     Metadata:
       type: object
-      description: >
+      description: |
         Set of 16 key-value pairs that can be attached to an object. This can be
-
-        useful for storing additional information about the object in a
-        structured
-
+        useful for storing additional information about the object in a structured
         format, and querying for objects via API or the dashboard.
 
-
-        Keys are strings with a maximum length of 64 characters. Values are
-        strings
-
+        Keys are strings with a maximum length of 64 characters. Values are strings
         with a maximum length of 512 characters.
       additionalProperties:
         type: string
@@ -3018,9 +2869,7 @@ components:
               description: The type of data source. Always `jsonl`.
               x-stainless-const: true
             source:
-              description: >-
-                Determines what populates the `item` namespace in the data
-                source.
+              description: Determines what populates the `item` namespace in the data source.
               type: object
               title: EvalJsonlFileContentSource
               properties:
@@ -3053,11 +2902,7 @@ components:
                 - content
                 - id
             input_messages:
-              description: >-
-                Used when sampling from a model. Dictates the structure of the
-                messages passed into the model. Can either be a reference to a
-                prebuilt trajectory (ie, `item.input_trajectory`), or a template
-                with variable references to the `item` namespace.
+              description: Used when sampling from a model. Dictates the structure of the messages passed into the model. Can either be a reference to a prebuilt trajectory (ie, `item.input_trajectory`), or a template with variable references to the `item` namespace.
               type: object
               title: TemplateInputMessages
               properties:
@@ -3068,19 +2913,14 @@ components:
                   description: The type of input messages. Always `template`.
                 template:
                   type: array
-                  description: >-
-                    A list of chat messages forming the prompt or context. May
-                    include variable references to the `item` namespace, ie
-                    {{item.name}}.
+                  description: A list of chat messages forming the prompt or context. May include variable references to the `item` namespace, ie {{item.name}}.
                   items:
                     oneOf:
                       - $ref: '#/components/schemas/EasyInputMessage'
                       - $ref: '#/components/schemas/EvalItem'
                 item_reference:
                   type: string
-                  description: >-
-                    A reference to a variable in the `item` namespace. Ie,
-                    "item.input_trajectory"
+                  description: A reference to a variable in the `item` namespace. Ie, "item.input_trajectory"
               required:
                 - type
                 - template
@@ -3099,36 +2939,23 @@ components:
                   description: The maximum number of tokens in the generated output.
                 top_p:
                   type: number
-                  description: >-
-                    An alternative to temperature for nucleus sampling; 1.0
-                    includes all tokens.
+                  description: An alternative to temperature for nucleus sampling; 1.0 includes all tokens.
                   default: 1
                 seed:
                   type: integer
                   description: A seed value to initialize the randomness, during sampling.
                   default: 42
                 response_format:
-                  description: >
+                  description: |
                     An object specifying the format that the model must output.
 
-
-                    Setting to `{ "type": "json_schema", "json_schema": {...} }`
-                    enables
-
-                    Structured Outputs which ensures the model will match your
-                    supplied JSON
-
+                    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+                    Structured Outputs which ensures the model will match your supplied JSON
                     schema. Learn more in the [Structured Outputs
-
                     guide](/docs/guides/structured-outputs).
 
-
-                    Setting to `{ "type": "json_object" }` enables the older
-                    JSON mode, which
-
-                    ensures the message the model generates is valid JSON. Using
-                    `json_schema`
-
+                    Setting to `{ "type": "json_object" }` enables the older JSON mode, which
+                    ensures the message the model generates is valid JSON. Using `json_schema`
                     is preferred for models that support it.
                   oneOf:
                     - $ref: '#/components/schemas/ResponseFormatText'
@@ -3136,18 +2963,13 @@ components:
                     - $ref: '#/components/schemas/ResponseFormatJsonObject'
                 tools:
                   type: array
-                  description: >
-                    A list of tools the model may call. Currently, only
-                    functions are supported as a tool. Use this to provide a
-                    list of functions the model may generate JSON inputs for. A
-                    max of 128 functions are supported.
+                  description: |
+                    A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported.
                   items:
                     $ref: '#/components/schemas/ChatCompletionTool'
             model:
               type: string
-              description: >-
-                The name of the model to use for generating completions (e.g.
-                "o3-mini").
+              description: The name of the model to use for generating completions (e.g. "o3-mini").
           required:
             - type
             - source
@@ -3284,9 +3106,7 @@ components:
               description: The type of data source. Always `jsonl`.
               x-stainless-const: true
             source:
-              description: >-
-                Determines what populates the `item` namespace in the data
-                source.
+              description: Determines what populates the `item` namespace in the data source.
               type: object
               title: EvalJsonlFileContentSource
               properties:
@@ -3319,11 +3139,7 @@ components:
                 - content
                 - id
             input_messages:
-              description: >-
-                Used when sampling from a model. Dictates the structure of the
-                messages passed into the model. Can either be a reference to a
-                prebuilt trajectory (ie, `item.input_trajectory`), or a template
-                with variable references to the `item` namespace.
+              description: Used when sampling from a model. Dictates the structure of the messages passed into the model. Can either be a reference to a prebuilt trajectory (ie, `item.input_trajectory`), or a template with variable references to the `item` namespace.
               type: object
               title: TemplateInputMessages
               properties:
@@ -3334,19 +3150,14 @@ components:
                   description: The type of input messages. Always `template`.
                 template:
                   type: array
-                  description: >-
-                    A list of chat messages forming the prompt or context. May
-                    include variable references to the `item` namespace, ie
-                    {{item.name}}.
+                  description: A list of chat messages forming the prompt or context. May include variable references to the `item` namespace, ie {{item.name}}.
                   items:
                     oneOf:
                       - $ref: '#/components/schemas/EasyInputMessage'
                       - $ref: '#/components/schemas/EvalItem'
                 item_reference:
                   type: string
-                  description: >-
-                    A reference to a variable in the `item` namespace. Ie,
-                    "item.input_trajectory"
+                  description: A reference to a variable in the `item` namespace. Ie, "item.input_trajectory"
               required:
                 - type
                 - template
@@ -3365,36 +3176,23 @@ components:
                   description: The maximum number of tokens in the generated output.
                 top_p:
                   type: number
-                  description: >-
-                    An alternative to temperature for nucleus sampling; 1.0
-                    includes all tokens.
+                  description: An alternative to temperature for nucleus sampling; 1.0 includes all tokens.
                   default: 1
                 seed:
                   type: integer
                   description: A seed value to initialize the randomness, during sampling.
                   default: 42
                 response_format:
-                  description: >
+                  description: |
                     An object specifying the format that the model must output.
 
-
-                    Setting to `{ "type": "json_schema", "json_schema": {...} }`
-                    enables
-
-                    Structured Outputs which ensures the model will match your
-                    supplied JSON
-
+                    Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+                    Structured Outputs which ensures the model will match your supplied JSON
                     schema. Learn more in the [Structured Outputs
-
                     guide](/docs/guides/structured-outputs).
 
-
-                    Setting to `{ "type": "json_object" }` enables the older
-                    JSON mode, which
-
-                    ensures the message the model generates is valid JSON. Using
-                    `json_schema`
-
+                    Setting to `{ "type": "json_object" }` enables the older JSON mode, which
+                    ensures the message the model generates is valid JSON. Using `json_schema`
                     is preferred for models that support it.
                   oneOf:
                     - $ref: '#/components/schemas/ResponseFormatText'
@@ -3402,18 +3200,13 @@ components:
                     - $ref: '#/components/schemas/ResponseFormatJsonObject'
                 tools:
                   type: array
-                  description: >
-                    A list of tools the model may call. Currently, only
-                    functions are supported as a tool. Use this to provide a
-                    list of functions the model may generate JSON inputs for. A
-                    max of 128 functions are supported.
+                  description: |
+                    A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported.
                   items:
                     $ref: '#/components/schemas/ChatCompletionTool'
             model:
               type: string
-              description: >-
-                The name of the model to use for generating completions (e.g.
-                "o3-mini").
+              description: The name of the model to use for generating completions (e.g. "o3-mini").
           required:
             - type
             - source
@@ -3714,9 +3507,7 @@ components:
           description: Unique identifier for the evaluation run output item.
         run_id:
           type: string
-          description: >-
-            The identifier of the evaluation run associated with this output
-            item.
+          description: The identifier of the evaluation run associated with this output item.
         eval_id:
           type: string
           description: The identifier of the evaluation group.
@@ -3752,9 +3543,7 @@ components:
                 properties:
                   role:
                     type: string
-                    description: >-
-                      The role of the message sender (e.g., system, user,
-                      developer).
+                    description: The role of the message sender (e.g., system, user, developer).
                   content:
                     type: string
                     description: The content of the message.
@@ -3769,9 +3558,7 @@ components:
                 properties:
                   role:
                     type: string
-                    description: >-
-                      The role of the message (e.g. "system", "assistant",
-                      "user").
+                    description: The role of the message (e.g. "system", "assistant", "user").
                   content:
                     type: string
                     description: The content of the message.
@@ -3897,14 +3684,10 @@ components:
     CreateEvalCustomDataSourceConfig:
       type: object
       title: CustomDataSourceConfig
-      description: >
-        A CustomDataSourceConfig object that defines the schema for the data
-        source used for the evaluation runs.
-
+      description: |
+        A CustomDataSourceConfig object that defines the schema for the data source used for the evaluation runs.
         This schema is used to define the shape of the data that will be:
-
         - Used to define your testing criteria and
-
         - What data is required when creating a run
       properties:
         type:
@@ -3930,9 +3713,7 @@ components:
         include_sample_schema:
           type: boolean
           default: false
-          description: >-
-            Whether the eval should expect you to populate the sample namespace
-            (ie, by generating responses off of your data source)
+          description: Whether the eval should expect you to populate the sample namespace (ie, by generating responses off of your data source)
       required:
         - item_schema
         - type
@@ -3955,12 +3736,9 @@ components:
     CreateEvalLogsDataSourceConfig:
       type: object
       title: LogsDataSourceConfig
-      description: >
-        A data source config which specifies the metadata property of your logs
-        query.
-
-        This is usually metadata like `usecase=chatbot` or `prompt-version=v2`,
-        etc.
+      description: |
+        A data source config which specifies the metadata property of your logs query.
+        This is usually metadata like `usecase=chatbot` or `prompt-version=v2`, etc.
       properties:
         type:
           type: string
@@ -4026,10 +3804,8 @@ components:
     CreateEvalLabelModelGrader:
       type: object
       title: LabelModelGrader
-      description: >
-        A LabelModelGrader object which uses a model to assign labels to each
-        item
-
+      description: |
+        A LabelModelGrader object which uses a model to assign labels to each item
         in the evaluation.
       properties:
         type:
@@ -4043,14 +3819,10 @@ components:
           description: The name of the grader.
         model:
           type: string
-          description: >-
-            The model to use for the evaluation. Must support structured
-            outputs.
+          description: The model to use for the evaluation. Must support structured outputs.
         input:
           type: array
-          description: >-
-            A list of chat messages forming the prompt or context. May include
-            variable references to the `item` namespace, ie {{item.name}}.
+          description: A list of chat messages forming the prompt or context. May include variable references to the `item` namespace, ie {{item.name}}.
           items:
             $ref: '#/components/schemas/CreateEvalItem'
         labels:
@@ -4062,9 +3834,7 @@ components:
           type: array
           items:
             type: string
-          description: >-
-            The labels that indicate a passing result. Must be a subset of
-            labels.
+          description: The labels that indicate a passing result. Must be a subset of labels.
       required:
         - type
         - model
@@ -4096,9 +3866,8 @@ components:
     EvalGraderStringCheck:
       type: object
       title: StringCheckGrader
-      description: >
-        A StringCheckGrader object that performs a string comparison between
-        input and reference using a specified operation.
+      description: |
+        A StringCheckGrader object that performs a string comparison between input and reference using a specified operation.
       properties:
         type:
           type: string
@@ -4122,9 +3891,7 @@ components:
             - ne
             - like
             - ilike
-          description: >-
-            The string check operation to perform. One of `eq`, `ne`, `like`, or
-            `ilike`.
+          description: The string check operation to perform. One of `eq`, `ne`, `like`, or `ilike`.
       required:
         - type
         - name
@@ -4145,9 +3912,8 @@ components:
     EvalGraderTextSimilarity:
       type: object
       title: TextSimilarityGrader
-      description: >
-        A TextSimilarityGrader object which grades text based on similarity
-        metrics.
+      description: |
+        A TextSimilarityGrader object which grades text based on similarity metrics.
       properties:
         type:
           type: string
@@ -4179,13 +3945,9 @@ components:
             - rouge_4
             - rouge_5
             - rouge_l
-          description: >
-            The evaluation metric to use. One of `cosine`, `fuzzy_match`,
-            `bleu`, 
-
-            `gleu`, `meteor`, `rouge_1`, `rouge_2`, `rouge_3`, `rouge_4`,
-            `rouge_5`, 
-
+          description: |
+            The evaluation metric to use. One of `cosine`, `fuzzy_match`, `bleu`, 
+            `gleu`, `meteor`, `rouge_1`, `rouge_2`, `rouge_3`, `rouge_4`, `rouge_5`, 
             or `rouge_l`.
         pass_threshold:
           type: number
@@ -4257,9 +4019,8 @@ components:
     EvalGraderScoreModel:
       type: object
       title: ScoreModelGrader
-      description: >
-        A ScoreModelGrader object that uses a model to assign a score to the
-        input.
+      description: |
+        A ScoreModelGrader object that uses a model to assign a score to the input.
       properties:
         type:
           type: string
@@ -4288,9 +4049,8 @@ components:
                 - type: number
                   default: 1
                   example: 1
-                  description: >
-                    An alternative to temperature for nucleus sampling; 1.0
-                    includes all tokens.
+                  description: |
+                    An alternative to temperature for nucleus sampling; 1.0 includes all tokens.
                 - type: 'null'
             temperature:
               anyOf:
@@ -4302,9 +4062,8 @@ components:
               anyOf:
                 - type: integer
                   minimum: 1
-                  description: >
-                    The maximum number of tokens the grader model may generate
-                    in its response.
+                  description: |
+                    The maximum number of tokens the grader model may generate in its response.
                 - type: 'null'
             reasoning_effort:
               $ref: '#/components/schemas/ReasoningEffort'
@@ -4312,10 +4071,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EvalItem'
-          description: >
-            The input messages evaluated by the grader. Supports text, output
-            text, input image, and input audio content blocks, and may include
-            template strings.
+          description: |
+            The input messages evaluated by the grader. Supports text, output text, input image, and input audio content blocks, and may include template strings.
         range:
           type: array
           items:
@@ -4372,14 +4129,10 @@ components:
     EvalCustomDataSourceConfig:
       type: object
       title: CustomDataSourceConfig
-      description: >
-        A CustomDataSourceConfig which specifies the schema of your `item` and
-        optionally `sample` namespaces.
-
+      description: |
+        A CustomDataSourceConfig which specifies the schema of your `item` and optionally `sample` namespaces.
         The response schema defines the shape of the data that will be:
-
         - Used to define your testing criteria and
-
         - What data is required when creating a run
       properties:
         type:
@@ -4435,16 +4188,10 @@ components:
     EvalLogsDataSourceConfig:
       type: object
       title: LogsDataSourceConfig
-      description: >
-        A LogsDataSourceConfig which specifies the metadata property of your
-        logs query.
-
-        This is usually metadata like `usecase=chatbot` or `prompt-version=v2`,
-        etc.
-
-        The schema returned by this data source config is used to defined what
-        variables are available in your evals.
-
+      description: |
+        A LogsDataSourceConfig which specifies the metadata property of your logs query.
+        This is usually metadata like `usecase=chatbot` or `prompt-version=v2`, etc.
+        The schema returned by this data source config is used to defined what variables are available in your evals.
         `item` and `sample` are both defined when using this data source config.
       properties:
         type:
@@ -4541,10 +4288,8 @@ components:
     EvalGraderLabelModel:
       type: object
       title: LabelModelGrader
-      description: >
-        A LabelModelGrader object which uses a model to assign labels to each
-        item
-
+      description: |
+        A LabelModelGrader object which uses a model to assign labels to each item
         in the evaluation.
       properties:
         type:
@@ -4558,9 +4303,7 @@ components:
           description: The name of the grader.
         model:
           type: string
-          description: >-
-            The model to use for the evaluation. Must support structured
-            outputs.
+          description: The model to use for the evaluation. Must support structured outputs.
         input:
           type: array
           items:
@@ -4574,9 +4317,7 @@ components:
           type: array
           items:
             type: string
-          description: >-
-            The labels that indicate a passing result. Must be a subset of
-            labels.
+          description: The labels that indicate a passing result. Must be a subset of labels.
       required:
         - type
         - model
@@ -4622,9 +4363,8 @@ components:
     CreateEvalJsonlRunDataSource:
       type: object
       title: JsonlRunDataSource
-      description: >
-        A JsonlRunDataSource object with that specifies a JSONL file that
-        matches the eval 
+      description: |
+        A JsonlRunDataSource object with that specifies a JSONL file that matches the eval 
       properties:
         type:
           type: string
@@ -4683,9 +4423,8 @@ components:
     CreateEvalCompletionsRunDataSource:
       type: object
       title: CompletionsRunDataSource
-      description: >
-        A CompletionsRunDataSource object describing a model sampling
-        configuration.
+      description: |
+        A CompletionsRunDataSource object describing a model sampling configuration.
       properties:
         type:
           type: string
@@ -4694,11 +4433,7 @@ components:
           default: completions
           description: The type of run data source. Always `completions`.
         input_messages:
-          description: >-
-            Used when sampling from a model. Dictates the structure of the
-            messages passed into the model. Can either be a reference to a
-            prebuilt trajectory (ie, `item.input_trajectory`), or a template
-            with variable references to the `item` namespace.
+          description: Used when sampling from a model. Dictates the structure of the messages passed into the model. Can either be a reference to a prebuilt trajectory (ie, `item.input_trajectory`), or a template with variable references to the `item` namespace.
           type: object
           title: TemplateInputMessages
           properties:
@@ -4709,19 +4444,14 @@ components:
               description: The type of input messages. Always `template`.
             template:
               type: array
-              description: >-
-                A list of chat messages forming the prompt or context. May
-                include variable references to the `item` namespace, ie
-                {{item.name}}.
+              description: A list of chat messages forming the prompt or context. May include variable references to the `item` namespace, ie {{item.name}}.
               items:
                 oneOf:
                   - $ref: '#/components/schemas/EasyInputMessage'
                   - $ref: '#/components/schemas/EvalItem'
             item_reference:
               type: string
-              description: >-
-                A reference to a variable in the `item` namespace. Ie,
-                "item.input_trajectory"
+              description: A reference to a variable in the `item` namespace. Ie, "item.input_trajectory"
           required:
             - type
             - template
@@ -4740,36 +4470,23 @@ components:
               description: The maximum number of tokens in the generated output.
             top_p:
               type: number
-              description: >-
-                An alternative to temperature for nucleus sampling; 1.0 includes
-                all tokens.
+              description: An alternative to temperature for nucleus sampling; 1.0 includes all tokens.
               default: 1
             seed:
               type: integer
               description: A seed value to initialize the randomness, during sampling.
               default: 42
             response_format:
-              description: >
+              description: |
                 An object specifying the format that the model must output.
 
-
-                Setting to `{ "type": "json_schema", "json_schema": {...} }`
-                enables
-
-                Structured Outputs which ensures the model will match your
-                supplied JSON
-
+                Setting to `{ "type": "json_schema", "json_schema": {...} }` enables
+                Structured Outputs which ensures the model will match your supplied JSON
                 schema. Learn more in the [Structured Outputs
-
                 guide](/docs/guides/structured-outputs).
 
-
-                Setting to `{ "type": "json_object" }` enables the older JSON
-                mode, which
-
-                ensures the message the model generates is valid JSON. Using
-                `json_schema`
-
+                Setting to `{ "type": "json_object" }` enables the older JSON mode, which
+                ensures the message the model generates is valid JSON. Using `json_schema`
                 is preferred for models that support it.
               oneOf:
                 - $ref: '#/components/schemas/ResponseFormatText'
@@ -4777,22 +4494,15 @@ components:
                 - $ref: '#/components/schemas/ResponseFormatJsonObject'
             tools:
               type: array
-              description: >
-                A list of tools the model may call. Currently, only functions
-                are supported as a tool. Use this to provide a list of functions
-                the model may generate JSON inputs for. A max of 128 functions
-                are supported.
+              description: |
+                A list of tools the model may call. Currently, only functions are supported as a tool. Use this to provide a list of functions the model may generate JSON inputs for. A max of 128 functions are supported.
               items:
                 $ref: '#/components/schemas/ChatCompletionTool'
         model:
           type: string
-          description: >-
-            The name of the model to use for generating completions (e.g.
-            "o3-mini").
+          description: The name of the model to use for generating completions (e.g. "o3-mini").
         source:
-          description: >-
-            Determines what populates the `item` namespace in this run's data
-            source.
+          description: Determines what populates the `item` namespace in this run's data source.
           type: object
           title: EvalJsonlFileContentSource
           properties:
@@ -4827,14 +4537,10 @@ components:
               description: An optional model to filter by (e.g., 'gpt-4o').
             created_after:
               type: integer
-              description: >-
-                An optional Unix timestamp to filter items created after this
-                time.
+              description: An optional Unix timestamp to filter items created after this time.
             created_before:
               type: integer
-              description: >-
-                An optional Unix timestamp to filter items created before this
-                time.
+              description: An optional Unix timestamp to filter items created before this time.
             limit:
               type: integer
               description: An optional maximum number of items to return.
@@ -4843,9 +4549,7 @@ components:
             - content
             - id
           x-oaiMeta:
-            name: >-
-              The stored completions data source object used to configure an
-              individual run
+            name: The stored completions data source object used to configure an individual run
             group: eval runs
             example: |
               {
@@ -4881,9 +4585,8 @@ components:
     CreateEvalResponsesRunDataSource:
       type: object
       title: ResponsesRunDataSource
-      description: >
-        A ResponsesRunDataSource object describing a model sampling
-        configuration.
+      description: |
+        A ResponsesRunDataSource object describing a model sampling configuration.
       properties:
         type:
           type: string
@@ -4892,11 +4595,7 @@ components:
           default: responses
           description: The type of run data source. Always `responses`.
         input_messages:
-          description: >-
-            Used when sampling from a model. Dictates the structure of the
-            messages passed into the model. Can either be a reference to a
-            prebuilt trajectory (ie, `item.input_trajectory`), or a template
-            with variable references to the `item` namespace.
+          description: Used when sampling from a model. Dictates the structure of the messages passed into the model. Can either be a reference to a prebuilt trajectory (ie, `item.input_trajectory`), or a template with variable references to the `item` namespace.
           type: object
           title: InputMessagesTemplate
           properties:
@@ -4907,10 +4606,7 @@ components:
               description: The type of input messages. Always `template`.
             template:
               type: array
-              description: >-
-                A list of chat messages forming the prompt or context. May
-                include variable references to the `item` namespace, ie
-                {{item.name}}.
+              description: A list of chat messages forming the prompt or context. May include variable references to the `item` namespace, ie {{item.name}}.
               items:
                 oneOf:
                   - type: object
@@ -4918,9 +4614,7 @@ components:
                     properties:
                       role:
                         type: string
-                        description: >-
-                          The role of the message (e.g. "system", "assistant",
-                          "user").
+                        description: The role of the message (e.g. "system", "assistant", "user").
                       content:
                         type: string
                         description: The content of the message.
@@ -4930,9 +4624,7 @@ components:
                   - $ref: '#/components/schemas/EvalItem'
             item_reference:
               type: string
-              description: >-
-                A reference to a variable in the `item` namespace. Ie,
-                "item.name"
+              description: A reference to a variable in the `item` namespace. Ie, "item.name"
           required:
             - type
             - template
@@ -4951,9 +4643,7 @@ components:
               description: The maximum number of tokens in the generated output.
             top_p:
               type: number
-              description: >-
-                An alternative to temperature for nucleus sampling; 1.0 includes
-                all tokens.
+              description: An alternative to temperature for nucleus sampling; 1.0 includes all tokens.
               default: 1
             seed:
               type: integer
@@ -4961,51 +4651,36 @@ components:
               default: 42
             tools:
               type: array
-              description: >
-                An array of tools the model may call while generating a
-                response. You
-
-                can specify which tool to use by setting the `tool_choice`
-                parameter.
-
+              description: |
+                An array of tools the model may call while generating a response. You
+                can specify which tool to use by setting the `tool_choice` parameter.
 
                 The two categories of tools you can provide the model are:
 
-
-                - **Built-in tools**: Tools that are provided by OpenAI that
-                extend the
+                - **Built-in tools**: Tools that are provided by OpenAI that extend the
                   model's capabilities, like [web search](/docs/guides/tools-web-search)
                   or [file search](/docs/guides/tools-file-search). Learn more about
                   [built-in tools](/docs/guides/tools).
-                - **Function calls (custom tools)**: Functions that are defined
-                by you,
+                - **Function calls (custom tools)**: Functions that are defined by you,
                   enabling the model to call your own code. Learn more about
                   [function calling](/docs/guides/function-calling).
               items:
                 $ref: '#/components/schemas/Tool'
             text:
               type: object
-              description: >
-                Configuration options for a text response from the model. Can be
-                plain
-
+              description: |
+                Configuration options for a text response from the model. Can be plain
                 text or structured JSON data. Learn more:
-
                 - [Text inputs and outputs](/docs/guides/text)
-
                 - [Structured Outputs](/docs/guides/structured-outputs)
               properties:
                 format:
                   $ref: '#/components/schemas/TextResponseFormatConfiguration'
         model:
           type: string
-          description: >-
-            The name of the model to use for generating completions (e.g.
-            "o3-mini").
+          description: The name of the model to use for generating completions (e.g. "o3-mini").
         source:
-          description: >-
-            Determines what populates the `item` namespace in this run's data
-            source.
+          description: Determines what populates the `item` namespace in this run's data source.
           type: object
           title: EvalJsonlFileContentSource
           properties:
@@ -5035,31 +4710,21 @@ components:
               description: The identifier of the file.
             metadata:
               type: string
-              description: >-
-                Metadata filter for the responses. This is a query parameter
-                used to select responses. (opaque JSON object)
+              description: Metadata filter for the responses. This is a query parameter used to select responses. (opaque JSON object)
             model:
               type: string
-              description: >-
-                The name of the model to find responses for. This is a query
-                parameter used to select responses.
+              description: The name of the model to find responses for. This is a query parameter used to select responses.
             instructions_search:
               type: string
-              description: >-
-                Optional string to search the 'instructions' field. This is a
-                query parameter used to select responses.
+              description: Optional string to search the 'instructions' field. This is a query parameter used to select responses.
             created_after:
               type: integer
               minimum: 0
-              description: >-
-                Only include items created after this timestamp (inclusive).
-                This is a query parameter used to select responses.
+              description: Only include items created after this timestamp (inclusive). This is a query parameter used to select responses.
             created_before:
               type: integer
               minimum: 0
-              description: >-
-                Only include items created before this timestamp (inclusive).
-                This is a query parameter used to select responses.
+              description: Only include items created before this timestamp (inclusive). This is a query parameter used to select responses.
             reasoning_effort:
               type: string
               enum:
@@ -5070,57 +4735,33 @@ components:
                 - high
                 - xhigh
               default: medium
-              description: >
+              description: |
                 Constrains effort on reasoning for
-
-                [reasoning
-                models](https://platform.openai.com/docs/guides/reasoning).
-
-                Currently supported values are `none`, `minimal`, `low`,
-                `medium`, `high`, and `xhigh`. Reducing
-
-                reasoning effort can result in faster responses and fewer tokens
-                used
-
+                [reasoning models](https://platform.openai.com/docs/guides/reasoning).
+                Currently supported values are `none`, `minimal`, `low`, `medium`, `high`, and `xhigh`. Reducing
+                reasoning effort can result in faster responses and fewer tokens used
                 on reasoning in a response.
 
-
-                - `gpt-5.1` defaults to `none`, which does not perform
-                reasoning. The supported reasoning values for `gpt-5.1` are
-                `none`, `low`, `medium`, and `high`. Tool calls are supported
-                for all reasoning values in gpt-5.1.
-
-                - All models before `gpt-5.1` default to `medium` reasoning
-                effort, and do not support `none`.
-
-                - The `gpt-5-pro` model defaults to (and only supports) `high`
-                reasoning effort.
-
+                - `gpt-5.1` defaults to `none`, which does not perform reasoning. The supported reasoning values for `gpt-5.1` are `none`, `low`, `medium`, and `high`. Tool calls are supported for all reasoning values in gpt-5.1.
+                - All models before `gpt-5.1` default to `medium` reasoning effort, and do not support `none`.
+                - The `gpt-5-pro` model defaults to (and only supports) `high` reasoning effort.
                 - `xhigh` is supported for all models after `gpt-5.1-codex-max`.
             temperature:
               type: number
-              description: >-
-                Sampling temperature. This is a query parameter used to select
-                responses.
+              description: Sampling temperature. This is a query parameter used to select responses.
             top_p:
               type: number
-              description: >-
-                Nucleus sampling parameter. This is a query parameter used to
-                select responses.
+              description: Nucleus sampling parameter. This is a query parameter used to select responses.
             users:
               type: array
               items:
                 type: string
-              description: >-
-                List of user identifiers. This is a query parameter used to
-                select responses.
+              description: List of user identifiers. This is a query parameter used to select responses.
             tools:
               type: array
               items:
                 type: string
-              description: >-
-                List of tool names. This is a query parameter used to select
-                responses.
+              description: List of tool names. This is a query parameter used to select responses.
           required:
             - type
             - content
@@ -5212,9 +4853,7 @@ components:
         - passed
     CreateEvalItem:
       title: CreateEvalItem
-      description: >-
-        A chat message that makes up the prompt or context. May include variable
-        references to the `item` namespace, ie {{item.name}}.
+      description: A chat message that makes up the prompt or context. May include variable references to the `item` namespace, ie {{item.name}}.
       type: object
       x-oaiMeta:
         name: The chat message object used to configure an individual run
@@ -5238,9 +4877,8 @@ components:
     GraderStringCheck:
       type: object
       title: StringCheckGrader
-      description: >
-        A StringCheckGrader object that performs a string comparison between
-        input and reference using a specified operation.
+      description: |
+        A StringCheckGrader object that performs a string comparison between input and reference using a specified operation.
       properties:
         type:
           type: string
@@ -5264,9 +4902,7 @@ components:
             - ne
             - like
             - ilike
-          description: >-
-            The string check operation to perform. One of `eq`, `ne`, `like`, or
-            `ilike`.
+          description: The string check operation to perform. One of `eq`, `ne`, `like`, or `ilike`.
       required:
         - type
         - name
@@ -5287,9 +4923,8 @@ components:
     GraderTextSimilarity:
       type: object
       title: TextSimilarityGrader
-      description: >
-        A TextSimilarityGrader object which grades text based on similarity
-        metrics.
+      description: |
+        A TextSimilarityGrader object which grades text based on similarity metrics.
       properties:
         type:
           type: string
@@ -5321,13 +4956,9 @@ components:
             - rouge_4
             - rouge_5
             - rouge_l
-          description: >
-            The evaluation metric to use. One of `cosine`, `fuzzy_match`,
-            `bleu`, 
-
-            `gleu`, `meteor`, `rouge_1`, `rouge_2`, `rouge_3`, `rouge_4`,
-            `rouge_5`, 
-
+          description: |
+            The evaluation metric to use. One of `cosine`, `fuzzy_match`, `bleu`, 
+            `gleu`, `meteor`, `rouge_1`, `rouge_2`, `rouge_3`, `rouge_4`, `rouge_5`, 
             or `rouge_l`.
       required:
         - type
@@ -5392,9 +5023,8 @@ components:
     GraderScoreModel:
       type: object
       title: ScoreModelGrader
-      description: >
-        A ScoreModelGrader object that uses a model to assign a score to the
-        input.
+      description: |
+        A ScoreModelGrader object that uses a model to assign a score to the input.
       properties:
         type:
           type: string
@@ -5423,9 +5053,8 @@ components:
                 - type: number
                   default: 1
                   example: 1
-                  description: >
-                    An alternative to temperature for nucleus sampling; 1.0
-                    includes all tokens.
+                  description: |
+                    An alternative to temperature for nucleus sampling; 1.0 includes all tokens.
                 - type: 'null'
             temperature:
               anyOf:
@@ -5437,9 +5066,8 @@ components:
               anyOf:
                 - type: integer
                   minimum: 1
-                  description: >
-                    The maximum number of tokens the grader model may generate
-                    in its response.
+                  description: |
+                    The maximum number of tokens the grader model may generate in its response.
                 - type: 'null'
             reasoning_effort:
               $ref: '#/components/schemas/ReasoningEffort'
@@ -5447,10 +5075,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EvalItem'
-          description: >
-            The input messages evaluated by the grader. Supports text, output
-            text, input image, and input audio content blocks, and may include
-            template strings.
+          description: |
+            The input messages evaluated by the grader. Supports text, output text, input image, and input audio content blocks, and may include template strings.
         range:
           type: array
           items:
@@ -5504,10 +5130,8 @@ components:
     GraderLabelModel:
       type: object
       title: LabelModelGrader
-      description: >
-        A LabelModelGrader object which uses a model to assign labels to each
-        item
-
+      description: |
+        A LabelModelGrader object which uses a model to assign labels to each item
         in the evaluation.
       properties:
         type:
@@ -5521,9 +5145,7 @@ components:
           description: The name of the grader.
         model:
           type: string
-          description: >-
-            The model to use for the evaluation. Must support structured
-            outputs.
+          description: The model to use for the evaluation. Must support structured outputs.
         input:
           type: array
           items:
@@ -5537,9 +5159,7 @@ components:
           type: array
           items:
             type: string
-          description: >-
-            The labels that indicate a passing result. Must be a subset of
-            labels.
+          description: The labels that indicate a passing result. Must be a subset of labels.
       required:
         - type
         - model
@@ -5630,26 +5250,17 @@ components:
     EasyInputMessage:
       type: object
       title: Input message
-      description: >
-        A message input to the model with a role indicating instruction
-        following
-
+      description: |
+        A message input to the model with a role indicating instruction following
         hierarchy. Instructions given with the `developer` or `system` role take
-
-        precedence over instructions given with the `user` role. Messages with
-        the
-
-        `assistant` role are presumed to have been generated by the model in
-        previous
-
+        precedence over instructions given with the `user` role. Messages with the
+        `assistant` role are presumed to have been generated by the model in previous
         interactions.
       properties:
         role:
           type: string
-          description: >
-            The role of the message input. One of `user`, `assistant`, `system`,
-            or
-
+          description: |
+            The role of the message input. One of `user`, `assistant`, `system`, or
             `developer`.
           enum:
             - user
@@ -5657,10 +5268,8 @@ components:
             - system
             - developer
         content:
-          description: >
-            Text, image, or audio input to the model, used to generate a
-            response.
-
+          description: |
+            Text, image, or audio input to the model, used to generate a response.
             Can also contain previous assistant responses.
           type: string
           title: Text input
@@ -5668,15 +5277,10 @@ components:
             $ref: '#/components/schemas/InputContent'
         phase:
           type: string
-          description: >
-            Labels an `assistant` message as intermediate commentary
-            (`commentary`) or the final answer (`final_answer`).
-
-            For models like `gpt-5.3-codex` and beyond, when sending follow-up
-            requests, preserve and resend
-
-            phase on all assistant messages — dropping it can degrade
-            performance. Not used for user messages.
+          description: |
+            Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`).
+            For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend
+            phase on all assistant messages — dropping it can degrade performance. Not used for user messages.
           enum:
             - commentary
             - final_answer
@@ -5693,26 +5297,17 @@ components:
     EvalItem:
       type: object
       title: Eval message object
-      description: >
-        A message input to the model with a role indicating instruction
-        following
-
+      description: |
+        A message input to the model with a role indicating instruction following
         hierarchy. Instructions given with the `developer` or `system` role take
-
-        precedence over instructions given with the `user` role. Messages with
-        the
-
-        `assistant` role are presumed to have been generated by the model in
-        previous
-
+        precedence over instructions given with the `user` role. Messages with the
+        `assistant` role are presumed to have been generated by the model in previous
         interactions.
       properties:
         role:
           type: string
-          description: >
-            The role of the message input. One of `user`, `assistant`, `system`,
-            or
-
+          description: |
+            The role of the message input. One of `user`, `assistant`, `system`, or
             `developer`.
           enum:
             - user
@@ -5741,30 +5336,16 @@ components:
         - high
         - xhigh
       default: medium
-      description: >
+      description: |
         Constrains effort on reasoning for
-
         [reasoning models](https://platform.openai.com/docs/guides/reasoning).
-
-        Currently supported values are `none`, `minimal`, `low`, `medium`,
-        `high`, and `xhigh`. Reducing
-
+        Currently supported values are `none`, `minimal`, `low`, `medium`, `high`, and `xhigh`. Reducing
         reasoning effort can result in faster responses and fewer tokens used
-
         on reasoning in a response.
 
-
-        - `gpt-5.1` defaults to `none`, which does not perform reasoning. The
-        supported reasoning values for `gpt-5.1` are `none`, `low`, `medium`,
-        and `high`. Tool calls are supported for all reasoning values in
-        gpt-5.1.
-
-        - All models before `gpt-5.1` default to `medium` reasoning effort, and
-        do not support `none`.
-
-        - The `gpt-5-pro` model defaults to (and only supports) `high` reasoning
-        effort.
-
+        - `gpt-5.1` defaults to `none`, which does not perform reasoning. The supported reasoning values for `gpt-5.1` are `none`, `low`, `medium`, and `high`. Tool calls are supported for all reasoning values in gpt-5.1.
+        - All models before `gpt-5.1` default to `medium` reasoning effort, and do not support `none`.
+        - The `gpt-5-pro` model defaults to (and only supports) `high` reasoning effort.
         - `xhigh` is supported for all models after `gpt-5.1-codex-max`.
     ResponseFormatText:
       type: object
@@ -5801,17 +5382,13 @@ components:
           properties:
             description:
               type: string
-              description: >
-                A description of what the response format is for, used by the
-                model to
-
+              description: |
+                A description of what the response format is for, used by the model to
                 determine how to respond in the format.
             name:
               type: string
-              description: >
-                The name of the response format. Must be a-z, A-Z, 0-9, or
-                contain
-
+              description: |
+                The name of the response format. Must be a-z, A-Z, 0-9, or contain
                 underscores and dashes, with a maximum length of 64.
             schema:
               $ref: '#/components/schemas/ResponseFormatJsonSchemaSchema'
@@ -5819,19 +5396,11 @@ components:
               anyOf:
                 - type: boolean
                   default: false
-                  description: >
-                    Whether to enable strict schema adherence when generating
-                    the output.
-
-                    If set to true, the model will always follow the exact
-                    schema defined
-
-                    in the `schema` field. Only a subset of JSON Schema is
-                    supported when
-
-                    `strict` is `true`. To learn more, read the [Structured
-                    Outputs
-
+                  description: |
+                    Whether to enable strict schema adherence when generating the output.
+                    If set to true, the model will always follow the exact schema defined
+                    in the `schema` field. Only a subset of JSON Schema is supported when
+                    `strict` is `true`. To learn more, read the [Structured Outputs
                     guide](/docs/guides/structured-outputs).
                 - type: 'null'
           required:
@@ -5842,16 +5411,10 @@ components:
     ResponseFormatJsonObject:
       type: object
       title: JSON object
-      description: >
-        JSON object response format. An older method of generating JSON
-        responses.
-
-        Using `json_schema` is recommended for models that support it. Note that
-        the
-
-        model will not generate JSON without a system or user message
-        instructing it
-
+      description: |
+        JSON object response format. An older method of generating JSON responses.
+        Using `json_schema` is recommended for models that support it. Note that the
+        model will not generate JSON without a system or user message instructing it
         to do so.
       properties:
         type:
@@ -5882,9 +5445,8 @@ components:
     EvalStoredCompletionsSource:
       type: object
       title: StoredCompletionsRunDataSource
-      description: >
-        A StoredCompletionsRunDataSource configuration describing a set of
-        filters
+      description: |
+        A StoredCompletionsRunDataSource configuration describing a set of filters
       properties:
         type:
           type: string
@@ -5910,9 +5472,7 @@ components:
       required:
         - type
       x-oaiMeta:
-        name: >-
-          The stored completions data source object used to configure an
-          individual run
+        name: The stored completions data source object used to configure an individual run
         group: eval runs
         example: |
           {
@@ -5941,9 +5501,7 @@ components:
           description: The name of the function to call.
         description:
           type: string
-          description: >-
-            A description of the function. Used by the model to determine
-            whether or not to call the function.
+          description: A description of the function. Used by the model to determine whether or not to call the function.
         parameters:
           additionalProperties: {}
           type: object
@@ -5962,9 +5520,7 @@ components:
           description: The IDs of the vector stores to search.
         max_num_results:
           type: integer
-          description: >-
-            The maximum number of results to return. This number should be
-            between 1 and 50 inclusive.
+          description: The maximum number of results to return. This number should be between 1 and 50 inclusive.
         ranking_options:
           $ref: '#/components/schemas/RankingOptions'
           description: Ranking options for search.
@@ -5972,9 +5528,8 @@ components:
           type: object
           additionalProperties: false
           title: Comparison Filter
-          description: >
-            A filter used to compare a specified attribute key to a given value
-            using a defined comparison operation.
+          description: |
+            A filter used to compare a specified attribute key to a given value using a defined comparison operation.
           properties:
             type:
               type: string
@@ -5988,32 +5543,21 @@ components:
                 - lte
                 - in
                 - nin
-              description: >
-                Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`,
-                `lt`, `lte`, `in`, `nin`.
-
+              description: |
+                Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`, `nin`.
                 - `eq`: equals
-
                 - `ne`: not equal
-
                 - `gt`: greater than
-
                 - `gte`: greater than or equal
-
                 - `lt`: less than
-
                 - `lte`: less than or equal
-
                 - `in`: in
-
                 - `nin`: not in
             key:
               type: string
               description: The key to compare against the value.
             value:
-              description: >-
-                The value to compare against the attribute key; supports string,
-                number, or boolean types.
+              description: The value to compare against the attribute key; supports string, number, or boolean types.
               type: string
               items:
                 oneOf:
@@ -6021,9 +5565,7 @@ components:
                   - type: number
             filters:
               type: array
-              description: >-
-                Array of filters to combine. Items can be `ComparisonFilter` or
-                `CompoundFilter`.
+              description: Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.
               items:
                 oneOf:
                   - $ref: '#/components/schemas/ComparisonFilter'
@@ -6056,10 +5598,7 @@ components:
             - medium
             - high
           default: medium
-          description: >-
-            High level guidance for the amount of context window space to use
-            for the search. One of `low`, `medium`, or `high`. `medium` is the
-            default.
+          description: High level guidance for the amount of context window space to use for the search. One of `low`, `medium`, or `high`. `medium` is the default.
         server_label:
           type: string
           description: |
@@ -6067,10 +5606,8 @@ components:
         server_url:
           type: string
           format: uri
-          description: >
-            The URL for the MCP server. One of `server_url` or `connector_id`
-            must be
-
+          description: |
+            The URL for the MCP server. One of `server_url` or `connector_id` must be
             provided.
         connector_id:
           type: string
@@ -6083,57 +5620,37 @@ components:
             - connector_outlookcalendar
             - connector_outlookemail
             - connector_sharepoint
-          description: >
-            Identifier for service connectors, like those available in ChatGPT.
-            One of
-
-            `server_url` or `connector_id` must be provided. Learn more about
-            service
-
+          description: |
+            Identifier for service connectors, like those available in ChatGPT. One of
+            `server_url` or `connector_id` must be provided. Learn more about service
             connectors [here](/docs/guides/tools-remote-mcp#connectors).
-
 
             Currently supported `connector_id` values are:
 
-
             - Dropbox: `connector_dropbox`
-
             - Gmail: `connector_gmail`
-
             - Google Calendar: `connector_googlecalendar`
-
             - Google Drive: `connector_googledrive`
-
             - Microsoft Teams: `connector_microsoftteams`
-
             - Outlook Calendar: `connector_outlookcalendar`
-
             - Outlook Email: `connector_outlookemail`
-
             - SharePoint: `connector_sharepoint`
         authorization:
           type: string
-          description: >
-            An OAuth access token that can be used with a remote MCP server,
-            either
-
-            with a custom MCP server URL or a service connector. Your
-            application
-
+          description: |
+            An OAuth access token that can be used with a remote MCP server, either
+            with a custom MCP server URL or a service connector. Your application
             must handle the OAuth authorization flow and provide the token here.
         server_description:
           type: string
-          description: >
-            Optional description of the MCP server, used to provide more
-            context.
+          description: |
+            Optional description of the MCP server, used to provide more context.
         headers:
           type: object
           additionalProperties:
             type: string
-          description: >
-            Optional HTTP headers to send to the MCP server. Use for
-            authentication
-
+          description: |
+            Optional HTTP headers to send to the MCP server. Use for authentication
             or other purposes.
         allowed_tools:
           description: |
@@ -6163,13 +5680,9 @@ components:
               additionalProperties: false
             - type: string
               title: MCP tool approval setting
-              description: >
-                Specify a single approval policy for all tools. One of `always`
-                or
-
-                `never`. When set to `always`, all tools will require approval.
-                When
-
+              description: |
+                Specify a single approval policy for all tools. One of `always` or
+                `never`. When set to `always`, all tools will require approval. When
                 set to `never`, all tools will not require approval.
               enum:
                 - always
@@ -6177,13 +5690,9 @@ components:
           default: always
           type: 'null'
         container:
-          description: >
-            The code interpreter container. Can be a container ID or an object
-            that
-
-            specifies uploaded file IDs to make available to your code, along
-            with an
-
+          description: |
+            The code interpreter container. Can be a container ID or an object that
+            specifies uploaded file IDs to make available to your code, along with an
             optional `memory_limit` setting.
           type: string
           properties:
@@ -6200,9 +5709,7 @@ components:
                 example: file-123
               type: array
               maxItems: 50
-              description: >-
-                An optional list of uploaded files to make available to your
-                code.
+              description: An optional list of uploaded files to make available to your code.
             memory_limit:
               type: string
               enum:
@@ -6230,8 +5737,7 @@ components:
                   description: A list of allowed domains when type is `allowlist`.
                 domain_secrets:
                   items:
-                    $ref: >-
-                      #/components/schemas/ContainerNetworkPolicyDomainSecretParam
+                    $ref: '#/components/schemas/ContainerNetworkPolicyDomainSecretParam'
                   type: array
                   minItems: 1
                   description: Optional domain-scoped secrets for allowlisted domains.
@@ -6263,19 +5769,7 @@ components:
             or `auto`. Default: `auto`.
           default: auto
         size:
-          description: >-
-            The size of the generated images. For `gpt-image-2` and
-            `gpt-image-2-2026-04-21`, arbitrary resolutions are supported as
-            `WIDTHxHEIGHT` strings, for example `1536x864`. Width and height
-            must both be divisible by 16 and the requested aspect ratio must be
-            between 1:3 and 3:1. Resolutions above `2560x1440` are experimental,
-            and the maximum supported resolution is `3840x2160`. The requested
-            size must also satisfy the model's current pixel and edge limits.
-            The standard sizes `1024x1024`, `1536x1024`, and `1024x1536` are
-            supported by the GPT image models; `auto` is supported for models
-            that allow automatic sizing. For `dall-e-2`, use one of `256x256`,
-            `512x512`, or `1024x1024`. For `dall-e-3`, use one of `1024x1024`,
-            `1792x1024`, or `1024x1792`.
+          description: The size of the generated images. For `gpt-image-2` and `gpt-image-2-2026-04-21`, arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`. Width and height must both be divisible by 16 and the requested aspect ratio must be between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum supported resolution is `3840x2160`. The requested size must also satisfy the model's current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and `1024x1536` are supported by the GPT image models; `auto` is supported for models that allow automatic sizing. For `dall-e-2`, use one of `256x256`, `512x512`, or `1024x1024`. For `dall-e-3`, use one of `1024x1024`, `1792x1024`, or `1024x1792`.
           default: auto
           type: string
           enum:
@@ -6323,12 +5817,7 @@ components:
           enum:
             - high
             - low
-          description: >-
-            Control how much effort the model will exert to match the style and
-            features, especially facial features, of input images. This
-            parameter is only supported for `gpt-image-1` and `gpt-image-1.5`
-            and later models, unsupported for `gpt-image-1-mini`. Supports
-            `high` and `low`. Defaults to `low`.
+          description: Control how much effort the model will exert to match the style and features, especially facial features, of input images. This parameter is only supported for `gpt-image-1` and `gpt-image-1.5` and later models, unsupported for `gpt-image-1-mini`. Supports `high` and `low`. Defaults to `low`.
         input_image_mask:
           type: object
           description: |
@@ -6349,14 +5838,12 @@ components:
           type: integer
           minimum: 0
           maximum: 3
-          description: >
-            Number of partial images to generate in streaming mode, from 0
-            (default value) to 3.
+          description: |
+            Number of partial images to generate in streaming mode, from 0 (default value) to 3.
           default: 0
         action:
-          description: >
-            Whether to generate a new image or edit an existing image. Default:
-            `auto`.
+          description: |
+            Whether to generate a new image or edit an existing image. Default: `auto`.
           $ref: '#/components/schemas/ImageGenActionEnum'
         format:
           description: The input format for the custom tool. Default is unconstrained text.
@@ -6416,30 +5903,19 @@ components:
         - tools
       title: Function
     TextResponseFormatConfiguration:
-      description: >
+      description: |
         An object specifying the format that the model must output.
 
-
         Configuring `{ "type": "json_schema" }` enables Structured Outputs, 
-
-        which ensures the model will match your supplied JSON schema. Learn more
-        in the 
-
+        which ensures the model will match your supplied JSON schema. Learn more in the 
         [Structured Outputs guide](/docs/guides/structured-outputs).
-
 
         The default format is `{ "type": "text" }` with no additional options.
 
-
         **Not recommended for gpt-4o and newer models:**
 
-
-        Setting to `{ "type": "json_object" }` enables the older JSON mode,
-        which
-
-        ensures the message the model generates is valid JSON. Using
-        `json_schema`
-
+        Setting to `{ "type": "json_object" }` enables the older JSON mode, which
+        ensures the message the model generates is valid JSON. Using `json_schema`
         is preferred for models that support it.
       type: object
       title: Text
@@ -6452,10 +5928,8 @@ components:
           x-stainless-const: true
         description:
           type: string
-          description: >
-            A description of what the response format is for, used by the model
-            to
-
+          description: |
+            A description of what the response format is for, used by the model to
             determine how to respond in the format.
         name:
           type: string
@@ -6467,18 +5941,11 @@ components:
         strict:
           type: boolean
           default: false
-          description: >
-            Whether to enable strict schema adherence when generating the
-            output.
-
-            If set to true, the model will always follow the exact schema
-            defined
-
-            in the `schema` field. Only a subset of JSON Schema is supported
-            when
-
+          description: |
+            Whether to enable strict schema adherence when generating the output.
+            If set to true, the model will always follow the exact schema defined
+            in the `schema` field. Only a subset of JSON Schema is supported when
             `strict` is `true`. To learn more, read the [Structured Outputs
-
             guide](/docs/guides/structured-outputs).
       required:
         - type
@@ -6497,31 +5964,21 @@ components:
           description: The type of run data source. Always `responses`.
         metadata:
           type: string
-          description: >-
-            Metadata filter for the responses. This is a query parameter used to
-            select responses. (opaque JSON object)
+          description: Metadata filter for the responses. This is a query parameter used to select responses. (opaque JSON object)
         model:
           type: string
-          description: >-
-            The name of the model to find responses for. This is a query
-            parameter used to select responses.
+          description: The name of the model to find responses for. This is a query parameter used to select responses.
         instructions_search:
           type: string
-          description: >-
-            Optional string to search the 'instructions' field. This is a query
-            parameter used to select responses.
+          description: Optional string to search the 'instructions' field. This is a query parameter used to select responses.
         created_after:
           type: integer
           minimum: 0
-          description: >-
-            Only include items created after this timestamp (inclusive). This is
-            a query parameter used to select responses.
+          description: Only include items created after this timestamp (inclusive). This is a query parameter used to select responses.
         created_before:
           type: integer
           minimum: 0
-          description: >-
-            Only include items created before this timestamp (inclusive). This
-            is a query parameter used to select responses.
+          description: Only include items created before this timestamp (inclusive). This is a query parameter used to select responses.
         reasoning_effort:
           type: string
           enum:
@@ -6532,57 +5989,33 @@ components:
             - high
             - xhigh
           default: medium
-          description: >
+          description: |
             Constrains effort on reasoning for
-
-            [reasoning
-            models](https://platform.openai.com/docs/guides/reasoning).
-
-            Currently supported values are `none`, `minimal`, `low`, `medium`,
-            `high`, and `xhigh`. Reducing
-
-            reasoning effort can result in faster responses and fewer tokens
-            used
-
+            [reasoning models](https://platform.openai.com/docs/guides/reasoning).
+            Currently supported values are `none`, `minimal`, `low`, `medium`, `high`, and `xhigh`. Reducing
+            reasoning effort can result in faster responses and fewer tokens used
             on reasoning in a response.
 
-
-            - `gpt-5.1` defaults to `none`, which does not perform reasoning.
-            The supported reasoning values for `gpt-5.1` are `none`, `low`,
-            `medium`, and `high`. Tool calls are supported for all reasoning
-            values in gpt-5.1.
-
-            - All models before `gpt-5.1` default to `medium` reasoning effort,
-            and do not support `none`.
-
-            - The `gpt-5-pro` model defaults to (and only supports) `high`
-            reasoning effort.
-
+            - `gpt-5.1` defaults to `none`, which does not perform reasoning. The supported reasoning values for `gpt-5.1` are `none`, `low`, `medium`, and `high`. Tool calls are supported for all reasoning values in gpt-5.1.
+            - All models before `gpt-5.1` default to `medium` reasoning effort, and do not support `none`.
+            - The `gpt-5-pro` model defaults to (and only supports) `high` reasoning effort.
             - `xhigh` is supported for all models after `gpt-5.1-codex-max`.
         temperature:
           type: number
-          description: >-
-            Sampling temperature. This is a query parameter used to select
-            responses.
+          description: Sampling temperature. This is a query parameter used to select responses.
         top_p:
           type: number
-          description: >-
-            Nucleus sampling parameter. This is a query parameter used to select
-            responses.
+          description: Nucleus sampling parameter. This is a query parameter used to select responses.
         users:
           type: array
           items:
             type: string
-          description: >-
-            List of user identifiers. This is a query parameter used to select
-            responses.
+          description: List of user identifiers. This is a query parameter used to select responses.
         tools:
           type: array
           items:
             type: string
-          description: >-
-            List of tool names. This is a query parameter used to select
-            responses.
+          description: List of tool names. This is a query parameter used to select responses.
       required:
         - type
       x-oaiMeta:
@@ -6601,33 +6034,24 @@ components:
     InputMessageContentList:
       type: array
       title: Input item content list
-      description: >
-        A list of one or many input items to the model, containing different
-        content 
-
+      description: |
+        A list of one or many input items to the model, containing different content 
         types.
       items:
         $ref: '#/components/schemas/InputContent'
     MessagePhase:
       type: string
-      description: >
-        Labels an `assistant` message as intermediate commentary (`commentary`)
-        or the final answer (`final_answer`).
-
-        For models like `gpt-5.3-codex` and beyond, when sending follow-up
-        requests, preserve and resend
-
-        phase on all assistant messages — dropping it can degrade performance.
-        Not used for user messages.
+      description: |
+        Labels an `assistant` message as intermediate commentary (`commentary`) or the final answer (`final_answer`).
+        For models like `gpt-5.3-codex` and beyond, when sending follow-up requests, preserve and resend
+        phase on all assistant messages — dropping it can degrade performance. Not used for user messages.
       enum:
         - commentary
         - final_answer
     EvalItemContent:
       title: Eval content
-      description: >
-        Inputs to the model - can contain template strings. Supports text,
-        output text, input images, and input audio, either as a single item or
-        an array of items.
+      description: |
+        Inputs to the model - can contain template strings. Supports text, output text, input images, and input audio, either as a single item or an array of items.
       type: string
       properties:
         type:
@@ -6647,9 +6071,8 @@ components:
             The URL of the image input.
         detail:
           type: string
-          description: >
-            The detail level of the image to be sent to the model. One of
-            `high`, `low`, or `auto`. Defaults to `auto`.
+          description: |
+            The detail level of the image to be sent to the model. One of `high`, `low`, or `auto`. Defaults to `auto`.
         input_audio:
           type: object
           properties:
@@ -6659,10 +6082,8 @@ components:
                 Base64-encoded audio data.
             format:
               type: string
-              description: >
-                The format of the audio data. Currently supported formats are
-                `mp3` and
-
+              description: |
+                The format of the audio data. Currently supported formats are `mp3` and
                 `wav`.
               enum:
                 - mp3
@@ -6689,26 +6110,16 @@ components:
       properties:
         description:
           type: string
-          description: >-
-            A description of what the function does, used by the model to choose
-            when and how to call the function.
+          description: A description of what the function does, used by the model to choose when and how to call the function.
         name:
           type: string
-          description: >-
-            The name of the function to be called. Must be a-z, A-Z, 0-9, or
-            contain underscores and dashes, with a maximum length of 64.
+          description: The name of the function to be called. Must be a-z, A-Z, 0-9, or contain underscores and dashes, with a maximum length of 64.
         parameters:
           $ref: '#/components/schemas/FunctionParameters'
         strict:
           type: boolean
           default: false
-          description: >-
-            Whether to enable strict schema adherence when generating the
-            function call. If set to true, the model will follow the exact
-            schema defined in the `parameters` field. Only a subset of JSON
-            Schema is supported when `strict` is `true`. Learn more about
-            Structured Outputs in the [function calling
-            guide](/docs/guides/function-calling).
+          description: Whether to enable strict schema adherence when generating the function call. If set to true, the model will follow the exact schema defined in the `parameters` field. Only a subset of JSON Schema is supported when `strict` is `true`. Learn more about Structured Outputs in the [function calling guide](/docs/guides/function-calling).
       required:
         - name
     FunctionTool:
@@ -6725,9 +6136,7 @@ components:
           description: The name of the function to call.
         description:
           type: string
-          description: >-
-            A description of the function. Used by the model to determine
-            whether or not to call the function.
+          description: A description of the function. Used by the model to determine whether or not to call the function.
         parameters:
           additionalProperties: {}
           type: object
@@ -6746,10 +6155,7 @@ components:
         - strict
         - parameters
       title: Function
-      description: >-
-        Defines a function in your own code the model can choose to call. Learn
-        more about [function
-        calling](https://platform.openai.com/docs/guides/function-calling).
+      description: Defines a function in your own code the model can choose to call. Learn more about [function calling](https://platform.openai.com/docs/guides/function-calling).
     FileSearchTool:
       properties:
         type:
@@ -6766,9 +6172,7 @@ components:
           description: The IDs of the vector stores to search.
         max_num_results:
           type: integer
-          description: >-
-            The maximum number of results to return. This number should be
-            between 1 and 50 inclusive.
+          description: The maximum number of results to return. This number should be between 1 and 50 inclusive.
         ranking_options:
           $ref: '#/components/schemas/RankingOptions'
           description: Ranking options for search.
@@ -6776,9 +6180,8 @@ components:
           type: object
           additionalProperties: false
           title: Comparison Filter
-          description: >
-            A filter used to compare a specified attribute key to a given value
-            using a defined comparison operation.
+          description: |
+            A filter used to compare a specified attribute key to a given value using a defined comparison operation.
           properties:
             type:
               type: string
@@ -6792,32 +6195,21 @@ components:
                 - lte
                 - in
                 - nin
-              description: >
-                Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`,
-                `lt`, `lte`, `in`, `nin`.
-
+              description: |
+                Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`, `nin`.
                 - `eq`: equals
-
                 - `ne`: not equal
-
                 - `gt`: greater than
-
                 - `gte`: greater than or equal
-
                 - `lt`: less than
-
                 - `lte`: less than or equal
-
                 - `in`: in
-
                 - `nin`: not in
             key:
               type: string
               description: The key to compare against the value.
             value:
-              description: >-
-                The value to compare against the attribute key; supports string,
-                number, or boolean types.
+              description: The value to compare against the attribute key; supports string, number, or boolean types.
               type: string
               items:
                 oneOf:
@@ -6825,9 +6217,7 @@ components:
                   - type: number
             filters:
               type: array
-              description: >-
-                Array of filters to combine. Items can be `ComparisonFilter` or
-                `CompoundFilter`.
+              description: Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.
               items:
                 oneOf:
                   - $ref: '#/components/schemas/ComparisonFilter'
@@ -6847,10 +6237,7 @@ components:
         - type
         - vector_store_ids
       title: File search
-      description: >-
-        A tool that searches for relevant content from uploaded files. Learn
-        more about the [file search
-        tool](https://platform.openai.com/docs/guides/tools-file-search).
+      description: A tool that searches for relevant content from uploaded files. Learn more about the [file search tool](https://platform.openai.com/docs/guides/tools-file-search).
     ComputerTool:
       properties:
         type:
@@ -6864,9 +6251,7 @@ components:
       required:
         - type
       title: Computer
-      description: >-
-        A tool that controls a virtual computer. Learn more about the [computer
-        tool](https://platform.openai.com/docs/guides/tools-computer-use).
+      description: A tool that controls a virtual computer. Learn more about the [computer tool](https://platform.openai.com/docs/guides/tools-computer-use).
     ComputerUsePreviewTool:
       properties:
         type:
@@ -6892,16 +6277,12 @@ components:
         - display_width
         - display_height
       title: Computer use preview
-      description: >-
-        A tool that controls a virtual computer. Learn more about the [computer
-        tool](https://platform.openai.com/docs/guides/tools-computer-use).
+      description: A tool that controls a virtual computer. Learn more about the [computer tool](https://platform.openai.com/docs/guides/tools-computer-use).
     WebSearchTool:
       type: object
       title: Web search
-      description: >
-        Search the Internet for sources related to the prompt. Learn more about
-        the
-
+      description: |
+        Search the Internet for sources related to the prompt. Learn more about the
         [web search tool](/docs/guides/tools-web-search).
       properties:
         type:
@@ -6909,9 +6290,7 @@ components:
           enum:
             - web_search
             - web_search_2025_08_26
-          description: >-
-            The type of the web search tool. One of `web_search` or
-            `web_search_2025_08_26`.
+          description: The type of the web search tool. One of `web_search` or `web_search_2025_08_26`.
           default: web_search
         filters:
           type: object
@@ -6922,12 +6301,9 @@ components:
               anyOf:
                 - type: array
                   title: Allowed domains for the search.
-                  description: >
-                    Allowed domains for the search. If not provided, all domains
-                    are allowed.
-
+                  description: |
+                    Allowed domains for the search. If not provided, all domains are allowed.
                     Subdomains of the provided domains are allowed as well.
-
 
                     Example: `["pubmed.ncbi.nlm.nih.gov"]`
                   items:
@@ -6944,19 +6320,14 @@ components:
             - medium
             - high
           default: medium
-          description: >-
-            High level guidance for the amount of context window space to use
-            for the search. One of `low`, `medium`, or `high`. `medium` is the
-            default.
+          description: High level guidance for the amount of context window space to use for the search. One of `low`, `medium`, or `high`. `medium` is the default.
       required:
         - type
     MCPTool:
       type: object
       title: MCP tool
-      description: >
-        Give the model access to additional tools via remote Model Context
-        Protocol
-
+      description: |
+        Give the model access to additional tools via remote Model Context Protocol
         (MCP) servers. [Learn more about MCP](/docs/guides/tools-remote-mcp).
       properties:
         type:
@@ -6972,10 +6343,8 @@ components:
         server_url:
           type: string
           format: uri
-          description: >
-            The URL for the MCP server. One of `server_url` or `connector_id`
-            must be
-
+          description: |
+            The URL for the MCP server. One of `server_url` or `connector_id` must be
             provided.
         connector_id:
           type: string
@@ -6988,57 +6357,37 @@ components:
             - connector_outlookcalendar
             - connector_outlookemail
             - connector_sharepoint
-          description: >
-            Identifier for service connectors, like those available in ChatGPT.
-            One of
-
-            `server_url` or `connector_id` must be provided. Learn more about
-            service
-
+          description: |
+            Identifier for service connectors, like those available in ChatGPT. One of
+            `server_url` or `connector_id` must be provided. Learn more about service
             connectors [here](/docs/guides/tools-remote-mcp#connectors).
-
 
             Currently supported `connector_id` values are:
 
-
             - Dropbox: `connector_dropbox`
-
             - Gmail: `connector_gmail`
-
             - Google Calendar: `connector_googlecalendar`
-
             - Google Drive: `connector_googledrive`
-
             - Microsoft Teams: `connector_microsoftteams`
-
             - Outlook Calendar: `connector_outlookcalendar`
-
             - Outlook Email: `connector_outlookemail`
-
             - SharePoint: `connector_sharepoint`
         authorization:
           type: string
-          description: >
-            An OAuth access token that can be used with a remote MCP server,
-            either
-
-            with a custom MCP server URL or a service connector. Your
-            application
-
+          description: |
+            An OAuth access token that can be used with a remote MCP server, either
+            with a custom MCP server URL or a service connector. Your application
             must handle the OAuth authorization flow and provide the token here.
         server_description:
           type: string
-          description: >
-            Optional description of the MCP server, used to provide more
-            context.
+          description: |
+            Optional description of the MCP server, used to provide more context.
         headers:
           type: object
           additionalProperties:
             type: string
-          description: >
-            Optional HTTP headers to send to the MCP server. Use for
-            authentication
-
+          description: |
+            Optional HTTP headers to send to the MCP server. Use for authentication
             or other purposes.
         allowed_tools:
           description: |
@@ -7068,13 +6417,9 @@ components:
               additionalProperties: false
             - type: string
               title: MCP tool approval setting
-              description: >
-                Specify a single approval policy for all tools. One of `always`
-                or
-
-                `never`. When set to `always`, all tools will require approval.
-                When
-
+              description: |
+                Specify a single approval policy for all tools. One of `always` or
+                `never`. When set to `always`, all tools will require approval. When
                 set to `never`, all tools will not require approval.
               enum:
                 - always
@@ -7102,13 +6447,9 @@ components:
             The type of the code interpreter tool. Always `code_interpreter`.
           x-stainless-const: true
         container:
-          description: >
-            The code interpreter container. Can be a container ID or an object
-            that
-
-            specifies uploaded file IDs to make available to your code, along
-            with an
-
+          description: |
+            The code interpreter container. Can be a container ID or an object that
+            specifies uploaded file IDs to make available to your code, along with an
             optional `memory_limit` setting.
           type: string
           properties:
@@ -7125,9 +6466,7 @@ components:
                 example: file-123
               type: array
               maxItems: 50
-              description: >-
-                An optional list of uploaded files to make available to your
-                code.
+              description: An optional list of uploaded files to make available to your code.
             memory_limit:
               type: string
               enum:
@@ -7155,8 +6494,7 @@ components:
                   description: A list of allowed domains when type is `allowlist`.
                 domain_secrets:
                   items:
-                    $ref: >-
-                      #/components/schemas/ContainerNetworkPolicyDomainSecretParam
+                    $ref: '#/components/schemas/ContainerNetworkPolicyDomainSecretParam'
                   type: array
                   minItems: 1
                   description: Optional domain-scoped secrets for allowlisted domains.
@@ -7204,19 +6542,7 @@ components:
             or `auto`. Default: `auto`.
           default: auto
         size:
-          description: >-
-            The size of the generated images. For `gpt-image-2` and
-            `gpt-image-2-2026-04-21`, arbitrary resolutions are supported as
-            `WIDTHxHEIGHT` strings, for example `1536x864`. Width and height
-            must both be divisible by 16 and the requested aspect ratio must be
-            between 1:3 and 3:1. Resolutions above `2560x1440` are experimental,
-            and the maximum supported resolution is `3840x2160`. The requested
-            size must also satisfy the model's current pixel and edge limits.
-            The standard sizes `1024x1024`, `1536x1024`, and `1024x1536` are
-            supported by the GPT image models; `auto` is supported for models
-            that allow automatic sizing. For `dall-e-2`, use one of `256x256`,
-            `512x512`, or `1024x1024`. For `dall-e-3`, use one of `1024x1024`,
-            `1792x1024`, or `1024x1792`.
+          description: The size of the generated images. For `gpt-image-2` and `gpt-image-2-2026-04-21`, arbitrary resolutions are supported as `WIDTHxHEIGHT` strings, for example `1536x864`. Width and height must both be divisible by 16 and the requested aspect ratio must be between 1:3 and 3:1. Resolutions above `2560x1440` are experimental, and the maximum supported resolution is `3840x2160`. The requested size must also satisfy the model's current pixel and edge limits. The standard sizes `1024x1024`, `1536x1024`, and `1024x1536` are supported by the GPT image models; `auto` is supported for models that allow automatic sizing. For `dall-e-2`, use one of `256x256`, `512x512`, or `1024x1024`. For `dall-e-3`, use one of `1024x1024`, `1792x1024`, or `1024x1792`.
           default: auto
           type: string
           enum:
@@ -7264,12 +6590,7 @@ components:
           enum:
             - high
             - low
-          description: >-
-            Control how much effort the model will exert to match the style and
-            features, especially facial features, of input images. This
-            parameter is only supported for `gpt-image-1` and `gpt-image-1.5`
-            and later models, unsupported for `gpt-image-1-mini`. Supports
-            `high` and `low`. Defaults to `low`.
+          description: Control how much effort the model will exert to match the style and features, especially facial features, of input images. This parameter is only supported for `gpt-image-1` and `gpt-image-1.5` and later models, unsupported for `gpt-image-1-mini`. Supports `high` and `low`. Defaults to `low`.
         input_image_mask:
           type: object
           description: |
@@ -7290,14 +6611,12 @@ components:
           type: integer
           minimum: 0
           maximum: 3
-          description: >
-            Number of partial images to generate in streaming mode, from 0
-            (default value) to 3.
+          description: |
+            Number of partial images to generate in streaming mode, from 0 (default value) to 3.
           default: 0
         action:
-          description: >
-            Whether to generate a new image or edit an existing image. Default:
-            `auto`.
+          description: |
+            Whether to generate a new image or edit an existing image. Default: `auto`.
           $ref: '#/components/schemas/ImageGenActionEnum'
       required:
         - type
@@ -7314,9 +6633,7 @@ components:
       required:
         - type
       title: Local shell tool
-      description: >-
-        A tool that allows the model to execute shell commands in a local
-        environment.
+      description: A tool that allows the model to execute shell commands in a local environment.
     FunctionShellToolParam:
       properties:
         type:
@@ -7353,9 +6670,7 @@ components:
           description: The name of the custom tool, used to identify it in tool calls.
         description:
           type: string
-          description: >-
-            Optional description of the custom tool, used to provide more
-            context.
+          description: Optional description of the custom tool, used to provide more context.
         format:
           description: The input format for the custom tool. Default is unconstrained text.
           discriminator:
@@ -7388,9 +6703,7 @@ components:
         - type
         - name
       title: Custom tool
-      description: >-
-        A custom tool that processes input using a specified format. Learn more
-        about   [custom tools](/docs/guides/function-calling#custom-tools)
+      description: A custom tool that processes input using a specified format. Learn more about   [custom tools](/docs/guides/function-calling#custom-tools)
     NamespaceToolParam:
       properties:
         type:
@@ -7441,9 +6754,7 @@ components:
           description: Whether tool search is executed by the server or by the client.
         description:
           type: string
-          description: >-
-            Description shown to the model for a client-executed tool search
-            tool.
+          description: Description shown to the model for a client-executed tool search tool.
         parameters:
           properties: {}
           type: object
@@ -7460,9 +6771,7 @@ components:
           enum:
             - web_search_preview
             - web_search_preview_2025_03_11
-          description: >-
-            The type of the web search tool. One of `web_search_preview` or
-            `web_search_preview_2025_03_11`.
+          description: The type of the web search tool. One of `web_search_preview` or `web_search_preview_2025_03_11`.
           default: web_search_preview
           x-stainless-const: true
         user_location:
@@ -7476,10 +6785,7 @@ components:
               x-stainless-const: true
             country:
               type: string
-              description: >-
-                The two-letter [ISO country
-                code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user,
-                e.g. `US`.
+              description: The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.
             region:
               type: string
               description: Free text input for the region of the user, e.g. `California`.
@@ -7488,19 +6794,13 @@ components:
               description: Free text input for the city of the user, e.g. `San Francisco`.
             timezone:
               type: string
-              description: >-
-                The [IANA
-                timezone](https://timeapi.io/documentation/iana-timezones) of
-                the user, e.g. `America/Los_Angeles`.
+              description: The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.
           type: object
           required:
             - type
         search_context_size:
           $ref: '#/components/schemas/SearchContextSize'
-          description: >-
-            High level guidance for the amount of context window space to use
-            for the search. One of `low`, `medium`, or `high`. `medium` is the
-            default.
+          description: High level guidance for the amount of context window space to use for the search. One of `low`, `medium`, or `high`. `medium` is the default.
         search_content_types:
           items:
             $ref: '#/components/schemas/SearchContentType'
@@ -7509,10 +6809,7 @@ components:
       required:
         - type
       title: Web search preview
-      description: >-
-        This tool searches the web for relevant results to use in a response.
-        Learn more about the [web search
-        tool](https://platform.openai.com/docs/guides/tools-web-search).
+      description: This tool searches the web for relevant results to use in a response. Learn more about the [web search tool](https://platform.openai.com/docs/guides/tools-web-search).
     ApplyPatchToolParam:
       properties:
         type:
@@ -7526,9 +6823,7 @@ components:
       required:
         - type
       title: Apply patch tool
-      description: >-
-        Allows the assistant to create, delete, or update files using unified
-        diffs.
+      description: Allows the assistant to create, delete, or update files using unified diffs.
     TextResponseFormatJsonSchema:
       type: object
       title: JSON schema
@@ -7544,10 +6839,8 @@ components:
           x-stainless-const: true
         description:
           type: string
-          description: >
-            A description of what the response format is for, used by the model
-            to
-
+          description: |
+            A description of what the response format is for, used by the model to
             determine how to respond in the format.
         name:
           type: string
@@ -7559,18 +6852,11 @@ components:
         strict:
           type: boolean
           default: false
-          description: >
-            Whether to enable strict schema adherence when generating the
-            output.
-
-            If set to true, the model will always follow the exact schema
-            defined
-
-            in the `schema` field. Only a subset of JSON Schema is supported
-            when
-
+          description: |
+            Whether to enable strict schema adherence when generating the output.
+            If set to true, the model will always follow the exact schema defined
+            in the `schema` field. Only a subset of JSON Schema is supported when
             `strict` is `true`. To learn more, read the [Structured Outputs
-
             guide](/docs/guides/structured-outputs).
       required:
         - type
@@ -7593,17 +6879,13 @@ components:
         image_url:
           type: string
           format: uri
-          description: >-
-            The URL of the image to be sent to the model. A fully qualified URL
-            or base64 encoded image in a data URL.
+          description: The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.
         file_id:
           type: string
           description: The ID of the file to be sent to the model.
         detail:
           $ref: '#/components/schemas/ImageDetail'
-          description: >-
-            The detail level of the image to be sent to the model. One of
-            `high`, `low`, `auto`, or `original`. Defaults to `auto`.
+          description: The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.
         filename:
           type: string
           description: The name of the file to be sent to the model.
@@ -7624,9 +6906,8 @@ components:
       description: A text input to the model.
     EvalItemContentItem:
       title: Eval content item
-      description: >
-        A single content item: input text, output text, input image, or input
-        audio.
+      description: |
+        A single content item: input text, output text, input image, or input audio.
       type: string
       properties:
         type:
@@ -7646,9 +6927,8 @@ components:
             The URL of the image input.
         detail:
           type: string
-          description: >
-            The detail level of the image to be sent to the model. One of
-            `high`, `low`, or `auto`. Defaults to `auto`.
+          description: |
+            The detail level of the image to be sent to the model. One of `high`, `low`, or `auto`. Defaults to `auto`.
         input_audio:
           type: object
           properties:
@@ -7658,10 +6938,8 @@ components:
                 Base64-encoded audio data.
             format:
               type: string
-              description: >
-                The format of the audio data. Currently supported formats are
-                `mp3` and
-
+              description: |
+                The format of the audio data. Currently supported formats are `mp3` and
                 `wav`.
               enum:
                 - mp3
@@ -7677,22 +6955,15 @@ components:
     EvalItemContentArray:
       type: array
       title: An array of Input text, Output text, Input image, and Input audio
-      description: >
-        A list of inputs, each of which may be either an input text, output
-        text, input
-
+      description: |
+        A list of inputs, each of which may be either an input text, output text, input
         image, or input audio object.
       items:
         $ref: '#/components/schemas/EvalItemContentItem'
     FunctionParameters:
       type: object
-      description: >-
-        The parameters the functions accepts, described as a JSON Schema object.
-        See the [guide](/docs/guides/function-calling) for examples, and the
-        [JSON Schema
-        reference](https://json-schema.org/understanding-json-schema/) for
-        documentation about the format. 
-
+      description: |-
+        The parameters the functions accepts, described as a JSON Schema object. See the [guide](/docs/guides/function-calling) for examples, and the [JSON Schema reference](https://json-schema.org/understanding-json-schema/) for documentation about the format. 
 
         Omitting `parameters` defines a function with an empty parameter list.
       additionalProperties: true
@@ -7703,25 +6974,18 @@ components:
           description: The ranker to use for the file search.
         score_threshold:
           type: number
-          description: >-
-            The score threshold for the file search, a number between 0 and 1.
-            Numbers closer to 1 will attempt to return only the most relevant
-            results, but may return fewer results.
+          description: The score threshold for the file search, a number between 0 and 1. Numbers closer to 1 will attempt to return only the most relevant results, but may return fewer results.
         hybrid_search:
           $ref: '#/components/schemas/HybridSearchOptions'
-          description: >-
-            Weights that control how reciprocal rank fusion balances semantic
-            embedding matches versus sparse keyword matches when hybrid search
-            is enabled.
+          description: Weights that control how reciprocal rank fusion balances semantic embedding matches versus sparse keyword matches when hybrid search is enabled.
       type: object
       required: []
     Filters:
       type: object
       additionalProperties: false
       title: Comparison Filter
-      description: >
-        A filter used to compare a specified attribute key to a given value
-        using a defined comparison operation.
+      description: |
+        A filter used to compare a specified attribute key to a given value using a defined comparison operation.
       properties:
         type:
           type: string
@@ -7735,32 +6999,21 @@ components:
             - lte
             - in
             - nin
-          description: >
-            Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`,
-            `lte`, `in`, `nin`.
-
+          description: |
+            Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`, `nin`.
             - `eq`: equals
-
             - `ne`: not equal
-
             - `gt`: greater than
-
             - `gte`: greater than or equal
-
             - `lt`: less than
-
             - `lte`: less than or equal
-
             - `in`: in
-
             - `nin`: not in
         key:
           type: string
           description: The key to compare against the value.
         value:
-          description: >-
-            The value to compare against the attribute key; supports string,
-            number, or boolean types.
+          description: The value to compare against the attribute key; supports string, number, or boolean types.
           type: string
           items:
             oneOf:
@@ -7768,9 +7021,7 @@ components:
               - type: number
         filters:
           type: array
-          description: >-
-            Array of filters to combine. Items can be `ComparisonFilter` or
-            `CompoundFilter`.
+          description: Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.
           items:
             oneOf:
               - $ref: '#/components/schemas/ComparisonFilter'
@@ -7809,10 +7060,7 @@ components:
         country:
           anyOf:
             - type: string
-              description: >-
-                The two-letter [ISO country
-                code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user,
-                e.g. `US`.
+              description: The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.
             - type: 'null'
         region:
           anyOf:
@@ -7827,10 +7075,7 @@ components:
         timezone:
           anyOf:
             - type: string
-              description: >-
-                The [IANA
-                timezone](https://timeapi.io/documentation/iana-timezones) of
-                the user, e.g. `America/Los_Angeles`.
+              description: The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.
             - type: 'null'
     MCPToolFilter:
       type: object
@@ -7846,12 +7091,9 @@ components:
           description: List of allowed tool names.
         read_only:
           type: boolean
-          description: >
+          description: |
             Indicates whether or not a tool modifies data or is read-only. If an
-
-            MCP server is [annotated with
-            `readOnlyHint`](https://modelcontextprotocol.io/specification/2025-06-18/schema#toolannotations-readonlyhint),
-
+            MCP server is [annotated with `readOnlyHint`](https://modelcontextprotocol.io/specification/2025-06-18/schema#toolannotations-readonlyhint),
             it will match this filter.
       required: []
       additionalProperties: false
@@ -7910,20 +7152,13 @@ components:
       required:
         - type
       title: CodeInterpreterToolAuto
-      description: >-
-        Configuration for a code interpreter container. Optionally specify the
-        IDs of the files to run the code on.
+      description: Configuration for a code interpreter container. Optionally specify the IDs of the files to run the code on.
     InputFidelity:
       type: string
       enum:
         - high
         - low
-      description: >-
-        Control how much effort the model will exert to match the style and
-        features, especially facial features, of input images. This parameter is
-        only supported for `gpt-image-1` and `gpt-image-1.5` and later models,
-        unsupported for `gpt-image-1-mini`. Supports `high` and `low`. Defaults
-        to `low`.
+      description: Control how much effort the model will exert to match the style and features, especially facial features, of input images. This parameter is only supported for `gpt-image-1` and `gpt-image-1.5` and later models, unsupported for `gpt-image-1-mini`. Supports `high` and `low`. Defaults to `low`.
     ImageGenActionEnum:
       type: string
       enum:
@@ -8088,9 +7323,7 @@ components:
           x-stainless-const: true
         defer_loading:
           type: boolean
-          description: >-
-            Whether this function should be deferred and discovered via tool
-            search.
+          description: Whether this function should be deferred and discovered via tool search.
       type: object
       required:
         - name
@@ -8115,10 +7348,7 @@ components:
           x-stainless-const: true
         country:
           type: string
-          description: >-
-            The two-letter [ISO country
-            code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g.
-            `US`.
+          description: The two-letter [ISO country code](https://en.wikipedia.org/wiki/ISO_3166-1) of the user, e.g. `US`.
         region:
           type: string
           description: Free text input for the region of the user, e.g. `California`.
@@ -8127,9 +7357,7 @@ components:
           description: Free text input for the city of the user, e.g. `San Francisco`.
         timezone:
           type: string
-          description: >-
-            The [IANA timezone](https://timeapi.io/documentation/iana-timezones)
-            of the user, e.g. `America/Los_Angeles`.
+          description: The [IANA timezone](https://timeapi.io/documentation/iana-timezones) of the user, e.g. `America/Los_Angeles`.
       type: object
       required:
         - type
@@ -8174,25 +7402,19 @@ components:
         image_url:
           type: string
           format: uri
-          description: >-
-            The URL of the image to be sent to the model. A fully qualified URL
-            or base64 encoded image in a data URL.
+          description: The URL of the image to be sent to the model. A fully qualified URL or base64 encoded image in a data URL.
         file_id:
           type: string
           description: The ID of the file to be sent to the model.
         detail:
           $ref: '#/components/schemas/ImageDetail'
-          description: >-
-            The detail level of the image to be sent to the model. One of
-            `high`, `low`, `auto`, or `original`. Defaults to `auto`.
+          description: The detail level of the image to be sent to the model. One of `high`, `low`, `auto`, or `original`. Defaults to `auto`.
       type: object
       required:
         - type
         - detail
       title: Input image
-      description: >-
-        An image input to the model. Learn about [image
-        inputs](/docs/guides/vision).
+      description: An image input to the model. Learn about [image inputs](/docs/guides/vision).
     InputFileContent:
       properties:
         type:
@@ -8218,10 +7440,7 @@ components:
           description: The URL of the file to be sent to the model.
         detail:
           $ref: '#/components/schemas/FileInputDetail'
-          description: >-
-            The detail level of the file to be sent to the model. Use `low` for
-            the default rendering behavior, or `high` to render the file at
-            higher quality. Defaults to `low`.
+          description: The detail level of the file to be sent to the model. Use `low` for the default rendering behavior, or `high` to render the file at higher quality. Defaults to `low`.
       type: object
       required:
         - type
@@ -8271,9 +7490,8 @@ components:
             The URL of the image input.
         detail:
           type: string
-          description: >
-            The detail level of the image to be sent to the model. One of
-            `high`, `low`, or `auto`. Defaults to `auto`.
+          description: |
+            The detail level of the image to be sent to the model. One of `high`, `low`, or `auto`. Defaults to `auto`.
       required:
         - type
         - image_url
@@ -8299,10 +7517,8 @@ components:
                 Base64-encoded audio data.
             format:
               type: string
-              description: >
-                The format of the audio data. Currently supported formats are
-                `mp3` and
-
+              description: |
+                The format of the audio data. Currently supported formats are `mp3` and
                 `wav`.
               enum:
                 - mp3
@@ -8334,9 +7550,8 @@ components:
       type: object
       additionalProperties: false
       title: Comparison Filter
-      description: >
-        A filter used to compare a specified attribute key to a given value
-        using a defined comparison operation.
+      description: |
+        A filter used to compare a specified attribute key to a given value using a defined comparison operation.
       properties:
         type:
           type: string
@@ -8350,32 +7565,21 @@ components:
             - lte
             - in
             - nin
-          description: >
-            Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`,
-            `lte`, `in`, `nin`.
-
+          description: |
+            Specifies the comparison operator: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`, `in`, `nin`.
             - `eq`: equals
-
             - `ne`: not equal
-
             - `gt`: greater than
-
             - `gte`: greater than or equal
-
             - `lt`: less than
-
             - `lte`: less than or equal
-
             - `in`: in
-
             - `nin`: not in
         key:
           type: string
           description: The key to compare against the value.
         value:
-          description: >-
-            The value to compare against the attribute key; supports string,
-            number, or boolean types.
+          description: The value to compare against the attribute key; supports string, number, or boolean types.
           type: string
           items:
             oneOf:
@@ -8402,9 +7606,7 @@ components:
             - or
         filters:
           type: array
-          description: >-
-            Array of filters to combine. Items can be `ComparisonFilter` or
-            `CompoundFilter`.
+          description: Array of filters to combine. Items can be `ComparisonFilter` or `CompoundFilter`.
           items:
             oneOf:
               - $ref: '#/components/schemas/ComparisonFilter'
@@ -8441,9 +7643,7 @@ components:
           type: string
           enum:
             - allowlist
-          description: >-
-            Allow outbound network access only to specified domains. Always
-            `allowlist`.
+          description: Allow outbound network access only to specified domains. Always `allowlist`.
           default: allowlist
           x-stainless-const: true
         allowed_domains:
@@ -8478,9 +7678,7 @@ components:
           description: The ID of the referenced skill.
         version:
           type: string
-          description: >-
-            Optional skill version. Use a positive integer or 'latest'. Omit for
-            default.
+          description: Optional skill version. Use a positive integer or 'latest'. Omit for default.
       type: object
       required:
         - type
@@ -8575,9 +7773,7 @@ components:
           type: string
           enum:
             - application/zip
-          description: >-
-            The media type of the inline skill payload. Must be
-            `application/zip`.
+          description: The media type of the inline skill payload. Must be `application/zip`.
           default: application/zip
           x-stainless-const: true
         data:
@@ -8604,6 +7800,8 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
+          request:
+            nativeCasing: kebab
         create:
           config:
             requestBodyTranslate:
@@ -8613,12 +7811,16 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '201'
+          request:
+            nativeCasing: kebab
         get:
           operation:
             $ref: '#/paths/~1evals~1{eval_id}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         update:
           config:
             requestBodyTranslate:
@@ -8628,12 +7830,16 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         delete:
           operation:
             $ref: '#/paths/~1evals~1{eval_id}/delete'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/evals/methods/get'
@@ -8657,6 +7863,8 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
+          request:
+            nativeCasing: kebab
         create:
           config:
             requestBodyTranslate:
@@ -8666,24 +7874,32 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '201'
+          request:
+            nativeCasing: kebab
         get:
           operation:
             $ref: '#/paths/~1evals~1{eval_id}~1runs~1{run_id}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         cancel:
           operation:
             $ref: '#/paths/~1evals~1{eval_id}~1runs~1{run_id}/post'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         delete:
           operation:
             $ref: '#/paths/~1evals~1{eval_id}~1runs~1{run_id}/delete'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/runs/methods/get'
@@ -8706,13 +7922,16 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
+          request:
+            nativeCasing: kebab
         get:
           operation:
-            $ref: >-
-              #/paths/~1evals~1{eval_id}~1runs~1{run_id}~1output_items~1{output_item_id}/get
+            $ref: '#/paths/~1evals~1{eval_id}~1runs~1{run_id}~1output_items~1{output_item_id}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/run_output_items/methods/get'
@@ -8731,3 +7950,7 @@ x-stackQL-config:
     responseToken:
       key: $.last_id
       location: body
+  queryParamPushdown:
+    top:
+      paramName: limit
+      maxValue: 100

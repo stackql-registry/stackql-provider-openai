@@ -42,21 +42,31 @@ const inventoryPath = path.join(repoRoot, 'provider-dev', 'config', 'endpoint_in
 
 const HTTP_VERBS = ['get', 'post', 'put', 'delete', 'patch', 'options', 'head', 'trace'];
 
+// Declared in lowercase kebab-case, not the vendor's `OpenAI-Organization`
+// spelling. HTTP field names are case-insensitive (RFC 7230 s3.2), so
+// `openai-organization` is the same header on the wire, but the lowercase kebab
+// form is what any-sdk's reverse-casing lookup can reach: with
+// `request.nativeCasing: kebab` (stamped by post_process.mjs), a snake_case SQL
+// key resolves via casing.FromSnake(key, 'kebab') -> `openai-organization`. That
+// lets users write `WHERE openai_organization = '...'` unquoted, instead of
+// quoting `"OpenAI-Organization"`. The botocore-derived ToSnake alias path cannot
+// help here: it does not handle hyphens (ToSnake('OpenAI-Organization') yields
+// the mangled 'open_ai-_organization').
 const ORG_PROJECT_HEADERS = [
   {
-    name: 'OpenAI-Organization',
+    name: 'openai-organization',
     in: 'header',
     required: false,
     description:
-      'Optionally scope the request to a specific organization (overrides the default associated with the API key).',
+      'Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.',
     schema: { type: 'string' },
   },
   {
-    name: 'OpenAI-Project',
+    name: 'openai-project',
     in: 'header',
     required: false,
     description:
-      'Optionally scope the request to a specific project (overrides the default associated with the API key).',
+      'Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.',
     schema: { type: 'string' },
   },
 ];
@@ -100,8 +110,16 @@ let headersInjected = 0;
 let opsTouched = 0;
 let deprecatedStamped = 0;
 let binaryPropsStripped = 0;
+let limitAnnotated = 0;
 const perFile = {};
 const docs = {};
+
+// Appended to every `limit` query parameter description. `limit` is wired to the
+// `top` query-param pushdown at generate time, so `SELECT ... LIMIT n` sets it on
+// the wire; users should not hand-write `WHERE limit = n`.
+const LIMIT_NOTE =
+  'Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.';
+const LIMIT_NOTE_RE = /Automatically applied from a SQL/;
 
 // A request-body property is a binary upload if its schema declares
 // `format: binary` anywhere (directly, in array items, or in a oneOf member).
@@ -166,6 +184,19 @@ for (const filename of files) {
         deprecatedStamped++;
       }
 
+      // Annotate the `limit` query parameter: it is the page-size parameter wired
+      // to the `top` query-param pushdown at generate time, so a SQL LIMIT clause
+      // supplies it automatically. The docs drop it from the example WHERE clauses
+      // (sanitize_docs.mjs) but keep the row in the params table, where this note
+      // is what the reader sees.
+      for (const p of op.parameters) {
+        const param = p && p.$ref ? undefined : p;
+        if (param && param.in === 'query' && param.name === 'limit' && !LIMIT_NOTE_RE.test(param.description || '')) {
+          param.description = `${(param.description || '').trim()}\n\n${LIMIT_NOTE}`.trim();
+          limitAnnotated++;
+        }
+      }
+
       const content = op.requestBody?.content;
       if (content && typeof content === 'object') {
         const resolve = (ref) => ref.replace(/^#\//, '').split('/').reduce((o, kk) => (o ? o[kk] : undefined), doc);
@@ -193,4 +224,5 @@ console.log(`Injected ${headersInjected} org/project header parameter(s) across 
 for (const [f, n] of Object.entries(perFile).sort()) console.log(`  ${f}: ${n}`);
 console.log(`Stamped deprecated: true on ${deprecatedStamped} operation(s) not already flagged upstream (${deprecatedOpIds.size} deprecated per the inventory).`);
 console.log(`Stripped ${binaryPropsStripped} binary (format:binary) request-body property(ies) - not marshalable by any-sdk (JSON/XML only).`);
+console.log(`Annotated ${limitAnnotated} \`limit\` query parameter(s) as SQL-LIMIT driven (the top pushdown).`);
 console.log('No openapi 3.1.0 array-type nullable sites found; no downgrade needed against this pin.');

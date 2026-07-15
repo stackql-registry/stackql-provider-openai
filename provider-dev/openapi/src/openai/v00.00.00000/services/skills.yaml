@@ -11,20 +11,16 @@ paths:
       summary: Create a new skill.
       operationId: CreateSkill
       parameters:
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -99,7 +95,10 @@ paths:
       parameters:
         - name: limit
           in: query
-          description: Number of items to retrieve
+          description: |-
+            Number of items to retrieve
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
           required: false
           schema:
             type: integer
@@ -107,9 +106,7 @@ paths:
             maximum: 100
         - name: order
           in: query
-          description: >-
-            Sort order of results by timestamp. Use `asc` for ascending order or
-            `desc` for descending order.
+          description: Sort order of results by timestamp. Use `asc` for ascending order or `desc` for descending order.
           required: false
           schema:
             $ref: '#/components/schemas/OrderEnum'
@@ -120,20 +117,16 @@ paths:
           schema:
             description: Identifier for the last item from the previous pagination request
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -208,20 +201,16 @@ paths:
           schema:
             example: skill_123
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -295,20 +284,16 @@ paths:
           schema:
             example: skill_123
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -382,20 +367,16 @@ paths:
           schema:
             example: skill_123
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -417,18 +398,14 @@ paths:
         examples:
           response: ''
           request:
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const skill = await client.skills.update('skill_123', {
-              default_version: 'default_version' });
-
+              const skill = await client.skills.update('skill_123', { default_version: 'default_version' });
 
               console.log(skill.id);
             python: |-
@@ -465,16 +442,12 @@ paths:
                       Skill skill = client.skills().update(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              skill = openai.skills.update("skill_123", default_version:
-              "default_version")
-
+              skill = openai.skills.update("skill_123", default_version: "default_version")
 
               puts(skill)
   /skills/{skill_id}/versions:
@@ -491,20 +464,16 @@ paths:
           schema:
             example: skill_123
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       requestBody:
@@ -526,18 +495,14 @@ paths:
         examples:
           response: ''
           request:
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const skillVersion = await
-              client.skills.versions.create('skill_123');
-
+              const skillVersion = await client.skills.versions.create('skill_123');
 
               console.log(skillVersion.id);
             python: |-
@@ -592,7 +557,10 @@ paths:
             type: string
         - name: limit
           in: query
-          description: Number of versions to retrieve.
+          description: |-
+            Number of versions to retrieve.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
           required: false
           schema:
             type: integer
@@ -611,20 +579,16 @@ paths:
           schema:
             example: skillver_123
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -638,19 +602,15 @@ paths:
         examples:
           response: ''
           request:
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
               // Automatically fetches more pages as needed.
-
-              for await (const skillVersion of
-              client.skills.versions.list('skill_123')) {
+              for await (const skillVersion of client.skills.versions.list('skill_123')) {
                 console.log(skillVersion.id);
               }
             python: |-
@@ -712,20 +672,16 @@ paths:
           schema:
             description: The version number to retrieve.
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -739,19 +695,14 @@ paths:
         examples:
           response: ''
           request:
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const skillVersion = await
-              client.skills.versions.retrieve('version', { skill_id: 'skill_123'
-              });
-
+              const skillVersion = await client.skills.versions.retrieve('version', { skill_id: 'skill_123' });
 
               console.log(skillVersion.id);
             python: |-
@@ -788,16 +739,12 @@ paths:
                       SkillVersion skillVersion = client.skills().versions().retrieve(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              skill_version = openai.skills.versions.retrieve("version",
-              skill_id: "skill_123")
-
+              skill_version = openai.skills.versions.retrieve("version", skill_id: "skill_123")
 
               puts(skill_version)
     delete:
@@ -820,20 +767,16 @@ paths:
           schema:
             description: The skill version number.
             type: string
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -847,20 +790,16 @@ paths:
         examples:
           response: ''
           request:
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const deletedSkillVersion = await
-              client.skills.versions.delete('version', {
+              const deletedSkillVersion = await client.skills.versions.delete('version', {
                 skill_id: 'skill_123',
               });
-
 
               console.log(deletedSkillVersion.id);
             python: |-
@@ -897,16 +836,12 @@ paths:
                       DeletedSkillVersion deletedSkillVersion = client.skills().versions().delete(params);
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              deleted_skill_version = openai.skills.versions.delete("version",
-              skill_id: "skill_123")
-
+              deleted_skill_version = openai.skills.versions.delete("version", skill_id: "skill_123")
 
               puts(deleted_skill_version)
 components:
@@ -916,9 +851,7 @@ components:
       type: object
       required: []
       title: Create skill request
-      description: >-
-        Uploads a skill either as a directory (multipart `files[]`) or as a
-        single zip file.
+      description: Uploads a skill either as a directory (multipart `files[]`) or as a single zip file.
     SkillResource:
       properties:
         id:
@@ -1128,18 +1061,24 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
+          request:
+            nativeCasing: kebab
         delete:
           operation:
             $ref: '#/paths/~1skills~1{skill_id}/delete'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         get:
           operation:
             $ref: '#/paths/~1skills~1{skill_id}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         update:
           config:
             requestBodyTranslate:
@@ -1149,6 +1088,8 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/skills/methods/get'
@@ -1171,18 +1112,24 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
+          request:
+            nativeCasing: kebab
         get:
           operation:
             $ref: '#/paths/~1skills~1{skill_id}~1versions~1{version}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         delete:
           operation:
             $ref: '#/paths/~1skills~1{skill_id}~1versions~1{version}/delete'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/versions/methods/get'
@@ -1202,3 +1149,7 @@ x-stackQL-config:
     responseToken:
       key: $.last_id
       location: body
+  queryParamPushdown:
+    top:
+      paramName: limit
+      maxValue: 100

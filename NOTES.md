@@ -172,6 +172,60 @@ Four in-scope operations declare binary request fields. The disposition follows 
 
 The mapping totals move to 100 ops -> 97 mapped / 3 skipped (insert 17, select 43, delete 16, exec 12, update 9). If any-sdk gains multipart/octet-stream body support, these skips are revisited (the operations are recorded here, not lost).
 
+## 10. Pushdown and parameter casing - what shipped, and the two engine gaps
+
+Revisits section 8 with per-directive evidence (`applyPushdown*` in
+`internal/anysdk/query_param_pushdown_apply.go`).
+
+**`top` (LIMIT) - enabled.** Correcting section 8: `applyPushdownTop` has *no*
+dialect gate - it honours any `paramName` - so `LIMIT n` -> `?limit=n` is
+expressible today. The service config now carries:
+
+```yaml
+queryParamPushdown:
+  top: { paramName: limit, maxValue: 100 }
+```
+
+`limit` is therefore dropped from the generated example WHERE clauses
+(`sanitize_docs.mjs`) and annotated in the params table as SQL-LIMIT driven
+(`pre_normalize.mjs`). Caveat, recorded not hidden: because `limit` *is* the
+pagination page-size parameter and the REST acquire path never bounds the cursor
+walk by the pushed limit (`GetPushdownLimit` is consumed only in stackql's GraphQL
+acquire path; the REST loop in `execution/mono_valent_execution.go` terminates on
+token absence or the global `HTTPPageLimit`), a small `LIMIT` shrinks the page
+without reducing rows fetched - it costs requests rather than saving them. The
+over-fetch predates the pushdown; only the page size changes. Bounding the REST
+walk by the pushed limit is the engine fix (noted in the order-pushdown work order).
+
+**`orderBy` (`order`) - blocked, work order raised.** `applyPushdownOrderBy` hard-
+requires `syntax: odata` and renders `<col> <asc|desc>`; OpenAI's `order` takes a
+bare `asc`/`desc` (column implicit). No custom renderer exists, so
+`ORDER BY created_at DESC` cannot be pushed. `order` stays an ordinary WHERE
+parameter (`WHERE "order" = 'desc'`). Requested as a general directive in
+`provider-dev/config/any-sdk-order-pushdown-issue.md`.
+
+**`filter` - deliberately parked.** Same OData-only constraint, but vendor filter
+DSLs vary too much for a useful generalisation; not pursued.
+
+**Parameter casing - not achievable without an any-sdk change.** any-sdk *does*
+have the mechanism (`request.nativeCasing` + `pkg/casing`), and it is live at the
+method level - proven: with `nativeCasing: kebab` stamped per method,
+`WHERE "open_ai-_organization" = 'x'` (the mangled `ToSnake` alias of
+`OpenAI-Organization`) resolves and reaches the API. But `casing.ToSnake` is a
+botocore `xform_name` port that never treats `-` as a separator, so a hyphenated
+header yields either a mangled alias or none; and no unhyphenated spelling is a
+valid header. `WHERE openai_organization = ...` therefore fails with
+`could not locate symbol`. Raised as `provider-dev/config/any-sdk-casing-hyphen-issue.md`.
+
+Shipped posture: the scoping headers are declared with their wire-valid lowercase
+kebab names (`openai-organization` / `openai-project` - HTTP field names are
+case-insensitive per RFC 7230 s3.2, so these are the vendor's headers), methods
+carry `request.nativeCasing: kebab` (a no-op today, the correct forward-compatible
+declaration once the transform handles hyphens), and the docs use the quoted form.
+`sanitize_docs.mjs` quotes the identifiers that do not parse bare - the two headers
+and the reserved word `order` - because the doc generator emits them raw, which is
+invalid SQL (`syntax error ... near 'order'`, `unexpected: openai - organization`).
+
 ## Open
 
 1. **Live runbooks blocked on `OPENAI_API_KEY`** - the section 3 two-page traversal, the vector store cost-free lifecycle, the update-POST field-drop probes, rate-limit observation. All other phase 1 results are offline-proven; these execute unchanged when a key is present. (nvidia/vsphere blocked-on-key pattern.)

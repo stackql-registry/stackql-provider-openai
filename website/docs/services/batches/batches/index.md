@@ -312,28 +312,28 @@ The following methods are available for this resource:
     <td><a href="#get"><CopyableCode code="get" /></a></td>
     <td><CopyableCode code="select" /></td>
     <td><a href="#parameter-batch_id"><code>batch_id</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#list"><CopyableCode code="list" /></a></td>
     <td><CopyableCode code="select" /></td>
     <td></td>
-    <td><a href="#parameter-after"><code>after</code></a>, <a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-after"><code>after</code></a>, <a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#create"><CopyableCode code="create" /></a></td>
     <td><CopyableCode code="insert" /></td>
     <td><a href="#parameter-input_file_id"><code>input_file_id</code></a>, <a href="#parameter-endpoint"><code>endpoint</code></a>, <a href="#parameter-completion_window"><code>completion_window</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#cancel"><CopyableCode code="cancel" /></a></td>
     <td><CopyableCode code="exec" /></td>
     <td><a href="#parameter-batch_id"><code>batch_id</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-openai-organization"><code>openai-organization</code></a>, <a href="#parameter-openai-project"><code>openai-project</code></a></td>
     <td></td>
 </tr>
 </tbody>
@@ -357,16 +357,6 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
     <td><code>string</code></td>
     <td>The ID of the batch to cancel.</td>
 </tr>
-<tr id="parameter-OpenAI-Organization">
-    <td><CopyableCode code="OpenAI-Organization" /></td>
-    <td><code>string</code></td>
-    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key).</td>
-</tr>
-<tr id="parameter-OpenAI-Project">
-    <td><CopyableCode code="OpenAI-Project" /></td>
-    <td><code>string</code></td>
-    <td>Optionally scope the request to a specific project (overrides the default associated with the API key).</td>
-</tr>
 <tr id="parameter-after">
     <td><CopyableCode code="after" /></td>
     <td><code>string</code></td>
@@ -375,7 +365,17 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>
     <td><code>integer</code></td>
-    <td>A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20. </td>
+    <td>A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.  Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.</td>
+</tr>
+<tr id="parameter-openai-organization">
+    <td><CopyableCode code="openai-organization" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.</td>
+</tr>
+<tr id="parameter-openai-project">
+    <td><CopyableCode code="openai-project" /></td>
+    <td><code>string</code></td>
+    <td>Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.</td>
 </tr>
 </tbody>
 </table>
@@ -419,8 +419,8 @@ status,
 usage
 FROM openai.batches.batches
 WHERE batch_id = '{{ batch_id }}' -- required
-AND OpenAI-Organization = '{{ OpenAI-Organization }}'
-AND OpenAI-Project = '{{ OpenAI-Project }}'
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
 ```
 </TabItem>
@@ -454,9 +454,8 @@ status,
 usage
 FROM openai.batches.batches
 WHERE after = '{{ after }}'
-AND limit = '{{ limit }}'
-AND OpenAI-Organization = '{{ OpenAI-Organization }}'
-AND OpenAI-Project = '{{ OpenAI-Project }}'
+AND "openai-organization" = '{{ openai-organization }}'
+AND "openai-project" = '{{ openai-project }}'
 ;
 ```
 </TabItem>
@@ -483,8 +482,8 @@ endpoint,
 completion_window,
 metadata,
 output_expires_after,
-OpenAI-Organization,
-OpenAI-Project
+"openai-organization",
+"openai-project"
 )
 SELECT 
 '{{ input_file_id }}' /* required */,
@@ -492,8 +491,8 @@ SELECT
 '{{ completion_window }}' /* required */,
 '{{ metadata }}',
 '{{ output_expires_after }}',
-'{{ OpenAI-Organization }}',
-'{{ OpenAI-Project }}'
+'{{ openai-organization }}',
+'{{ openai-project }}'
 RETURNING
 id,
 error_file_id,
@@ -555,14 +554,14 @@ usage
       value:
         anchor: "{{ anchor }}"
         seconds: {{ seconds }}
-    - name: OpenAI-Organization
-      value: "{{ OpenAI-Organization }}"
-      description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
-      description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
-    - name: OpenAI-Project
-      value: "{{ OpenAI-Project }}"
-      description: Optionally scope the request to a specific project (overrides the default associated with the API key).
-      description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+    - name: openai-organization
+      value: "{{ openai-organization }}"
+      description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as \`openai_organization\`.
+      description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as \`openai_organization\`.
+    - name: openai-project
+      value: "{{ openai-project }}"
+      description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as \`openai_project\`.
+      description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as \`openai_project\`.
 `}</CodeBlock>
 
 </TabItem>
@@ -584,8 +583,8 @@ Batch is cancelling. Returns the cancelling batch's details.
 ```sql
 EXEC openai.batches.batches.cancel 
 @batch_id='{{ batch_id }}' --required, 
-@OpenAI-Organization='{{ OpenAI-Organization }}', 
-@OpenAI-Project='{{ OpenAI-Project }}'
+@openai-organization='{{ openai-organization }}', 
+@openai-project='{{ openai-project }}'
 ;
 ```
 </TabItem>

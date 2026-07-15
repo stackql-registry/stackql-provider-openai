@@ -9,9 +9,7 @@ paths:
       operationId: listModels
       tags:
         - Models
-      summary: >-
-        Lists the currently available models, and provides basic information
-        about each one such as the owner and availability.
+      summary: Lists the currently available models, and provides basic information about each one such as the owner and availability.
       responses:
         '200':
           description: OK
@@ -125,20 +123,16 @@ paths:
               ]
             }
       parameters:
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
   /models/{model}:
@@ -146,9 +140,7 @@ paths:
       operationId: retrieveModel
       tags:
         - Models
-      summary: >-
-        Retrieves a model instance, providing basic information about the model
-        such as the owner and permissioning.
+      summary: Retrieves a model instance, providing basic information about the model such as the owner and permissioning.
       parameters:
         - in: path
           name: model
@@ -157,20 +149,16 @@ paths:
             type: string
             example: gpt-4o-mini
           description: The ID of the model to use for this request
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -270,9 +258,7 @@ paths:
       operationId: deleteModel
       tags:
         - Models
-      summary: >-
-        Delete a fine-tuned model. You must have the Owner role in your
-        organization to delete a model.
+      summary: Delete a fine-tuned model. You must have the Owner role in your organization to delete a model.
       parameters:
         - in: path
           name: model
@@ -281,20 +267,16 @@ paths:
             type: string
             example: ft:gpt-4o-mini:acemeco:suffix:abc123
           description: The model to delete
-        - name: OpenAI-Organization
+        - name: openai-organization
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific organization (overrides
-            the default associated with the API key).
+          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
           schema:
             type: string
-        - name: OpenAI-Project
+        - name: openai-project
           in: header
           required: false
-          description: >-
-            Optionally scope the request to a specific project (overrides the
-            default associated with the API key).
+          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
           schema:
             type: string
       responses:
@@ -309,10 +291,8 @@ paths:
         group: models
         examples:
           request:
-            curl: >
-              curl
-              https://api.openai.com/v1/models/ft:gpt-4o-mini:acemeco:suffix:abc123
-              \
+            curl: |
+              curl https://api.openai.com/v1/models/ft:gpt-4o-mini:acemeco:suffix:abc123 \
                 -X DELETE \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
             python: |-
@@ -337,36 +317,26 @@ paths:
                 console.log(model);
               }
               main();
-            csharp: >
+            csharp: |
               using System;
-
               using System.ClientModel;
 
-
               using OpenAI.Models;
-
 
               OpenAIModelClient client = new(
                   apiKey: Environment.GetEnvironmentVariable("OPENAI_API_KEY")
               );
 
-
-              ClientResult success =
-              client.DeleteModel("ft:gpt-4o-mini:acemeco:suffix:abc123");
-
+              ClientResult success = client.DeleteModel("ft:gpt-4o-mini:acemeco:suffix:abc123");
               Console.WriteLine(success);
-            node.js: >-
+            node.js: |-
               import OpenAI from 'openai';
-
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-
-              const modelDeleted = await
-              client.models.delete('ft:gpt-4o-mini:acemeco:suffix:abc123');
-
+              const modelDeleted = await client.models.delete('ft:gpt-4o-mini:acemeco:suffix:abc123');
 
               console.log(modelDeleted.id);
             go: "package main\n\nimport (\n\t\"context\"\n\t\"fmt\"\n\n\t\"github.com/openai/openai-go\"\n\t\"github.com/openai/openai-go/option\"\n)\n\nfunc main() {\n\tclient := openai.NewClient(\n\t\toption.WithAPIKey(\"My API Key\"),\n\t)\n\tmodelDeleted, err := client.Models.Delete(context.TODO(), \"ft:gpt-4o-mini:acemeco:suffix:abc123\")\n\tif err != nil {\n\t\tpanic(err.Error())\n\t}\n\tfmt.Printf(\"%+v\\n\", modelDeleted.ID)\n}\n"
@@ -387,16 +357,12 @@ paths:
                       ModelDeleted modelDeleted = client.models().delete("ft:gpt-4o-mini:acemeco:suffix:abc123");
                   }
               }
-            ruby: >-
+            ruby: |-
               require "openai"
-
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-
-              model_deleted =
-              openai.models.delete("ft:gpt-4o-mini:acemeco:suffix:abc123")
-
+              model_deleted = openai.models.delete("ft:gpt-4o-mini:acemeco:suffix:abc123")
 
               puts(model_deleted)
           response: |
@@ -483,18 +449,24 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
+          request:
+            nativeCasing: kebab
         get:
           operation:
             $ref: '#/paths/~1models~1{model}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
         delete:
           operation:
             $ref: '#/paths/~1models~1{model}/delete'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
+          request:
+            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/models/methods/get'
@@ -514,3 +486,7 @@ x-stackQL-config:
     responseToken:
       key: $.last_id
       location: body
+  queryParamPushdown:
+    top:
+      paramName: limit
+      maxValue: 100
