@@ -1,9 +1,9 @@
 --- 
-title: vector_stores
+title: files
 hide_title: false
 hide_table_of_contents: false
 keywords:
-  - vector_stores
+  - files
   - vector_stores
   - openai
   - infrastructure-as-code
@@ -19,13 +19,13 @@ import CodeBlock from '@theme/CodeBlock';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Creates, updates, deletes, gets or lists a <code>vector_stores</code> resource.
+Creates, updates, deletes, gets or lists a <code>files</code> resource.
 
 ## Overview
 <table><tbody>
-<tr><td><b>Name</b></td><td><CopyableCode code="vector_stores" /></td></tr>
+<tr><td><b>Name</b></td><td><CopyableCode code="files" /></td></tr>
 <tr><td><b>Type</b></td><td>Resource</td></tr>
-<tr><td><b>Id</b></td><td><CopyableCode code="openai.vector_stores.vector_stores" /></td></tr>
+<tr><td><b>Id</b></td><td><CopyableCode code="openai.vector_stores.files" /></td></tr>
 </tbody></table>
 
 ## Fields
@@ -56,54 +56,44 @@ The following fields are returned by `SELECT` queries:
     <td>The identifier, which can be referenced in API endpoints.</td>
 </tr>
 <tr>
-    <td><CopyableCode code="name" /></td>
+    <td><CopyableCode code="vector_store_id" /></td>
     <td><code>string</code></td>
-    <td>The name of the vector store.</td>
+    <td>The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="attributes" /></td>
+    <td><code>object</code></td>
+    <td>Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format, and querying for objects via API or the dashboard. Keys are strings with a maximum length of 64 characters. Values are strings with a maximum length of 512 characters, booleans, or numbers.  (x-oaiTypeLabel: map)</td>
+</tr>
+<tr>
+    <td><CopyableCode code="chunking_strategy" /></td>
+    <td><code>object</code></td>
+    <td>The strategy used to chunk the file. (title: Static Chunking Strategy)</td>
 </tr>
 <tr>
     <td><CopyableCode code="created_at" /></td>
     <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store was created.</td>
+    <td>The Unix timestamp (in seconds) for when the vector store file was created.</td>
 </tr>
 <tr>
-    <td><CopyableCode code="expires_after" /></td>
+    <td><CopyableCode code="last_error" /></td>
     <td><code>object</code></td>
-    <td>The expiration policy for a vector store. (title: Vector store expiration policy)</td>
-</tr>
-<tr>
-    <td><CopyableCode code="expires_at" /></td>
-    <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store will expire.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="file_counts" /></td>
-    <td><code>object</code></td>
-    <td></td>
-</tr>
-<tr>
-    <td><CopyableCode code="last_active_at" /></td>
-    <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store was last active.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="metadata" /></td>
-    <td><code>object</code></td>
-    <td>Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format, and querying for objects via API or the dashboard.  Keys are strings with a maximum length of 64 characters. Values are strings with a maximum length of 512 characters.  (x-oaiTypeLabel: map)</td>
+    <td>The last error associated with this vector store file. Will be `null` if there are no errors.</td>
 </tr>
 <tr>
     <td><CopyableCode code="object" /></td>
     <td><code>string</code></td>
-    <td>The object type, which is always `vector_store`. (vector_store)</td>
+    <td>The object type, which is always `vector_store.file`. (vector_store.file)</td>
 </tr>
 <tr>
     <td><CopyableCode code="status" /></td>
     <td><code>string</code></td>
-    <td>The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use. (expired, in_progress, completed)</td>
+    <td>The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use. (in_progress, completed, cancelled, failed)</td>
 </tr>
 <tr>
     <td><CopyableCode code="usage_bytes" /></td>
     <td><code>integer</code></td>
-    <td>The total number of bytes used by the files in the vector store.</td>
+    <td>The total vector store usage in bytes. Note that this may be different from the original file size.</td>
 </tr>
 </tbody>
 </table>
@@ -125,54 +115,44 @@ The following fields are returned by `SELECT` queries:
     <td>The identifier, which can be referenced in API endpoints.</td>
 </tr>
 <tr>
-    <td><CopyableCode code="name" /></td>
+    <td><CopyableCode code="vector_store_id" /></td>
     <td><code>string</code></td>
-    <td>The name of the vector store.</td>
+    <td>The ID of the [vector store](/docs/api-reference/vector-stores/object) that the [File](/docs/api-reference/files) is attached to.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="attributes" /></td>
+    <td><code>object</code></td>
+    <td>Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format, and querying for objects via API or the dashboard. Keys are strings with a maximum length of 64 characters. Values are strings with a maximum length of 512 characters, booleans, or numbers.  (x-oaiTypeLabel: map)</td>
+</tr>
+<tr>
+    <td><CopyableCode code="chunking_strategy" /></td>
+    <td><code>object</code></td>
+    <td>The strategy used to chunk the file. (title: Static Chunking Strategy)</td>
 </tr>
 <tr>
     <td><CopyableCode code="created_at" /></td>
     <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store was created.</td>
+    <td>The Unix timestamp (in seconds) for when the vector store file was created.</td>
 </tr>
 <tr>
-    <td><CopyableCode code="expires_after" /></td>
+    <td><CopyableCode code="last_error" /></td>
     <td><code>object</code></td>
-    <td>The expiration policy for a vector store. (title: Vector store expiration policy)</td>
-</tr>
-<tr>
-    <td><CopyableCode code="expires_at" /></td>
-    <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store will expire.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="file_counts" /></td>
-    <td><code>object</code></td>
-    <td></td>
-</tr>
-<tr>
-    <td><CopyableCode code="last_active_at" /></td>
-    <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store was last active.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="metadata" /></td>
-    <td><code>object</code></td>
-    <td>Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format, and querying for objects via API or the dashboard.  Keys are strings with a maximum length of 64 characters. Values are strings with a maximum length of 512 characters.  (x-oaiTypeLabel: map)</td>
+    <td>The last error associated with this vector store file. Will be `null` if there are no errors.</td>
 </tr>
 <tr>
     <td><CopyableCode code="object" /></td>
     <td><code>string</code></td>
-    <td>The object type, which is always `vector_store`. (vector_store)</td>
+    <td>The object type, which is always `vector_store.file`. (vector_store.file)</td>
 </tr>
 <tr>
     <td><CopyableCode code="status" /></td>
     <td><code>string</code></td>
-    <td>The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use. (expired, in_progress, completed)</td>
+    <td>The status of the vector store file, which can be either `in_progress`, `completed`, `cancelled`, or `failed`. The status `completed` indicates that the vector store file is ready for use. (in_progress, completed, cancelled, failed)</td>
 </tr>
 <tr>
     <td><CopyableCode code="usage_bytes" /></td>
     <td><code>integer</code></td>
-    <td>The total number of bytes used by the files in the vector store.</td>
+    <td>The total vector store usage in bytes. Note that this may be different from the original file size.</td>
 </tr>
 </tbody>
 </table>
@@ -197,42 +177,35 @@ The following methods are available for this resource:
 <tr>
     <td><a href="#get"><CopyableCode code="get" /></a></td>
     <td><CopyableCode code="select" /></td>
-    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a></td>
+    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a>, <a href="#parameter-file_id"><code>file_id</code></a></td>
     <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#list"><CopyableCode code="list" /></a></td>
     <td><CopyableCode code="select" /></td>
-    <td></td>
-    <td><a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-after"><code>after</code></a>, <a href="#parameter-before"><code>before</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a></td>
+    <td><a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-after"><code>after</code></a>, <a href="#parameter-before"><code>before</code></a>, <a href="#parameter-filter"><code>filter</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#create"><CopyableCode code="create" /></a></td>
     <td><CopyableCode code="insert" /></td>
-    <td></td>
+    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a>, <a href="#parameter-file_id"><code>file_id</code></a></td>
     <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
-    <td></td>
+    <td>This endpoint is subject to a per-vector-store write rate limit of 300 requests per minute, shared with `/vector_stores/&#123;vector_store_id&#125;/file_batches`.<br />For uploading multiple files to the same vector store, use the file batches endpoint to reduce request volume.</td>
 </tr>
 <tr>
     <td><a href="#update"><CopyableCode code="update" /></a></td>
     <td><CopyableCode code="update" /></td>
-    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a></td>
+    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a>, <a href="#parameter-file_id"><code>file_id</code></a>, <a href="#parameter-attributes"><code>attributes</code></a></td>
     <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#delete"><CopyableCode code="delete" /></a></td>
     <td><CopyableCode code="delete" /></td>
-    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
-    <td></td>
-</tr>
-<tr>
-    <td><a href="#search"><CopyableCode code="search" /></a></td>
-    <td><CopyableCode code="exec" /></td>
-    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a>, <a href="#parameter-query"><code>query</code></a></td>
+    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a>, <a href="#parameter-file_id"><code>file_id</code></a></td>
     <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
     <td></td>
 </tr>
@@ -252,10 +225,15 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
     </tr>
 </thead>
 <tbody>
+<tr id="parameter-file_id">
+    <td><CopyableCode code="file_id" /></td>
+    <td><code>string</code></td>
+    <td>The ID of the file to delete.</td>
+</tr>
 <tr id="parameter-vector_store_id">
     <td><CopyableCode code="vector_store_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the vector store to search.</td>
+    <td>The ID of the vector store that the file belongs to.</td>
 </tr>
 <tr id="parameter-OpenAI-Organization">
     <td><CopyableCode code="OpenAI-Organization" /></td>
@@ -276,6 +254,11 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
     <td><CopyableCode code="before" /></td>
     <td><code>string</code></td>
     <td>A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list. </td>
+</tr>
+<tr id="parameter-filter">
+    <td><CopyableCode code="filter" /></td>
+    <td><code>string</code></td>
+    <td>Filter by file status. One of `in_progress`, `completed`, `failed`, `cancelled`.</td>
 </tr>
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>
@@ -306,18 +289,17 @@ OK
 ```sql
 SELECT
 id,
-name,
+vector_store_id,
+attributes,
+chunking_strategy,
 created_at,
-expires_after,
-expires_at,
-file_counts,
-last_active_at,
-metadata,
+last_error,
 object,
 status,
 usage_bytes
-FROM openai.vector_stores.vector_stores
+FROM openai.vector_stores.files
 WHERE vector_store_id = '{{ vector_store_id }}' -- required
+AND file_id = '{{ file_id }}' -- required
 AND OpenAI-Organization = '{{ OpenAI-Organization }}'
 AND OpenAI-Project = '{{ OpenAI-Project }}'
 ;
@@ -330,21 +312,21 @@ OK
 ```sql
 SELECT
 id,
-name,
+vector_store_id,
+attributes,
+chunking_strategy,
 created_at,
-expires_after,
-expires_at,
-file_counts,
-last_active_at,
-metadata,
+last_error,
 object,
 status,
 usage_bytes
-FROM openai.vector_stores.vector_stores
-WHERE limit = '{{ limit }}'
+FROM openai.vector_stores.files
+WHERE vector_store_id = '{{ vector_store_id }}' -- required
+AND limit = '{{ limit }}'
 AND order = '{{ order }}'
 AND after = '{{ after }}'
 AND before = '{{ before }}'
+AND filter = '{{ filter }}'
 AND OpenAI-Organization = '{{ OpenAI-Organization }}'
 AND OpenAI-Project = '{{ OpenAI-Project }}'
 ;
@@ -364,37 +346,31 @@ AND OpenAI-Project = '{{ OpenAI-Project }}'
 >
 <TabItem value="create">
 
-No description available.
+This endpoint is subject to a per-vector-store write rate limit of 300 requests per minute, shared with `/vector_stores/&#123;vector_store_id&#125;/file_batches`.<br />For uploading multiple files to the same vector store, use the file batches endpoint to reduce request volume.
 
 ```sql
-INSERT INTO openai.vector_stores.vector_stores (
-file_ids,
-name,
-description,
-expires_after,
+INSERT INTO openai.vector_stores.files (
+file_id,
 chunking_strategy,
-metadata,
+attributes,
+vector_store_id,
 OpenAI-Organization,
 OpenAI-Project
 )
 SELECT 
-'{{ file_ids }}',
-'{{ name }}',
-'{{ description }}',
-'{{ expires_after }}',
+'{{ file_id }}' /* required */,
 '{{ chunking_strategy }}',
-'{{ metadata }}',
+'{{ attributes }}',
+'{{ vector_store_id }}',
 '{{ OpenAI-Organization }}',
 '{{ OpenAI-Project }}'
 RETURNING
 id,
-name,
+vector_store_id,
+attributes,
+chunking_strategy,
 created_at,
-expires_after,
-expires_at,
-file_counts,
-last_active_at,
-metadata,
+last_error,
 object,
 status,
 usage_bytes
@@ -404,43 +380,31 @@ usage_bytes
 <TabItem value="manifest">
 
 <CodeBlock language="yaml">{`# Description fields are for documentation purposes
-- name: vector_stores
+- name: files
   props:
-    - name: file_ids
-      value:
-        - "{{ file_ids }}"
+    - name: vector_store_id
+      value: "{{ vector_store_id }}"
+      description: Required parameter for the files resource.
+    - name: file_id
+      value: "{{ file_id }}"
       description: |
-        A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like \`file_search\` that can access files.
-    - name: name
-      value: "{{ name }}"
-      description: |
-        The name of the vector store.
-    - name: description
-      value: "{{ description }}"
-      description: |
-        A description for the vector store. Can be used to describe the vector store's purpose.
-    - name: expires_after
-      description: |
-        The expiration policy for a vector store.
-      value:
-        anchor: "{{ anchor }}"
-        days: {{ days }}
+        A [File](/docs/api-reference/files) ID that the vector store should use. Useful for tools like \`file_search\` that can access files. For multi-file ingestion, we recommend [\`file_batches\`](/docs/api-reference/vector-stores-file-batches/createBatch) to minimize per-vector-store write requests.
     - name: chunking_strategy
       description: |
-        The chunking strategy used to chunk the file(s). If not set, will use the \`auto\` strategy. Only applicable if \`file_ids\` is non-empty.
+        The chunking strategy used to chunk the file(s). If not set, will use the \`auto\` strategy.
       value:
         type: "{{ type }}"
         static:
           max_chunk_size_tokens: {{ max_chunk_size_tokens }}
           chunk_overlap_tokens: {{ chunk_overlap_tokens }}
-    - name: metadata
-      value: "{{ metadata }}"
+    - name: attributes
+      value: "{{ attributes }}"
       description: |
         Set of 16 key-value pairs that can be attached to an object. This can be
         useful for storing additional information about the object in a structured
-        format, and querying for objects via API or the dashboard.
-        Keys are strings with a maximum length of 64 characters. Values are strings
-        with a maximum length of 512 characters.
+        format, and querying for objects via API or the dashboard. Keys are strings
+        with a maximum length of 64 characters. Values are strings with a maximum
+        length of 512 characters, booleans, or numbers.
     - name: OpenAI-Organization
       value: "{{ OpenAI-Organization }}"
       description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
@@ -468,24 +432,22 @@ usage_bytes
 No description available.
 
 ```sql
-UPDATE openai.vector_stores.vector_stores
+UPDATE openai.vector_stores.files
 SET 
-name = '{{ name }}',
-expires_after = '{{ expires_after }}',
-metadata = '{{ metadata }}'
+attributes = '{{ attributes }}'
 WHERE 
 vector_store_id = '{{ vector_store_id }}' --required
+AND file_id = '{{ file_id }}' --required
+AND attributes = '{{ attributes }}' --required
 AND OpenAI-Organization = '{{ OpenAI-Organization}}'
 AND OpenAI-Project = '{{ OpenAI-Project}}'
 RETURNING
 id,
-name,
+vector_store_id,
+attributes,
+chunking_strategy,
 created_at,
-expires_after,
-expires_at,
-file_counts,
-last_active_at,
-metadata,
+last_error,
 object,
 status,
 usage_bytes;
@@ -507,41 +469,11 @@ usage_bytes;
 No description available.
 
 ```sql
-DELETE FROM openai.vector_stores.vector_stores
+DELETE FROM openai.vector_stores.files
 WHERE vector_store_id = '{{ vector_store_id }}' --required
+AND file_id = '{{ file_id }}' --required
 AND OpenAI-Organization = '{{ OpenAI-Organization }}'
 AND OpenAI-Project = '{{ OpenAI-Project }}'
-;
-```
-</TabItem>
-</Tabs>
-
-
-## Lifecycle Methods
-
-<Tabs
-    defaultValue="search"
-    values={[
-        { label: 'search', value: 'search' }
-    ]}
->
-<TabItem value="search">
-
-OK
-
-```sql
-EXEC openai.vector_stores.vector_stores.search 
-@vector_store_id='{{ vector_store_id }}' --required, 
-@OpenAI-Organization='{{ OpenAI-Organization }}', 
-@OpenAI-Project='{{ OpenAI-Project }}' 
-@@json=
-'{
-"query": "{{ query }}", 
-"rewrite_query": {{ rewrite_query }}, 
-"max_num_results": {{ max_num_results }}, 
-"filters": "{{ filters }}", 
-"ranking_options": "{{ ranking_options }}"
-}'
 ;
 ```
 </TabItem>

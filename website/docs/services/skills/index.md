@@ -1,9 +1,9 @@
 ---
-title: assistants
+title: skills
 hide_title: false
 hide_table_of_contents: false
 keywords:
-  - assistants
+  - skills
   - openai
   - stackql
   - infrastructure-as-code
@@ -14,23 +14,20 @@ custom_edit_url: null
 image: /img/stackql-openai-provider-featured-image.png
 ---
 
-assistants service documentation.
+skills service documentation.
 
 :::info[Service Summary]
 
-total resources: __5__  
+total resources: __2__  
 
 :::
 
 ## Resources
 <div class="row">
 <div class="providerDocColumn">
-<a href="/services/assistants/assistants/">assistants</a><br />
-<a href="/services/assistants/messages/">messages</a><br />
-<a href="/services/assistants/run_steps/">run_steps</a>
+<a href="/services/skills/skills/">skills</a>
 </div>
 <div class="providerDocColumn">
-<a href="/services/assistants/runs/">runs</a><br />
-<a href="/services/assistants/threads/">threads</a>
+<a href="/services/skills/versions/">versions</a>
 </div>
 </div>

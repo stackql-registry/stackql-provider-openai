@@ -1,10 +1,10 @@
 --- 
-title: vector_stores
+title: evals
 hide_title: false
 hide_table_of_contents: false
 keywords:
-  - vector_stores
-  - vector_stores
+  - evals
+  - evals
   - openai
   - infrastructure-as-code
   - configuration-as-data
@@ -19,13 +19,13 @@ import CodeBlock from '@theme/CodeBlock';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Creates, updates, deletes, gets or lists a <code>vector_stores</code> resource.
+Creates, updates, deletes, gets or lists an <code>evals</code> resource.
 
 ## Overview
 <table><tbody>
-<tr><td><b>Name</b></td><td><CopyableCode code="vector_stores" /></td></tr>
+<tr><td><b>Name</b></td><td><CopyableCode code="evals" /></td></tr>
 <tr><td><b>Type</b></td><td>Resource</td></tr>
-<tr><td><b>Id</b></td><td><CopyableCode code="openai.vector_stores.vector_stores" /></td></tr>
+<tr><td><b>Id</b></td><td><CopyableCode code="openai.evals.evals" /></td></tr>
 </tbody></table>
 
 ## Fields
@@ -41,74 +41,7 @@ The following fields are returned by `SELECT` queries:
 >
 <TabItem value="get">
 
-<table>
-<thead>
-    <tr>
-    <th>Name</th>
-    <th>Datatype</th>
-    <th>Description</th>
-    </tr>
-</thead>
-<tbody>
-<tr>
-    <td><CopyableCode code="id" /></td>
-    <td><code>string</code></td>
-    <td>The identifier, which can be referenced in API endpoints.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="name" /></td>
-    <td><code>string</code></td>
-    <td>The name of the vector store.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="created_at" /></td>
-    <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store was created.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="expires_after" /></td>
-    <td><code>object</code></td>
-    <td>The expiration policy for a vector store. (title: Vector store expiration policy)</td>
-</tr>
-<tr>
-    <td><CopyableCode code="expires_at" /></td>
-    <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store will expire.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="file_counts" /></td>
-    <td><code>object</code></td>
-    <td></td>
-</tr>
-<tr>
-    <td><CopyableCode code="last_active_at" /></td>
-    <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store was last active.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="metadata" /></td>
-    <td><code>object</code></td>
-    <td>Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format, and querying for objects via API or the dashboard.  Keys are strings with a maximum length of 64 characters. Values are strings with a maximum length of 512 characters.  (x-oaiTypeLabel: map)</td>
-</tr>
-<tr>
-    <td><CopyableCode code="object" /></td>
-    <td><code>string</code></td>
-    <td>The object type, which is always `vector_store`. (vector_store)</td>
-</tr>
-<tr>
-    <td><CopyableCode code="status" /></td>
-    <td><code>string</code></td>
-    <td>The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use. (expired, in_progress, completed)</td>
-</tr>
-<tr>
-    <td><CopyableCode code="usage_bytes" /></td>
-    <td><code>integer</code></td>
-    <td>The total number of bytes used by the files in the vector store.</td>
-</tr>
-</tbody>
-</table>
-</TabItem>
-<TabItem value="list">
+The evaluation
 
 <table>
 <thead>
@@ -122,37 +55,22 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="id" /></td>
     <td><code>string</code></td>
-    <td>The identifier, which can be referenced in API endpoints.</td>
+    <td>Unique identifier for the evaluation.</td>
 </tr>
 <tr>
     <td><CopyableCode code="name" /></td>
     <td><code>string</code></td>
-    <td>The name of the vector store.</td>
+    <td>The name of the evaluation. (example: Chatbot effectiveness Evaluation)</td>
 </tr>
 <tr>
     <td><CopyableCode code="created_at" /></td>
     <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store was created.</td>
+    <td>The Unix timestamp (in seconds) for when the eval was created.</td>
 </tr>
 <tr>
-    <td><CopyableCode code="expires_after" /></td>
+    <td><CopyableCode code="data_source_config" /></td>
     <td><code>object</code></td>
-    <td>The expiration policy for a vector store. (title: Vector store expiration policy)</td>
-</tr>
-<tr>
-    <td><CopyableCode code="expires_at" /></td>
-    <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store will expire.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="file_counts" /></td>
-    <td><code>object</code></td>
-    <td></td>
-</tr>
-<tr>
-    <td><CopyableCode code="last_active_at" /></td>
-    <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the vector store was last active.</td>
+    <td>Configuration of data sources used in runs of the evaluation. (title: CustomDataSourceConfig)</td>
 </tr>
 <tr>
     <td><CopyableCode code="metadata" /></td>
@@ -162,17 +80,63 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="object" /></td>
     <td><code>string</code></td>
-    <td>The object type, which is always `vector_store`. (vector_store)</td>
+    <td>The object type. (eval) (default: eval)</td>
 </tr>
 <tr>
-    <td><CopyableCode code="status" /></td>
+    <td><CopyableCode code="testing_criteria" /></td>
+    <td><code>array</code></td>
+    <td>A list of testing criteria. (default: eval)</td>
+</tr>
+</tbody>
+</table>
+</TabItem>
+<TabItem value="list">
+
+A list of evals
+
+<table>
+<thead>
+    <tr>
+    <th>Name</th>
+    <th>Datatype</th>
+    <th>Description</th>
+    </tr>
+</thead>
+<tbody>
+<tr>
+    <td><CopyableCode code="id" /></td>
     <td><code>string</code></td>
-    <td>The status of the vector store, which can be either `expired`, `in_progress`, or `completed`. A status of `completed` indicates that the vector store is ready for use. (expired, in_progress, completed)</td>
+    <td>Unique identifier for the evaluation.</td>
 </tr>
 <tr>
-    <td><CopyableCode code="usage_bytes" /></td>
-    <td><code>integer</code></td>
-    <td>The total number of bytes used by the files in the vector store.</td>
+    <td><CopyableCode code="name" /></td>
+    <td><code>string</code></td>
+    <td>The name of the evaluation. (example: Chatbot effectiveness Evaluation)</td>
+</tr>
+<tr>
+    <td><CopyableCode code="created_at" /></td>
+    <td><code>integer (unixtime)</code></td>
+    <td>The Unix timestamp (in seconds) for when the eval was created.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="data_source_config" /></td>
+    <td><code>object</code></td>
+    <td>Configuration of data sources used in runs of the evaluation. (title: CustomDataSourceConfig)</td>
+</tr>
+<tr>
+    <td><CopyableCode code="metadata" /></td>
+    <td><code>object</code></td>
+    <td>Set of 16 key-value pairs that can be attached to an object. This can be useful for storing additional information about the object in a structured format, and querying for objects via API or the dashboard.  Keys are strings with a maximum length of 64 characters. Values are strings with a maximum length of 512 characters.  (x-oaiTypeLabel: map)</td>
+</tr>
+<tr>
+    <td><CopyableCode code="object" /></td>
+    <td><code>string</code></td>
+    <td>The object type. (eval) (default: eval)</td>
+</tr>
+<tr>
+    <td><CopyableCode code="testing_criteria" /></td>
+    <td><code>array</code></td>
+    <td>A list of testing criteria. (default: eval)</td>
 </tr>
 </tbody>
 </table>
@@ -197,7 +161,7 @@ The following methods are available for this resource:
 <tr>
     <td><a href="#get"><CopyableCode code="get" /></a></td>
     <td><CopyableCode code="select" /></td>
-    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a></td>
+    <td><a href="#parameter-eval_id"><code>eval_id</code></a></td>
     <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
     <td></td>
 </tr>
@@ -205,34 +169,27 @@ The following methods are available for this resource:
     <td><a href="#list"><CopyableCode code="list" /></a></td>
     <td><CopyableCode code="select" /></td>
     <td></td>
-    <td><a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-after"><code>after</code></a>, <a href="#parameter-before"><code>before</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td><a href="#parameter-after"><code>after</code></a>, <a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-order_by"><code>order_by</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#create"><CopyableCode code="create" /></a></td>
     <td><CopyableCode code="insert" /></td>
-    <td></td>
+    <td><a href="#parameter-data_source_config"><code>data_source_config</code></a>, <a href="#parameter-testing_criteria"><code>testing_criteria</code></a></td>
     <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#update"><CopyableCode code="update" /></a></td>
     <td><CopyableCode code="update" /></td>
-    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a></td>
+    <td><a href="#parameter-eval_id"><code>eval_id</code></a></td>
     <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
     <td></td>
 </tr>
 <tr>
     <td><a href="#delete"><CopyableCode code="delete" /></a></td>
     <td><CopyableCode code="delete" /></td>
-    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a></td>
-    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
-    <td></td>
-</tr>
-<tr>
-    <td><a href="#search"><CopyableCode code="search" /></a></td>
-    <td><CopyableCode code="exec" /></td>
-    <td><a href="#parameter-vector_store_id"><code>vector_store_id</code></a>, <a href="#parameter-query"><code>query</code></a></td>
+    <td><a href="#parameter-eval_id"><code>eval_id</code></a></td>
     <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
     <td></td>
 </tr>
@@ -252,10 +209,10 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
     </tr>
 </thead>
 <tbody>
-<tr id="parameter-vector_store_id">
-    <td><CopyableCode code="vector_store_id" /></td>
+<tr id="parameter-eval_id">
+    <td><CopyableCode code="eval_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the vector store to search.</td>
+    <td>The ID of the evaluation to delete.</td>
 </tr>
 <tr id="parameter-OpenAI-Organization">
     <td><CopyableCode code="OpenAI-Organization" /></td>
@@ -270,22 +227,22 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-after">
     <td><CopyableCode code="after" /></td>
     <td><code>string</code></td>
-    <td>A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list. </td>
-</tr>
-<tr id="parameter-before">
-    <td><CopyableCode code="before" /></td>
-    <td><code>string</code></td>
-    <td>A cursor for use in pagination. `before` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, starting with obj_foo, your subsequent call can include before=obj_foo in order to fetch the previous page of the list. </td>
+    <td>Identifier for the last eval from the previous pagination request.</td>
 </tr>
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>
     <td><code>integer</code></td>
-    <td>A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20. </td>
+    <td>Number of evals to retrieve.</td>
 </tr>
 <tr id="parameter-order">
     <td><CopyableCode code="order" /></td>
     <td><code>string</code></td>
-    <td>Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order. </td>
+    <td>Sort order for evals by timestamp. Use `asc` for ascending order or `desc` for descending order.</td>
+</tr>
+<tr id="parameter-order_by">
+    <td><CopyableCode code="order_by" /></td>
+    <td><code>string</code></td>
+    <td>Evals can be ordered by creation time or last updated time. Use `created_at` for creation time or `updated_at` for last updated time. </td>
 </tr>
 </tbody>
 </table>
@@ -301,23 +258,19 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 >
 <TabItem value="get">
 
-OK
+The evaluation
 
 ```sql
 SELECT
 id,
 name,
 created_at,
-expires_after,
-expires_at,
-file_counts,
-last_active_at,
+data_source_config,
 metadata,
 object,
-status,
-usage_bytes
-FROM openai.vector_stores.vector_stores
-WHERE vector_store_id = '{{ vector_store_id }}' -- required
+testing_criteria
+FROM openai.evals.evals
+WHERE eval_id = '{{ eval_id }}' -- required
 AND OpenAI-Organization = '{{ OpenAI-Organization }}'
 AND OpenAI-Project = '{{ OpenAI-Project }}'
 ;
@@ -325,26 +278,22 @@ AND OpenAI-Project = '{{ OpenAI-Project }}'
 </TabItem>
 <TabItem value="list">
 
-OK
+A list of evals
 
 ```sql
 SELECT
 id,
 name,
 created_at,
-expires_after,
-expires_at,
-file_counts,
-last_active_at,
+data_source_config,
 metadata,
 object,
-status,
-usage_bytes
-FROM openai.vector_stores.vector_stores
-WHERE limit = '{{ limit }}'
+testing_criteria
+FROM openai.evals.evals
+WHERE after = '{{ after }}'
+AND limit = '{{ limit }}'
 AND order = '{{ order }}'
-AND after = '{{ after }}'
-AND before = '{{ before }}'
+AND order_by = '{{ order_by }}'
 AND OpenAI-Organization = '{{ OpenAI-Organization }}'
 AND OpenAI-Project = '{{ OpenAI-Project }}'
 ;
@@ -367,72 +316,41 @@ AND OpenAI-Project = '{{ OpenAI-Project }}'
 No description available.
 
 ```sql
-INSERT INTO openai.vector_stores.vector_stores (
-file_ids,
+INSERT INTO openai.evals.evals (
 name,
-description,
-expires_after,
-chunking_strategy,
 metadata,
+data_source_config,
+testing_criteria,
 OpenAI-Organization,
 OpenAI-Project
 )
 SELECT 
-'{{ file_ids }}',
 '{{ name }}',
-'{{ description }}',
-'{{ expires_after }}',
-'{{ chunking_strategy }}',
 '{{ metadata }}',
+'{{ data_source_config }}' /* required */,
+'{{ testing_criteria }}' /* required */,
 '{{ OpenAI-Organization }}',
 '{{ OpenAI-Project }}'
 RETURNING
 id,
 name,
 created_at,
-expires_after,
-expires_at,
-file_counts,
-last_active_at,
+data_source_config,
 metadata,
 object,
-status,
-usage_bytes
+testing_criteria
 ;
 ```
 </TabItem>
 <TabItem value="manifest">
 
 <CodeBlock language="yaml">{`# Description fields are for documentation purposes
-- name: vector_stores
+- name: evals
   props:
-    - name: file_ids
-      value:
-        - "{{ file_ids }}"
-      description: |
-        A list of [File](/docs/api-reference/files) IDs that the vector store should use. Useful for tools like \`file_search\` that can access files.
     - name: name
       value: "{{ name }}"
       description: |
-        The name of the vector store.
-    - name: description
-      value: "{{ description }}"
-      description: |
-        A description for the vector store. Can be used to describe the vector store's purpose.
-    - name: expires_after
-      description: |
-        The expiration policy for a vector store.
-      value:
-        anchor: "{{ anchor }}"
-        days: {{ days }}
-    - name: chunking_strategy
-      description: |
-        The chunking strategy used to chunk the file(s). If not set, will use the \`auto\` strategy. Only applicable if \`file_ids\` is non-empty.
-      value:
-        type: "{{ type }}"
-        static:
-          max_chunk_size_tokens: {{ max_chunk_size_tokens }}
-          chunk_overlap_tokens: {{ chunk_overlap_tokens }}
+        The name of the evaluation.
     - name: metadata
       value: "{{ metadata }}"
       description: |
@@ -441,6 +359,18 @@ usage_bytes
         format, and querying for objects via API or the dashboard.
         Keys are strings with a maximum length of 64 characters. Values are strings
         with a maximum length of 512 characters.
+    - name: data_source_config
+      description: |
+        The configuration for the data source used for the evaluation runs. Dictates the schema of the data used in the evaluation.
+      value:
+        type: "{{ type }}"
+        item_schema: "{{ item_schema }}"
+        include_sample_schema: {{ include_sample_schema }}
+        metadata: "{{ metadata }}"
+    - name: testing_criteria
+      value: "{{ testing_criteria }}"
+      description: |
+        A list of graders for all eval runs in this group. Graders can reference variables in the data source using double curly braces notation, like \`{{item.variable_name}}\`. To reference the model's output, use the \`sample\` namespace (ie, \`{{sample.output_text}}\`).
     - name: OpenAI-Organization
       value: "{{ OpenAI-Organization }}"
       description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
@@ -468,27 +398,22 @@ usage_bytes
 No description available.
 
 ```sql
-UPDATE openai.vector_stores.vector_stores
+UPDATE openai.evals.evals
 SET 
 name = '{{ name }}',
-expires_after = '{{ expires_after }}',
 metadata = '{{ metadata }}'
 WHERE 
-vector_store_id = '{{ vector_store_id }}' --required
+eval_id = '{{ eval_id }}' --required
 AND OpenAI-Organization = '{{ OpenAI-Organization}}'
 AND OpenAI-Project = '{{ OpenAI-Project}}'
 RETURNING
 id,
 name,
 created_at,
-expires_after,
-expires_at,
-file_counts,
-last_active_at,
+data_source_config,
 metadata,
 object,
-status,
-usage_bytes;
+testing_criteria;
 ```
 </TabItem>
 </Tabs>
@@ -507,41 +432,10 @@ usage_bytes;
 No description available.
 
 ```sql
-DELETE FROM openai.vector_stores.vector_stores
-WHERE vector_store_id = '{{ vector_store_id }}' --required
+DELETE FROM openai.evals.evals
+WHERE eval_id = '{{ eval_id }}' --required
 AND OpenAI-Organization = '{{ OpenAI-Organization }}'
 AND OpenAI-Project = '{{ OpenAI-Project }}'
-;
-```
-</TabItem>
-</Tabs>
-
-
-## Lifecycle Methods
-
-<Tabs
-    defaultValue="search"
-    values={[
-        { label: 'search', value: 'search' }
-    ]}
->
-<TabItem value="search">
-
-OK
-
-```sql
-EXEC openai.vector_stores.vector_stores.search 
-@vector_store_id='{{ vector_store_id }}' --required, 
-@OpenAI-Organization='{{ OpenAI-Organization }}', 
-@OpenAI-Project='{{ OpenAI-Project }}' 
-@@json=
-'{
-"query": "{{ query }}", 
-"rewrite_query": {{ rewrite_query }}, 
-"max_num_results": {{ max_num_results }}, 
-"filters": "{{ filters }}", 
-"ranking_options": "{{ ranking_options }}"
-}'
 ;
 ```
 </TabItem>

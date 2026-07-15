@@ -4,7 +4,7 @@ hide_title: false
 hide_table_of_contents: false
 keywords:
   - files
-  - files
+  - containers
   - openai
   - infrastructure-as-code
   - configuration-as-data
@@ -25,7 +25,7 @@ Creates, updates, deletes, gets or lists a <code>files</code> resource.
 <table><tbody>
 <tr><td><b>Name</b></td><td><CopyableCode code="files" /></td></tr>
 <tr><td><b>Type</b></td><td>Resource</td></tr>
-<tr><td><b>Id</b></td><td><CopyableCode code="openai.files.files" /></td></tr>
+<tr><td><b>Id</b></td><td><CopyableCode code="openai.containers.files" /></td></tr>
 </tbody></table>
 
 ## Fields
@@ -53,47 +53,37 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="id" /></td>
     <td><code>string</code></td>
-    <td>The file identifier, which can be referenced in the API endpoints.</td>
+    <td>Unique identifier for the file.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="container_id" /></td>
+    <td><code>string</code></td>
+    <td>The container this file belongs to.</td>
 </tr>
 <tr>
     <td><CopyableCode code="bytes" /></td>
     <td><code>integer</code></td>
-    <td>The size of the file, in bytes.</td>
+    <td>Size of the file in bytes.</td>
 </tr>
 <tr>
     <td><CopyableCode code="created_at" /></td>
     <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the file was created.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="expires_at" /></td>
-    <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the file will expire.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="filename" /></td>
-    <td><code>string</code></td>
-    <td>The name of the file.</td>
+    <td>Unix timestamp (in seconds) when the file was created.</td>
 </tr>
 <tr>
     <td><CopyableCode code="object" /></td>
     <td><code>string</code></td>
-    <td>The object type, which is always `file`. (file)</td>
+    <td>The type of this object (`container.file`).</td>
 </tr>
 <tr>
-    <td><CopyableCode code="purpose" /></td>
+    <td><CopyableCode code="path" /></td>
     <td><code>string</code></td>
-    <td>The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results`, `vision`, and `user_data`. (assistants, assistants_output, batch, batch_output, fine-tune, fine-tune-results, vision, user_data)</td>
+    <td>Path of the file in the container.</td>
 </tr>
 <tr>
-    <td><CopyableCode code="status" /></td>
+    <td><CopyableCode code="source" /></td>
     <td><code>string</code></td>
-    <td>Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`. (uploaded, processed, error)</td>
-</tr>
-<tr>
-    <td><CopyableCode code="status_details" /></td>
-    <td><code>string</code></td>
-    <td>Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.</td>
+    <td>Source of the file (e.g., `user`, `assistant`).</td>
 </tr>
 </tbody>
 </table>
@@ -112,47 +102,37 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="id" /></td>
     <td><code>string</code></td>
-    <td>The file identifier, which can be referenced in the API endpoints.</td>
+    <td>Unique identifier for the file.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="container_id" /></td>
+    <td><code>string</code></td>
+    <td>The container this file belongs to.</td>
 </tr>
 <tr>
     <td><CopyableCode code="bytes" /></td>
     <td><code>integer</code></td>
-    <td>The size of the file, in bytes.</td>
+    <td>Size of the file in bytes.</td>
 </tr>
 <tr>
     <td><CopyableCode code="created_at" /></td>
     <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the file was created.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="expires_at" /></td>
-    <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the file will expire.</td>
-</tr>
-<tr>
-    <td><CopyableCode code="filename" /></td>
-    <td><code>string</code></td>
-    <td>The name of the file.</td>
+    <td>Unix timestamp (in seconds) when the file was created.</td>
 </tr>
 <tr>
     <td><CopyableCode code="object" /></td>
     <td><code>string</code></td>
-    <td>The object type, which is always `file`. (file)</td>
+    <td>The type of this object (`container.file`).</td>
 </tr>
 <tr>
-    <td><CopyableCode code="purpose" /></td>
+    <td><CopyableCode code="path" /></td>
     <td><code>string</code></td>
-    <td>The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results`, `vision`, and `user_data`. (assistants, assistants_output, batch, batch_output, fine-tune, fine-tune-results, vision, user_data)</td>
+    <td>Path of the file in the container.</td>
 </tr>
 <tr>
-    <td><CopyableCode code="status" /></td>
+    <td><CopyableCode code="source" /></td>
     <td><code>string</code></td>
-    <td>Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`. (uploaded, processed, error)</td>
-</tr>
-<tr>
-    <td><CopyableCode code="status_details" /></td>
-    <td><code>string</code></td>
-    <td>Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.</td>
+    <td>Source of the file (e.g., `user`, `assistant`).</td>
 </tr>
 </tbody>
 </table>
@@ -177,23 +157,30 @@ The following methods are available for this resource:
 <tr>
     <td><a href="#get"><CopyableCode code="get" /></a></td>
     <td><CopyableCode code="select" /></td>
-    <td><a href="#parameter-file_id"><code>file_id</code></a></td>
+    <td><a href="#parameter-container_id"><code>container_id</code></a>, <a href="#parameter-file_id"><code>file_id</code></a></td>
     <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
-    <td></td>
+    <td>Retrieves a container file.</td>
 </tr>
 <tr>
     <td><a href="#list"><CopyableCode code="list" /></a></td>
     <td><CopyableCode code="select" /></td>
-    <td></td>
-    <td><a href="#parameter-purpose"><code>purpose</code></a>, <a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-after"><code>after</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
-    <td></td>
+    <td><a href="#parameter-container_id"><code>container_id</code></a></td>
+    <td><a href="#parameter-limit"><code>limit</code></a>, <a href="#parameter-order"><code>order</code></a>, <a href="#parameter-after"><code>after</code></a>, <a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td>Lists container files.</td>
+</tr>
+<tr>
+    <td><a href="#create"><CopyableCode code="create" /></a></td>
+    <td><CopyableCode code="insert" /></td>
+    <td><a href="#parameter-container_id"><code>container_id</code></a></td>
+    <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
+    <td>Creates a container file.<br /></td>
 </tr>
 <tr>
     <td><a href="#delete"><CopyableCode code="delete" /></a></td>
     <td><CopyableCode code="delete" /></td>
-    <td><a href="#parameter-file_id"><code>file_id</code></a></td>
+    <td><a href="#parameter-container_id"><code>container_id</code></a>, <a href="#parameter-file_id"><code>file_id</code></a></td>
     <td><a href="#parameter-OpenAI-Organization"><code>OpenAI-Organization</code></a>, <a href="#parameter-OpenAI-Project"><code>OpenAI-Project</code></a></td>
-    <td></td>
+    <td>Delete a container file.</td>
 </tr>
 </tbody>
 </table>
@@ -211,10 +198,15 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
     </tr>
 </thead>
 <tbody>
+<tr id="parameter-container_id">
+    <td><CopyableCode code="container_id" /></td>
+    <td><code>string</code></td>
+    <td></td>
+</tr>
 <tr id="parameter-file_id">
     <td><CopyableCode code="file_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the file to use for this request.</td>
+    <td></td>
 </tr>
 <tr id="parameter-OpenAI-Organization">
     <td><CopyableCode code="OpenAI-Organization" /></td>
@@ -234,17 +226,12 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>
     <td><code>integer</code></td>
-    <td>A limit on the number of objects to be returned. Limit can range between 1 and 10,000, and the default is 10,000. </td>
+    <td>A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20. </td>
 </tr>
 <tr id="parameter-order">
     <td><CopyableCode code="order" /></td>
     <td><code>string</code></td>
     <td>Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order. </td>
-</tr>
-<tr id="parameter-purpose">
-    <td><CopyableCode code="purpose" /></td>
-    <td><code>string</code></td>
-    <td>Only return files with the given purpose.</td>
 </tr>
 </tbody>
 </table>
@@ -260,21 +247,20 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 >
 <TabItem value="get">
 
-OK
+Retrieves a container file.
 
 ```sql
 SELECT
 id,
+container_id,
 bytes,
 created_at,
-expires_at,
-filename,
 object,
-purpose,
-status,
-status_details
-FROM openai.files.files
-WHERE file_id = '{{ file_id }}' -- required
+path,
+source
+FROM openai.containers.files
+WHERE container_id = '{{ container_id }}' -- required
+AND file_id = '{{ file_id }}' -- required
 AND OpenAI-Organization = '{{ OpenAI-Organization }}'
 AND OpenAI-Project = '{{ OpenAI-Project }}'
 ;
@@ -282,21 +268,19 @@ AND OpenAI-Project = '{{ OpenAI-Project }}'
 </TabItem>
 <TabItem value="list">
 
-OK
+Lists container files.
 
 ```sql
 SELECT
 id,
+container_id,
 bytes,
 created_at,
-expires_at,
-filename,
 object,
-purpose,
-status,
-status_details
-FROM openai.files.files
-WHERE purpose = '{{ purpose }}'
+path,
+source
+FROM openai.containers.files
+WHERE container_id = '{{ container_id }}' -- required
 AND limit = '{{ limit }}'
 AND order = '{{ order }}'
 AND after = '{{ after }}'
@@ -304,6 +288,74 @@ AND OpenAI-Organization = '{{ OpenAI-Organization }}'
 AND OpenAI-Project = '{{ OpenAI-Project }}'
 ;
 ```
+</TabItem>
+</Tabs>
+
+
+## `INSERT` examples
+
+<Tabs
+    defaultValue="create"
+    values={[
+        { label: 'create', value: 'create' },
+        { label: 'Manifest', value: 'manifest' }
+    ]}
+>
+<TabItem value="create">
+
+Creates a container file.<br />
+
+```sql
+INSERT INTO openai.containers.files (
+file_id,
+file,
+container_id,
+OpenAI-Organization,
+OpenAI-Project
+)
+SELECT 
+'{{ file_id }}',
+'{{ file }}',
+'{{ container_id }}',
+'{{ OpenAI-Organization }}',
+'{{ OpenAI-Project }}'
+RETURNING
+id,
+container_id,
+bytes,
+created_at,
+object,
+path,
+source
+;
+```
+</TabItem>
+<TabItem value="manifest">
+
+<CodeBlock language="yaml">{`# Description fields are for documentation purposes
+- name: files
+  props:
+    - name: container_id
+      value: "{{ container_id }}"
+      description: Required parameter for the files resource.
+    - name: file_id
+      value: "{{ file_id }}"
+      description: |
+        Name of the file to create.
+    - name: file
+      value: "{{ file }}"
+      description: |
+        The File object (not file name) to be uploaded.
+    - name: OpenAI-Organization
+      value: "{{ OpenAI-Organization }}"
+      description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+      description: Optionally scope the request to a specific organization (overrides the default associated with the API key).
+    - name: OpenAI-Project
+      value: "{{ OpenAI-Project }}"
+      description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+      description: Optionally scope the request to a specific project (overrides the default associated with the API key).
+`}</CodeBlock>
+
 </TabItem>
 </Tabs>
 
@@ -318,11 +370,12 @@ AND OpenAI-Project = '{{ OpenAI-Project }}'
 >
 <TabItem value="delete">
 
-No description available.
+Delete a container file.
 
 ```sql
-DELETE FROM openai.files.files
-WHERE file_id = '{{ file_id }}' --required
+DELETE FROM openai.containers.files
+WHERE container_id = '{{ container_id }}' --required
+AND file_id = '{{ file_id }}' --required
 AND OpenAI-Organization = '{{ OpenAI-Organization }}'
 AND OpenAI-Project = '{{ OpenAI-Project }}'
 ;

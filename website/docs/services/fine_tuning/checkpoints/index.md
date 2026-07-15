@@ -1,9 +1,9 @@
 --- 
-title: events
+title: checkpoints
 hide_title: false
 hide_table_of_contents: false
 keywords:
-  - events
+  - checkpoints
   - fine_tuning
   - openai
   - infrastructure-as-code
@@ -19,13 +19,13 @@ import CodeBlock from '@theme/CodeBlock';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
-Creates, updates, deletes, gets or lists an <code>events</code> resource.
+Creates, updates, deletes, gets or lists a <code>checkpoints</code> resource.
 
 ## Overview
 <table><tbody>
-<tr><td><b>Name</b></td><td><CopyableCode code="events" /></td></tr>
+<tr><td><b>Name</b></td><td><CopyableCode code="checkpoints" /></td></tr>
 <tr><td><b>Type</b></td><td>Resource</td></tr>
-<tr><td><b>Id</b></td><td><CopyableCode code="openai.fine_tuning.events" /></td></tr>
+<tr><td><b>Id</b></td><td><CopyableCode code="openai.fine_tuning.checkpoints" /></td></tr>
 </tbody></table>
 
 ## Fields
@@ -52,37 +52,37 @@ The following fields are returned by `SELECT` queries:
 <tr>
     <td><CopyableCode code="id" /></td>
     <td><code>string</code></td>
-    <td>The object identifier.</td>
+    <td>The checkpoint identifier, which can be referenced in the API endpoints.</td>
+</tr>
+<tr>
+    <td><CopyableCode code="fine_tuning_job_id" /></td>
+    <td><code>string</code></td>
+    <td>The name of the fine-tuning job that this checkpoint was created from.</td>
 </tr>
 <tr>
     <td><CopyableCode code="created_at" /></td>
     <td><code>integer (unixtime)</code></td>
-    <td>The Unix timestamp (in seconds) for when the fine-tuning job was created.</td>
+    <td>The Unix timestamp (in seconds) for when the checkpoint was created.</td>
 </tr>
 <tr>
-    <td><CopyableCode code="data" /></td>
+    <td><CopyableCode code="fine_tuned_model_checkpoint" /></td>
     <td><code>string</code></td>
-    <td>The data associated with the event. (opaque JSON object)</td>
+    <td>The name of the fine-tuned checkpoint model that is created.</td>
 </tr>
 <tr>
-    <td><CopyableCode code="level" /></td>
-    <td><code>string</code></td>
-    <td>The log level of the event. (info, warn, error)</td>
-</tr>
-<tr>
-    <td><CopyableCode code="message" /></td>
-    <td><code>string</code></td>
-    <td>The message of the event.</td>
+    <td><CopyableCode code="metrics" /></td>
+    <td><code>object</code></td>
+    <td>Metrics at the step number during the fine-tuning job.</td>
 </tr>
 <tr>
     <td><CopyableCode code="object" /></td>
     <td><code>string</code></td>
-    <td>The object type, which is always "fine_tuning.job.event". (fine_tuning.job.event)</td>
+    <td>The object type, which is always "fine_tuning.job.checkpoint". (fine_tuning.job.checkpoint)</td>
 </tr>
 <tr>
-    <td><CopyableCode code="type" /></td>
-    <td><code>string</code></td>
-    <td>The type of event. (message, metrics)</td>
+    <td><CopyableCode code="step_number" /></td>
+    <td><code>integer</code></td>
+    <td>The step number that the checkpoint was created at.</td>
 </tr>
 </tbody>
 </table>
@@ -130,7 +130,7 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-fine_tuning_job_id">
     <td><CopyableCode code="fine_tuning_job_id" /></td>
     <td><code>string</code></td>
-    <td>The ID of the fine-tuning job to get events for. </td>
+    <td>The ID of the fine-tuning job to get checkpoints for. </td>
 </tr>
 <tr id="parameter-OpenAI-Organization">
     <td><CopyableCode code="OpenAI-Organization" /></td>
@@ -145,12 +145,12 @@ Parameters can be passed in the `WHERE` clause of a query. Check the [Methods](#
 <tr id="parameter-after">
     <td><CopyableCode code="after" /></td>
     <td><code>string</code></td>
-    <td>Identifier for the last event from the previous pagination request.</td>
+    <td>Identifier for the last checkpoint ID from the previous pagination request.</td>
 </tr>
 <tr id="parameter-limit">
     <td><CopyableCode code="limit" /></td>
     <td><code>integer</code></td>
-    <td>Number of events to retrieve.</td>
+    <td>Number of checkpoints to retrieve.</td>
 </tr>
 </tbody>
 </table>
@@ -170,13 +170,13 @@ OK
 ```sql
 SELECT
 id,
+fine_tuning_job_id,
 created_at,
-data,
-level,
-message,
+fine_tuned_model_checkpoint,
+metrics,
 object,
-type
-FROM openai.fine_tuning.events
+step_number
+FROM openai.fine_tuning.checkpoints
 WHERE fine_tuning_job_id = '{{ fine_tuning_job_id }}' -- required
 AND after = '{{ after }}'
 AND limit = '{{ limit }}'

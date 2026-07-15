@@ -16,24 +16,20 @@ image: /img/stackql-openai-provider-featured-image.png
 
 vector_stores service documentation.
 
-:::info Service Summary
+:::info[Service Summary]
 
-<div class="row">
-<div class="providerDocColumn">
-<span>total resources:&nbsp;<b>4</b></span><br />
-</div>
-</div>
+total resources: __4__  
 
 :::
 
 ## Resources
 <div class="row">
 <div class="providerDocColumn">
-<a href="/services/vector_stores/files_in_vector_store_batches/">files_in_vector_store_batches</a><br />
-<a href="/services/vector_stores/vector_store_file_batches/">vector_store_file_batches</a>
+<a href="/services/vector_stores/file_batch_files/">file_batch_files</a><br />
+<a href="/services/vector_stores/file_batches/">file_batches</a>
 </div>
 <div class="providerDocColumn">
-<a href="/services/vector_stores/vector_store_files/">vector_store_files</a><br />
+<a href="/services/vector_stores/files/">files</a><br />
 <a href="/services/vector_stores/vector_stores/">vector_stores</a>
 </div>
 </div>

@@ -1,19 +1,19 @@
 ---
-title: REPLACEME
+title: openai
 hide_title: false
 hide_table_of_contents: false
 keywords:
-  - REPLACEME
+  - openai
   - stackql
   - infrastructure-as-code
   - configuration-as-data
   - cloud inventory
-description: Query, deploy and manage REPLACEME resources using SQL
+description: Query, deploy and manage OpenAI resources using SQL
 custom_edit_url: null
-image: /img/stackql-REPLACEME-provider-featured-image.png
+image: /img/stackql-openai-provider-featured-image.png
 id: 'provider-intro'
 ---
 
 import CopyableCode from '@site/src/components/CopyableCode/CopyableCode';
 
-REPLACEME with description for the provider.
+The OpenAI platform surface available to standard API keys - models, files, fine-tuning, batches, vector stores, assistants, evals, conversations, uploads, containers and skills - queried and managed with SQL. The organization/admin surface is the sibling `openai_admin` provider; inference invocation (chat, responses, embeddings, images, audio) is out of scope.
