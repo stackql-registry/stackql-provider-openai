@@ -12,18 +12,23 @@ paths:
       parameters:
         - name: limit
           in: query
-          description: |-
-            A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+          description: >-
+            A limit on the number of objects to be returned. Limit can range
+            between 1 and 100, and the default is 20.
 
-            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT
+            10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE`
+            clause is not required.
           required: false
           schema:
             type: integer
             default: 20
         - name: order
           in: query
-          description: |
-            Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
+          description: >
+            Sort order by the `created_at` timestamp of the objects. `asc` for
+            ascending order and `desc` for descending order.
           schema:
             type: string
             default: desc
@@ -32,8 +37,11 @@ paths:
               - desc
         - name: after
           in: query
-          description: |
-            A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+          description: >
+            A cursor for use in pagination. `after` is an object ID that defines
+            your place in the list. For instance, if you make a list request and
+            receive 100 objects, ending with obj_foo, your subsequent call can
+            include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
         - name: name
@@ -45,13 +53,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -70,15 +84,19 @@ paths:
             curl: |
               curl https://api.openai.com/v1/containers \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
-            node.js: |-
+            node.js: >-
               import OpenAI from 'openai';
+
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
+
               // Automatically fetches more pages as needed.
-              for await (const containerListResponse of client.containers.list()) {
+
+              for await (const containerListResponse of
+              client.containers.list()) {
                 console.log(containerListResponse.id);
               }
             python: |-
@@ -149,13 +167,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       requestBody:
@@ -199,14 +223,18 @@ paths:
                         "allowed_domains": ["api.buildkite.com"]
                       }
                     }'
-            node.js: |-
+            node.js: >-
               import OpenAI from 'openai';
+
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-              const container = await client.containers.create({ name: 'name' });
+
+              const container = await client.containers.create({ name: 'name'
+              });
+
 
               console.log(container.id);
             python: |-
@@ -283,13 +311,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -305,17 +339,23 @@ paths:
         path: get
         examples:
           request:
-            curl: |
-              curl https://api.openai.com/v1/containers/cntr_682dfebaacac8198bbfe9c2474fb6f4a085685cbe3cb5863 \
+            curl: >
+              curl
+              https://api.openai.com/v1/containers/cntr_682dfebaacac8198bbfe9c2474fb6f4a085685cbe3cb5863
+              \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
-            node.js: |-
+            node.js: >-
               import OpenAI from 'openai';
+
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-              const container = await client.containers.retrieve('container_id');
+
+              const container = await
+              client.containers.retrieve('container_id');
+
 
               console.log(container.id);
             python: |-
@@ -385,13 +425,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -403,8 +449,10 @@ paths:
         path: delete
         examples:
           request:
-            curl: |
-              curl -X DELETE https://api.openai.com/v1/containers/cntr_682dfebaacac8198bbfe9c2474fb6f4a085685cbe3cb5863 \
+            curl: >
+              curl -X DELETE
+              https://api.openai.com/v1/containers/cntr_682dfebaacac8198bbfe9c2474fb6f4a085685cbe3cb5863
+              \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
             node.js: |-
               import OpenAI from 'openai';
@@ -459,10 +507,12 @@ paths:
         - Containers
   /containers/{container_id}/files:
     post:
-      summary: |
+      summary: >
         Create a Container File
 
-        You can send either a multipart/form-data request with the raw file content, or a JSON request with a file ID.
+
+        You can send either a multipart/form-data request with the raw file
+        content, or a JSON request with a file ID.
       description: |
         Creates a container file.
       operationId: CreateContainerFile
@@ -475,13 +525,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       requestBody:
@@ -506,8 +562,10 @@ paths:
         path: post
         examples:
           request:
-            curl: |
-              curl https://api.openai.com/v1/containers/cntr_682e0e7318108198aa783fd921ff305e08e78805b9fdbb04/files \
+            curl: >
+              curl
+              https://api.openai.com/v1/containers/cntr_682e0e7318108198aa783fd921ff305e08e78805b9fdbb04/files
+              \
                 -H "Authorization: Bearer $OPENAI_API_KEY" \
                 -F file="@example.txt"
             node.js: |-
@@ -582,18 +640,23 @@ paths:
             type: string
         - name: limit
           in: query
-          description: |-
-            A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+          description: >-
+            A limit on the number of objects to be returned. Limit can range
+            between 1 and 100, and the default is 20.
 
-            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT
+            10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE`
+            clause is not required.
           required: false
           schema:
             type: integer
             default: 20
         - name: order
           in: query
-          description: |
-            Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
+          description: >
+            Sort order by the `created_at` timestamp of the objects. `asc` for
+            ascending order and `desc` for descending order.
           schema:
             type: string
             default: desc
@@ -602,20 +665,29 @@ paths:
               - desc
         - name: after
           in: query
-          description: |
-            A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+          description: >
+            A cursor for use in pagination. `after` is an object ID that defines
+            your place in the list. For instance, if you make a list request and
+            receive 100 objects, ending with obj_foo, your subsequent call can
+            include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -631,18 +703,24 @@ paths:
         path: get
         examples:
           request:
-            curl: |
-              curl https://api.openai.com/v1/containers/cntr_682e0e7318108198aa783fd921ff305e08e78805b9fdbb04/files \
+            curl: >
+              curl
+              https://api.openai.com/v1/containers/cntr_682e0e7318108198aa783fd921ff305e08e78805b9fdbb04/files
+              \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
-            node.js: |-
+            node.js: >-
               import OpenAI from 'openai';
+
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
+
               // Automatically fetches more pages as needed.
-              for await (const fileListResponse of client.containers.files.list('container_id')) {
+
+              for await (const fileListResponse of
+              client.containers.files.list('container_id')) {
                 console.log(fileListResponse.id);
               }
             python: |-
@@ -722,13 +800,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -744,17 +828,23 @@ paths:
         path: get
         examples:
           request:
-            curl: |
-              curl https://api.openai.com/v1/containers/container_123/files/file_456 \
+            curl: >
+              curl
+              https://api.openai.com/v1/containers/container_123/files/file_456
+              \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
-            node.js: |-
+            node.js: >-
               import OpenAI from 'openai';
+
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-              const file = await client.containers.files.retrieve('file_id', { container_id: 'container_id' });
+
+              const file = await client.containers.files.retrieve('file_id', {
+              container_id: 'container_id' });
+
 
               console.log(file.id);
             python: |-
@@ -791,12 +881,16 @@ paths:
                       FileRetrieveResponse file = client.containers().files().retrieve(params);
                   }
               }
-            ruby: |-
+            ruby: >-
               require "openai"
+
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-              file = openai.containers.files.retrieve("file_id", container_id: "container_id")
+
+              file = openai.containers.files.retrieve("file_id", container_id:
+              "container_id")
+
 
               puts(file)
           response: |
@@ -829,13 +923,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -847,17 +947,22 @@ paths:
         path: delete
         examples:
           request:
-            curl: |
-              curl -X DELETE https://api.openai.com/v1/containers/cntr_682dfebaacac8198bbfe9c2474fb6f4a085685cbe3cb5863/files/cfile_682e0e8a43c88191a7978f477a09bdf5 \
+            curl: >
+              curl -X DELETE
+              https://api.openai.com/v1/containers/cntr_682dfebaacac8198bbfe9c2474fb6f4a085685cbe3cb5863/files/cfile_682e0e8a43c88191a7978f477a09bdf5
+              \
                 -H "Authorization: Bearer $OPENAI_API_KEY"
-            node.js: |-
+            node.js: >-
               import OpenAI from 'openai';
+
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-              await client.containers.files.delete('file_id', { container_id: 'container_id' });
+
+              await client.containers.files.delete('file_id', { container_id:
+              'container_id' });
             python: |-
               import os
               from openai import OpenAI
@@ -890,12 +995,16 @@ paths:
                       client.containers().files().delete(params);
                   }
               }
-            ruby: |-
+            ruby: >-
               require "openai"
+
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-              result = openai.containers.files.delete("file_id", container_id: "container_id")
+
+              result = openai.containers.files.delete("file_id", container_id:
+              "container_id")
+
 
               puts(result)
           response: |
@@ -955,7 +1064,9 @@ components:
               type: string
               enum:
                 - last_active_at
-              description: Time anchor for the expiration time. Currently only 'last_active_at' is supported.
+              description: >-
+                Time anchor for the expiration time. Currently only
+                'last_active_at' is supported.
             minutes:
               type: integer
           required:
@@ -1034,10 +1145,13 @@ components:
           description: Unix timestamp (in seconds) when the container was last active.
         expires_after:
           type: object
-          description: |
+          description: >
             The container will expire after this time period.
+
             The anchor is the reference point for the expiration.
-            The minutes is the number of minutes after the anchor before the container expires.
+
+            The minutes is the number of minutes after the anchor before the
+            container expires.
           properties:
             anchor:
               type: string
@@ -1046,7 +1160,9 @@ components:
                 - last_active_at
             minutes:
               type: integer
-              description: The number of minutes after the anchor before the container expires.
+              description: >-
+                The number of minutes after the anchor before the container
+                expires.
         memory_limit:
           type: string
           description: The memory limit configured for the container.
@@ -1195,7 +1311,9 @@ components:
           description: The ID of the referenced skill.
         version:
           type: string
-          description: Optional skill version. Use a positive integer or 'latest'. Omit for default.
+          description: >-
+            Optional skill version. Use a positive integer or 'latest'. Omit for
+            default.
       type: object
       required:
         - type
@@ -1242,7 +1360,9 @@ components:
           type: string
           enum:
             - allowlist
-          description: Allow outbound network access only to specified domains. Always `allowlist`.
+          description: >-
+            Allow outbound network access only to specified domains. Always
+            `allowlist`.
           default: allowlist
           x-stainless-const: true
         allowed_domains:
@@ -1274,7 +1394,9 @@ components:
           type: string
           enum:
             - application/zip
-          description: The media type of the inline skill payload. Must be `application/zip`.
+          description: >-
+            The media type of the inline skill payload. Must be
+            `application/zip`.
           default: application/zip
           x-stainless-const: true
         data:
@@ -1321,8 +1443,6 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
-          request:
-            nativeCasing: kebab
         create:
           config:
             requestBodyTranslate:
@@ -1332,24 +1452,18 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
         get:
           operation:
             $ref: '#/paths/~1containers~1{container_id}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
         delete:
           operation:
             $ref: '#/paths/~1containers~1{container_id}/delete'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/containers/methods/get'
@@ -1374,8 +1488,6 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
         list:
           operation:
             $ref: '#/paths/~1containers~1{container_id}~1files/get'
@@ -1383,24 +1495,18 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
-          request:
-            nativeCasing: kebab
         get:
           operation:
             $ref: '#/paths/~1containers~1{container_id}~1files~1{file_id}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
         delete:
           operation:
             $ref: '#/paths/~1containers~1{container_id}~1files~1{file_id}/delete'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/files/methods/get'

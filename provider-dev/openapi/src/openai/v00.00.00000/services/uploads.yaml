@@ -9,24 +9,44 @@ paths:
       operationId: createUpload
       tags:
         - Uploads
-      summary: |
-        Creates an intermediate [Upload](/docs/api-reference/uploads/object) object
+      summary: >
+        Creates an intermediate [Upload](/docs/api-reference/uploads/object)
+        object
+
         that you can add [Parts](/docs/api-reference/uploads/part-object) to.
-        Currently, an Upload can accept at most 8 GB in total and expires after an
+
+        Currently, an Upload can accept at most 8 GB in total and expires after
+        an
+
         hour after you create it.
 
+
         Once you complete the Upload, we will create a
-        [File](/docs/api-reference/files/object) object that contains all the parts
-        you uploaded. This File is usable in the rest of our platform as a regular
+
+        [File](/docs/api-reference/files/object) object that contains all the
+        parts
+
+        you uploaded. This File is usable in the rest of our platform as a
+        regular
+
         File object.
 
-        For certain `purpose` values, the correct `mime_type` must be specified. 
+
+        For certain `purpose` values, the correct `mime_type` must be
+        specified. 
+
         Please refer to documentation for the 
-        [supported MIME types for your use case](/docs/assistants/tools/file-search#supported-files).
+
+        [supported MIME types for your use
+        case](/docs/assistants/tools/file-search#supported-files).
+
 
         For guidance on the proper filename extensions for each purpose, please
+
         follow the documentation on [creating a
+
         File](/docs/api-reference/files/create).
+
 
         Returns the Upload object with status `pending`.
       requestBody:
@@ -114,12 +134,16 @@ paths:
                       Upload upload = client.uploads().create(params);
                   }
               }
-            ruby: |-
+            ruby: >-
               require "openai"
+
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-              upload = openai.uploads.create(bytes: 0, filename: "filename", mime_type: "mime_type", purpose: :assistants)
+
+              upload = openai.uploads.create(bytes: 0, filename: "filename",
+              mime_type: "mime_type", purpose: :assistants)
+
 
               puts(upload)
           response: |
@@ -137,13 +161,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
   /uploads/{upload_id}/cancel:
@@ -167,13 +197,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -253,15 +289,25 @@ paths:
       operationId: completeUpload
       tags:
         - Uploads
-      summary: |
+      summary: >
         Completes the [Upload](/docs/api-reference/uploads/object). 
 
-        Within the returned Upload object, there is a nested [File](/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
 
-        You can specify the order of the Parts by passing in an ordered list of the Part IDs.
+        Within the returned Upload object, there is a nested
+        [File](/docs/api-reference/files/object) object that is ready to use in
+        the rest of the platform.
 
-        The number of bytes uploaded upon completion must match the number of bytes initially specified when creating the Upload object. No Parts may be added after an Upload is completed.
-        Returns the Upload object with status `completed`, including an additional `file` property containing the created usable File object.
+
+        You can specify the order of the Parts by passing in an ordered list of
+        the Part IDs.
+
+
+        The number of bytes uploaded upon completion must match the number of
+        bytes initially specified when creating the Upload object. No Parts may
+        be added after an Upload is completed.
+
+        Returns the Upload object with status `completed`, including an
+        additional `file` property containing the created usable File object.
       parameters:
         - in: path
           name: upload_id
@@ -274,13 +320,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       requestBody:
@@ -306,14 +358,18 @@ paths:
                 -d '{
                   "part_ids": ["part_def456", "part_ghi789"]
                 }'
-            node.js: |-
+            node.js: >-
               import OpenAI from 'openai';
+
 
               const client = new OpenAI({
                 apiKey: process.env['OPENAI_API_KEY'], // This is the default and can be omitted
               });
 
-              const upload = await client.uploads.complete('upload_abc123', { part_ids: ['string'] });
+
+              const upload = await client.uploads.complete('upload_abc123', {
+              part_ids: ['string'] });
+
 
               console.log(upload.id);
             python: |-
@@ -350,12 +406,16 @@ paths:
                       Upload upload = client.uploads().complete(params);
                   }
               }
-            ruby: |-
+            ruby: >-
               require "openai"
+
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-              upload = openai.uploads.complete("upload_abc123", part_ids: ["string"])
+
+              upload = openai.uploads.complete("upload_abc123", part_ids:
+              ["string"])
+
 
               puts(upload)
           response: |
@@ -405,11 +465,14 @@ components:
             The number of bytes in the file you are uploading.
           type: integer
         mime_type:
-          description: |
+          description: >
             The MIME type of the file.
 
 
-            This must fall within the supported MIME types for your file purpose. See
+
+            This must fall within the supported MIME types for your file
+            purpose. See
+
             the supported MIME types for assistants and vision.
           type: string
         expires_after:
@@ -427,7 +490,9 @@ components:
       properties:
         id:
           type: string
-          description: The Upload unique identifier, which can be referenced in API endpoints.
+          description: >-
+            The Upload unique identifier, which can be referenced in API
+            endpoints.
         created_at:
           type: integer
           format: unixtime
@@ -440,7 +505,10 @@ components:
           description: The intended number of bytes to be uploaded.
         purpose:
           type: string
-          description: The intended purpose of the file. [Please refer here](/docs/api-reference/files/object#files/object-purpose) for acceptable values.
+          description: >-
+            The intended purpose of the file. [Please refer
+            here](/docs/api-reference/files/object#files/object-purpose) for
+            acceptable values.
         status:
           type: string
           description: The status of the Upload.
@@ -461,11 +529,15 @@ components:
           x-stainless-const: true
         file:
           title: OpenAIFile
-          description: The `File` object represents a document that has been uploaded to OpenAI.
+          description: >-
+            The `File` object represents a document that has been uploaded to
+            OpenAI.
           properties:
             id:
               type: string
-              description: The file identifier, which can be referenced in the API endpoints.
+              description: >-
+                The file identifier, which can be referenced in the API
+                endpoints.
             bytes:
               type: integer
               description: The size of the file, in bytes.
@@ -488,7 +560,10 @@ components:
               x-stainless-const: true
             purpose:
               type: string
-              description: The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results`, `vision`, and `user_data`.
+              description: >-
+                The intended purpose of the file. Supported values are
+                `assistants`, `assistants_output`, `batch`, `batch_output`,
+                `fine-tune`, `fine-tune-results`, `vision`, and `user_data`.
               enum:
                 - assistants
                 - assistants_output
@@ -501,7 +576,9 @@ components:
             status:
               type: string
               deprecated: true
-              description: Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.
+              description: >-
+                Deprecated. The current status of the file, which can be either
+                `uploaded`, `processed`, or `error`.
               enum:
                 - uploaded
                 - processed
@@ -509,7 +586,9 @@ components:
             status_details:
               type: string
               deprecated: true
-              description: Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
+              description: >-
+                Deprecated. For details on why a fine-tuning training file
+                failed validation, see the `error` field on `fine_tuning.job`.
           required:
             - id
             - object
@@ -572,24 +651,32 @@ components:
           items:
             type: string
         md5:
-          description: |
-            The optional md5 checksum for the file contents to verify if the bytes uploaded matches what you expect.
+          description: >
+            The optional md5 checksum for the file contents to verify if the
+            bytes uploaded matches what you expect.
           type: string
       required:
         - part_ids
     FileExpirationAfter:
       type: object
       title: File expiration policy
-      description: The expiration policy for a file. By default, files with `purpose=batch` expire after 30 days and all other files are persisted until they are manually deleted.
+      description: >-
+        The expiration policy for a file. By default, files with `purpose=batch`
+        expire after 30 days and all other files are persisted until they are
+        manually deleted.
       properties:
         anchor:
-          description: 'Anchor timestamp after which the expiration policy applies. Supported anchors: `created_at`.'
+          description: >-
+            Anchor timestamp after which the expiration policy applies.
+            Supported anchors: `created_at`.
           type: string
           enum:
             - created_at
           x-stainless-const: true
         seconds:
-          description: The number of seconds after the anchor time that the file will expire. Must be between 3600 (1 hour) and 2592000 (30 days).
+          description: >-
+            The number of seconds after the anchor time that the file will
+            expire. Must be between 3600 (1 hour) and 2592000 (30 days).
           type: integer
           format: int64
           minimum: 3600
@@ -599,7 +686,9 @@ components:
         - seconds
     OpenAIFile:
       title: OpenAIFile
-      description: The `File` object represents a document that has been uploaded to OpenAI.
+      description: >-
+        The `File` object represents a document that has been uploaded to
+        OpenAI.
       properties:
         id:
           type: string
@@ -626,7 +715,10 @@ components:
           x-stainless-const: true
         purpose:
           type: string
-          description: The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results`, `vision`, and `user_data`.
+          description: >-
+            The intended purpose of the file. Supported values are `assistants`,
+            `assistants_output`, `batch`, `batch_output`, `fine-tune`,
+            `fine-tune-results`, `vision`, and `user_data`.
           enum:
             - assistants
             - assistants_output
@@ -639,7 +731,9 @@ components:
         status:
           type: string
           deprecated: true
-          description: Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.
+          description: >-
+            Deprecated. The current status of the file, which can be either
+            `uploaded`, `processed`, or `error`.
           enum:
             - uploaded
             - processed
@@ -647,7 +741,9 @@ components:
         status_details:
           type: string
           deprecated: true
-          description: Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
+          description: >-
+            Deprecated. For details on why a fine-tuning training file failed
+            validation, see the `error` field on `fine_tuning.job`.
       required:
         - id
         - object
@@ -684,16 +780,12 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
         cancel:
           operation:
             $ref: '#/paths/~1uploads~1{upload_id}~1cancel/post'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
         complete:
           config:
             requestBodyTranslate:
@@ -703,8 +795,6 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
       sqlVerbs:
         select: []
         insert:

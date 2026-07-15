@@ -23,12 +23,19 @@ paths:
               properties:
                 input_file_id:
                   type: string
-                  description: |
-                    The ID of an uploaded file that contains requests for the new batch.
+                  description: >
+                    The ID of an uploaded file that contains requests for the
+                    new batch.
 
-                    See [upload file](/docs/api-reference/files/create) for how to upload a file.
 
-                    Your input file must be formatted as a [JSONL file](/docs/api-reference/batch/request-input), and must be uploaded with the purpose `batch`. The file can contain up to 50,000 requests, and can be up to 200 MB in size.
+                    See [upload file](/docs/api-reference/files/create) for how
+                    to upload a file.
+
+
+                    Your input file must be formatted as a [JSONL
+                    file](/docs/api-reference/batch/request-input), and must be
+                    uploaded with the purpose `batch`. The file can contain up
+                    to 50,000 requests, and can be up to 200 MB in size.
                 endpoint:
                   type: string
                   enum:
@@ -40,12 +47,21 @@ paths:
                     - /v1/images/generations
                     - /v1/images/edits
                     - /v1/videos
-                  description: The endpoint to be used for all requests in the batch. Currently `/v1/responses`, `/v1/chat/completions`, `/v1/embeddings`, `/v1/completions`, `/v1/moderations`, `/v1/images/generations`, `/v1/images/edits`, and `/v1/videos` are supported. Note that `/v1/embeddings` batches are also restricted to a maximum of 50,000 embedding inputs across all requests in the batch.
+                  description: >-
+                    The endpoint to be used for all requests in the batch.
+                    Currently `/v1/responses`, `/v1/chat/completions`,
+                    `/v1/embeddings`, `/v1/completions`, `/v1/moderations`,
+                    `/v1/images/generations`, `/v1/images/edits`, and
+                    `/v1/videos` are supported. Note that `/v1/embeddings`
+                    batches are also restricted to a maximum of 50,000 embedding
+                    inputs across all requests in the batch.
                 completion_window:
                   type: string
                   enum:
                     - 24h
-                  description: The time frame within which the batch should be processed. Currently only `24h` is supported.
+                  description: >-
+                    The time frame within which the batch should be processed.
+                    Currently only `24h` is supported.
                 metadata:
                   $ref: '#/components/schemas/Metadata'
                 output_expires_after:
@@ -183,13 +199,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
     get:
@@ -203,14 +225,21 @@ paths:
           required: false
           schema:
             type: string
-          description: |
-            A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+          description: >
+            A cursor for use in pagination. `after` is an object ID that defines
+            your place in the list. For instance, if you make a list request and
+            receive 100 objects, ending with obj_foo, your subsequent call can
+            include after=obj_foo in order to fetch the next page of the list.
         - name: limit
           in: query
-          description: |-
-            A limit on the number of objects to be returned. Limit can range between 1 and 100, and the default is 20.
+          description: >-
+            A limit on the number of objects to be returned. Limit can range
+            between 1 and 100, and the default is 20.
 
-            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT
+            10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE`
+            clause is not required.
           required: false
           schema:
             type: integer
@@ -218,13 +247,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -359,13 +394,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -478,7 +519,10 @@ paths:
       operationId: cancelBatch
       tags:
         - Batch
-      summary: Cancels an in-progress batch. The batch will be in status `cancelling` for up to 10 minutes, before changing to `cancelled`, where it will have partial results (if any) available in the output file.
+      summary: >-
+        Cancels an in-progress batch. The batch will be in status `cancelling`
+        for up to 10 minutes, before changing to `cancelled`, where it will have
+        partial results (if any) available in the output file.
       parameters:
         - in: path
           name: batch_id
@@ -489,13 +533,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -608,12 +658,18 @@ components:
   schemas:
     Metadata:
       type: object
-      description: |
+      description: >
         Set of 16 key-value pairs that can be attached to an object. This can be
-        useful for storing additional information about the object in a structured
+
+        useful for storing additional information about the object in a
+        structured
+
         format, and querying for objects via API or the dashboard.
 
-        Keys are strings with a maximum length of 64 characters. Values are strings
+
+        Keys are strings with a maximum length of 64 characters. Values are
+        strings
+
         with a maximum length of 512 characters.
       additionalProperties:
         type: string
@@ -621,16 +677,23 @@ components:
     BatchFileExpirationAfter:
       type: object
       title: File expiration policy
-      description: The expiration policy for the output and/or error file that are generated for a batch.
+      description: >-
+        The expiration policy for the output and/or error file that are
+        generated for a batch.
       properties:
         anchor:
-          description: 'Anchor timestamp after which the expiration policy applies. Supported anchors: `created_at`. Note that the anchor is the file creation time, not the time the batch is created.'
+          description: >-
+            Anchor timestamp after which the expiration policy applies.
+            Supported anchors: `created_at`. Note that the anchor is the file
+            creation time, not the time the batch is created.
           type: string
           enum:
             - created_at
           x-stainless-const: true
         seconds:
-          description: The number of seconds after the anchor time that the file will expire. Must be between 3600 (1 hour) and 2592000 (30 days).
+          description: >-
+            The number of seconds after the anchor time that the file will
+            expire. Must be between 3600 (1 hour) and 2592000 (30 days).
           type: integer
           format: int64
           minimum: 3600
@@ -654,10 +717,14 @@ components:
           description: The OpenAI API endpoint used by the batch.
         model:
           type: string
-          description: |
+          description: >
             Model ID used to process the batch, like `gpt-5-2025-08-07`. OpenAI
-            offers a wide range of models with different capabilities, performance
+
+            offers a wide range of models with different capabilities,
+            performance
+
             characteristics, and price points. Refer to the [model
+
             guide](/docs/models) to browse and compare available models.
         errors:
           type: object
@@ -675,16 +742,22 @@ components:
                     description: An error code identifying the error type.
                   message:
                     type: string
-                    description: A human-readable message providing more details about the error.
+                    description: >-
+                      A human-readable message providing more details about the
+                      error.
                   param:
                     anyOf:
                       - type: string
-                        description: The name of the parameter that caused the error, if applicable.
+                        description: >-
+                          The name of the parameter that caused the error, if
+                          applicable.
                       - type: 'null'
                   line:
                     anyOf:
                       - type: integer
-                        description: The line number of the input file where the error occurred, if applicable.
+                        description: >-
+                          The line number of the input file where the error
+                          occurred, if applicable.
                       - type: 'null'
         input_file_id:
           type: string
@@ -706,7 +779,9 @@ components:
             - cancelled
         output_file_id:
           type: string
-          description: The ID of the file containing the outputs of successfully executed requests.
+          description: >-
+            The ID of the file containing the outputs of successfully executed
+            requests.
         error_file_id:
           type: string
           description: The ID of the file containing the outputs of requests with errors.
@@ -717,7 +792,9 @@ components:
         in_progress_at:
           type: integer
           format: unixtime
-          description: The Unix timestamp (in seconds) for when the batch started processing.
+          description: >-
+            The Unix timestamp (in seconds) for when the batch started
+            processing.
         expires_at:
           type: integer
           format: unixtime
@@ -725,7 +802,9 @@ components:
         finalizing_at:
           type: integer
           format: unixtime
-          description: The Unix timestamp (in seconds) for when the batch started finalizing.
+          description: >-
+            The Unix timestamp (in seconds) for when the batch started
+            finalizing.
         completed_at:
           type: integer
           format: unixtime
@@ -741,7 +820,9 @@ components:
         cancelling_at:
           type: integer
           format: unixtime
-          description: The Unix timestamp (in seconds) for when the batch started cancelling.
+          description: >-
+            The Unix timestamp (in seconds) for when the batch started
+            cancelling.
         cancelled_at:
           type: integer
           format: unixtime
@@ -765,9 +846,13 @@ components:
           description: The request counts for different statuses within the batch.
         usage:
           type: object
-          description: |
-            Represents token usage details including input tokens, output tokens, a
-            breakdown of output tokens, and the total tokens used. Only populated on
+          description: >
+            Represents token usage details including input tokens, output
+            tokens, a
+
+            breakdown of output tokens, and the total tokens used. Only
+            populated on
+
             batches created after September 7, 2025.
           properties:
             input_tokens:
@@ -779,8 +864,10 @@ components:
               properties:
                 cached_tokens:
                   type: integer
-                  description: |
-                    The number of tokens that were retrieved from the cache. [More on
+                  description: >
+                    The number of tokens that were retrieved from the cache.
+                    [More on
+
                     prompt caching](/docs/guides/prompt-caching).
               required:
                 - cached_tokens
@@ -898,8 +985,6 @@ components:
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
         list:
           operation:
             $ref: '#/paths/~1batches/get'
@@ -907,24 +992,18 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
-          request:
-            nativeCasing: kebab
         get:
           operation:
             $ref: '#/paths/~1batches~1{batch_id}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
         cancel:
           operation:
             $ref: '#/paths/~1batches~1{batch_id}~1cancel/post'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/batches/methods/get'

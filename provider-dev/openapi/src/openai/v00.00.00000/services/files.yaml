@@ -19,18 +19,23 @@ paths:
           description: Only return files with the given purpose.
         - name: limit
           in: query
-          description: |-
-            A limit on the number of objects to be returned. Limit can range between 1 and 10,000, and the default is 10,000.
+          description: >-
+            A limit on the number of objects to be returned. Limit can range
+            between 1 and 10,000, and the default is 10,000.
 
-            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT 10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE` clause is not required.
+
+            Automatically applied from a SQL `LIMIT` clause - `SELECT ... LIMIT
+            10` sends `limit=10` on the wire. Setting it explicitly in a `WHERE`
+            clause is not required.
           required: false
           schema:
             type: integer
             default: 10000
         - name: order
           in: query
-          description: |
-            Sort order by the `created_at` timestamp of the objects. `asc` for ascending order and `desc` for descending order.
+          description: >
+            Sort order by the `created_at` timestamp of the objects. `asc` for
+            ascending order and `desc` for descending order.
           schema:
             type: string
             default: desc
@@ -39,20 +44,29 @@ paths:
               - desc
         - name: after
           in: query
-          description: |
-            A cursor for use in pagination. `after` is an object ID that defines your place in the list. For instance, if you make a list request and receive 100 objects, ending with obj_foo, your subsequent call can include after=obj_foo in order to fetch the next page of the list.
+          description: >
+            A cursor for use in pagination. `after` is an object ID that defines
+            your place in the list. For instance, if you make a list request and
+            receive 100 objects, ending with obj_foo, your subsequent call can
+            include after=obj_foo in order to fetch the next page of the list.
           schema:
             type: string
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -162,21 +176,29 @@ paths:
       operationId: createFile
       tags:
         - Files
-      summary: |
-        Upload a file that can be used across various endpoints. Individual files
+      summary: >
+        Upload a file that can be used across various endpoints. Individual
+        files
+
         can be up to 512 MB, and each project can store up to 2.5 TB of files in
+
         total. There is no organization-wide storage limit. Uploads to this
+
         endpoint are rate-limited to 1,000 requests per minute per authenticated
+
         user.
 
-        - The Assistants API supports files up to 2 million tokens and of specific
+
+        - The Assistants API supports files up to 2 million tokens and of
+        specific
           file types. See the [Assistants Tools guide](/docs/assistants/tools) for
           details.
         - The Fine-tuning API only supports `.jsonl` files. The input also has
           certain required formats for fine-tuning
           [chat](/docs/api-reference/fine-tuning/chat-input) or
           [completions](/docs/api-reference/fine-tuning/completions-input) models.
-        - The Batch API only supports `.jsonl` files up to 200 MB in size. The input
+        - The Batch API only supports `.jsonl` files up to 200 MB in size. The
+        input
           also has a specific required
           [format](/docs/api-reference/batch/request-input).
         - For Retrieval or `file_search` ingestion, upload files here first. If
@@ -186,7 +208,9 @@ paths:
           limits from file upload, including 2,000 attached files per minute per
           organization.
 
-        Please [contact us](https://help.openai.com/) if you need to increase these
+        Please [contact us](https://help.openai.com/) if you need to increase
+        these
+
         storage limits.
       requestBody:
         required: true
@@ -204,8 +228,13 @@ paths:
       x-oaiMeta:
         name: Upload file
         group: files
-        description: |
-          Uploads a file for later use across OpenAI APIs. Uploads to this endpoint are rate-limited to 1,000 requests per minute per authenticated user. For Retrieval or `file_search` ingestion, upload files here first. If you need to attach multiple uploaded files to the same vector store, use vector store file batches instead of attaching them one by one.
+        description: >
+          Uploads a file for later use across OpenAI APIs. Uploads to this
+          endpoint are rate-limited to 1,000 requests per minute per
+          authenticated user. For Retrieval or `file_search` ingestion, upload
+          files here first. If you need to attach multiple uploaded files to the
+          same vector store, use vector store file batches instead of attaching
+          them one by one.
         examples:
           request:
             curl: |
@@ -285,12 +314,16 @@ paths:
                       FileObject fileObject = client.files().create(params);
                   }
               }
-            ruby: |-
+            ruby: >-
               require "openai"
+
 
               openai = OpenAI::Client.new(api_key: "My API Key")
 
-              file_object = openai.files.create(file: StringIO.new("Example data"), purpose: :assistants)
+
+              file_object = openai.files.create(file: StringIO.new("Example
+              data"), purpose: :assistants)
+
 
               puts(file_object)
           response: |
@@ -307,13 +340,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
   /files/{file_id}:
@@ -332,13 +371,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -437,13 +482,19 @@ paths:
         - name: openai-organization
           in: header
           required: false
-          description: Optionally scope the request to a specific organization (overrides the default associated with the API key). Addressable in SQL as `openai_organization`.
+          description: >-
+            Optionally scope the request to a specific organization (overrides
+            the default associated with the API key). Addressable in SQL as
+            `openai_organization`.
           schema:
             type: string
         - name: openai-project
           in: header
           required: false
-          description: Optionally scope the request to a specific project (overrides the default associated with the API key). Addressable in SQL as `openai_project`.
+          description: >-
+            Optionally scope the request to a specific project (overrides the
+            default associated with the API key). Addressable in SQL as
+            `openai_project`.
           schema:
             type: string
       responses:
@@ -584,7 +635,9 @@ components:
         - purpose
     OpenAIFile:
       title: OpenAIFile
-      description: The `File` object represents a document that has been uploaded to OpenAI.
+      description: >-
+        The `File` object represents a document that has been uploaded to
+        OpenAI.
       properties:
         id:
           type: string
@@ -611,7 +664,10 @@ components:
           x-stainless-const: true
         purpose:
           type: string
-          description: The intended purpose of the file. Supported values are `assistants`, `assistants_output`, `batch`, `batch_output`, `fine-tune`, `fine-tune-results`, `vision`, and `user_data`.
+          description: >-
+            The intended purpose of the file. Supported values are `assistants`,
+            `assistants_output`, `batch`, `batch_output`, `fine-tune`,
+            `fine-tune-results`, `vision`, and `user_data`.
           enum:
             - assistants
             - assistants_output
@@ -624,7 +680,9 @@ components:
         status:
           type: string
           deprecated: true
-          description: Deprecated. The current status of the file, which can be either `uploaded`, `processed`, or `error`.
+          description: >-
+            Deprecated. The current status of the file, which can be either
+            `uploaded`, `processed`, or `error`.
           enum:
             - uploaded
             - processed
@@ -632,7 +690,9 @@ components:
         status_details:
           type: string
           deprecated: true
-          description: Deprecated. For details on why a fine-tuning training file failed validation, see the `error` field on `fine_tuning.job`.
+          description: >-
+            Deprecated. For details on why a fine-tuning training file failed
+            validation, see the `error` field on `fine_tuning.job`.
       required:
         - id
         - object
@@ -673,16 +733,23 @@ components:
     FileExpirationAfter:
       type: object
       title: File expiration policy
-      description: The expiration policy for a file. By default, files with `purpose=batch` expire after 30 days and all other files are persisted until they are manually deleted.
+      description: >-
+        The expiration policy for a file. By default, files with `purpose=batch`
+        expire after 30 days and all other files are persisted until they are
+        manually deleted.
       properties:
         anchor:
-          description: 'Anchor timestamp after which the expiration policy applies. Supported anchors: `created_at`.'
+          description: >-
+            Anchor timestamp after which the expiration policy applies.
+            Supported anchors: `created_at`.
           type: string
           enum:
             - created_at
           x-stainless-const: true
         seconds:
-          description: The number of seconds after the anchor time that the file will expire. Must be between 3600 (1 hour) and 2592000 (30 days).
+          description: >-
+            The number of seconds after the anchor time that the file will
+            expire. Must be between 3600 (1 hour) and 2592000 (30 days).
           type: integer
           format: int64
           minimum: 3600
@@ -703,24 +770,18 @@ components:
             mediaType: application/json
             openAPIDocKey: '200'
             objectKey: $.data
-          request:
-            nativeCasing: kebab
         delete:
           operation:
             $ref: '#/paths/~1files~1{file_id}/delete'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
         get:
           operation:
             $ref: '#/paths/~1files~1{file_id}/get'
           response:
             mediaType: application/json
             openAPIDocKey: '200'
-          request:
-            nativeCasing: kebab
       sqlVerbs:
         select:
           - $ref: '#/components/x-stackQL-resources/files/methods/get'

@@ -195,14 +195,13 @@ acquire path; the REST loop in `execution/mono_valent_execution.go` terminates o
 token absence or the global `HTTPPageLimit`), a small `LIMIT` shrinks the page
 without reducing rows fetched - it costs requests rather than saving them. The
 over-fetch predates the pushdown; only the page size changes. Bounding the REST
-walk by the pushed limit is the engine fix (noted in the order-pushdown work order).
+walk by the pushed limit is the engine fix, raised upstream alongside the orderBy directive.
 
 **`orderBy` (`order`) - blocked, work order raised.** `applyPushdownOrderBy` hard-
 requires `syntax: odata` and renders `<col> <asc|desc>`; OpenAI's `order` takes a
 bare `asc`/`desc` (column implicit). No custom renderer exists, so
 `ORDER BY created_at DESC` cannot be pushed. `order` stays an ordinary WHERE
-parameter (`WHERE "order" = 'desc'`). Requested as a general directive in
-`provider-dev/config/any-sdk-order-pushdown-issue.md`.
+parameter (`WHERE "order" = 'desc'`). Requested upstream as a general directive (a `direction_only` algorithm alongside the default odata rendering).
 
 **`filter` - deliberately parked.** Same OData-only constraint, but vendor filter
 DSLs vary too much for a useful generalisation; not pursued.
@@ -215,7 +214,7 @@ method level - proven: with `nativeCasing: kebab` stamped per method,
 botocore `xform_name` port that never treats `-` as a separator, so a hyphenated
 header yields either a mangled alias or none; and no unhyphenated spelling is a
 valid header. `WHERE openai_organization = ...` therefore fails with
-`could not locate symbol`. Raised as `provider-dev/config/any-sdk-casing-hyphen-issue.md`.
+`could not locate symbol`. Raised upstream against `casing.ToSnake`.
 
 Shipped posture: the scoping headers are declared with their wire-valid lowercase
 kebab names (`openai-organization` / `openai-project` - HTTP field names are
