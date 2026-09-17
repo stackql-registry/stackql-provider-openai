@@ -71,7 +71,11 @@ stackql.exe shell --auth=$Auth
 ```
 </details>
 
-## Fine-tuning history and checkpoints
+## Example Queries
+
+Try the following queries using `stackql shell`, or run them from a script or CI pipeline with `stackql exec`.
+
+### Fine-tuning history and checkpoints
 
 Every fine-tuning job, newest first, with the tuning method and any failure reason:
 
@@ -117,7 +121,7 @@ WHERE fine_tuning_job_id = 'ftjob-abc123'
 ORDER BY step_number;
 ```
 
-## Async jobs: create, poll, cancel
+### Async jobs: create, poll, cancel
 
 Fine-tuning jobs, batches, vector store file batches and uploads are all the same shape - `INSERT` creates, `SELECT` polls, `EXEC` cancels:
 
@@ -135,7 +139,7 @@ WHERE fine_tuning_job_id = 'ftjob-abc123';
 EXEC openai.fine_tuning.jobs.cancel @fine_tuning_job_id = 'ftjob-abc123';
 ```
 
-## Batch status and error triage
+### Batch status and error triage
 
 Batches that are not finished, with their per-request tallies:
 
@@ -170,7 +174,7 @@ WHERE json_extract(request_counts, '$.failed') > 0
 ORDER BY last_event DESC;
 ```
 
-## Vector store audit
+### Vector store audit
 
 Stores by size, with their file processing state:
 
@@ -212,7 +216,7 @@ WHERE last_active_at < strftime('%s', date('now', '-30 days'))
 ORDER BY usage_bytes DESC;
 ```
 
-## File estate by purpose and age
+### File estate by purpose and age
 
 The whole file estate, grouped by what it is for:
 
@@ -238,7 +242,7 @@ WHERE purpose = 'fine-tune'
 ORDER BY created_at;
 ```
 
-## Assistants inventory
+### Assistants inventory
 
 > The Assistants family (assistants, threads, messages, runs, run steps) carries OpenAI's **deprecation** in favour of the Responses API. It is mapped and labelled here for inventory and migration work; new build-outs should target Responses.
 
