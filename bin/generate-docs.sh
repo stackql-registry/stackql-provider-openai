@@ -6,6 +6,9 @@ set -e
 # Get the script directory for relative paths
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 REPO_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+# Repository linked from the Provider Summary on the docs landing page
+# (--source-project, provider-utils >= 0.7.11); override with --source-project.
+SOURCE_PROJECT="${SOURCE_PROJECT:-https://github.com/stackql-registry/stackql-provider-openai}"
 
 # Parse command line arguments
 while [[ $# -gt 0 ]]; do
@@ -26,6 +29,10 @@ while [[ $# -gt 0 ]]; do
       PROVIDER_DATA_DIR="$2"
       shift 2
       ;;
+    --source-project)
+      SOURCE_PROJECT="$2"
+      shift 2
+      ;;
     --help)
       echo "Usage: generate-docs.sh [OPTIONS]"
       echo ""
@@ -34,6 +41,7 @@ while [[ $# -gt 0 ]]; do
       echo "  --provider-dir DIR        Provider directory path (default: $PROVIDER_DIR)"
       echo "  --output-dir DIR          Output directory for docs (default: $OUTPUT_DIR)"
       echo "  --provider-data-dir DIR   Provider data directory (default: $PROVIDER_DATA_DIR)"
+      echo "  --source-project URL      Repository URL linked from the provider summary (default: $SOURCE_PROJECT)"
       echo "  --help                    Show this help message"
       exit 0
       ;;
@@ -52,7 +60,8 @@ node --experimental-modules "$SCRIPT_DIR/generate-docs.mjs" \
   --provider-name "$PROVIDER_NAME" \
   --provider-dir "$PROVIDER_DIR" \
   --output-dir "$OUTPUT_DIR" \
-  --provider-data-dir "$PROVIDER_DATA_DIR"
+  --provider-data-dir "$PROVIDER_DATA_DIR" \
+  --source-project "$SOURCE_PROJECT"
 
 # Check if command succeeded
 if [ $? -ne 0 ]; then

@@ -23,6 +23,7 @@ The OpenAI platform surface available to standard API keys - models, files, fine
 
 total services: __11__  
 total resources: __37__  
+source project: __[stackql-provider-openai](https://github.com/stackql-registry/stackql-provider-openai)__  
 
 :::
 
